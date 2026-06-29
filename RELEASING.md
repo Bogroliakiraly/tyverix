@@ -19,15 +19,14 @@ you push a git tag  →  GitHub Actions builds + signs  →  GitHub Release + la
               offer "Update available" → download → verify signature → install → relaunch
 ```
 
-### One-time setup
+### One-time setup — done ✅
 
-1. Create a GitHub repo and push this project.
-2. Replace **`OWNER/REPO`** in two places with your `user/repo`:
-   - `src-tauri/tauri.conf.json` → `plugins.updater.endpoints`
-   - `website/i18n.js` → `GITHUB_REPO`
-3. Add two repository secrets (Settings → Secrets and variables → Actions):
-   - `TAURI_SIGNING_PRIVATE_KEY` — paste the contents of `.tauri-keys/boostforge.key`
-   - `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` — the password (`boostforge-updates` by default)
+This is already configured for **github.com/Bogroliakiraly/boostforge**:
+
+1. ~~Create a GitHub repo and push this project.~~ Done — public repo, `main` branch.
+2. ~~Replace `OWNER/REPO` in two places.~~ Done in `src-tauri/tauri.conf.json` (`plugins.updater.endpoints`) and `website/i18n.js` (`GITHUB_REPO`).
+3. ~~Add two repository secrets.~~ Done — `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` are set under Settings → Secrets and variables → Actions.
+4. The marketing site is published via GitHub Pages from the `gh-pages` branch (root) — see § 3 below for how that branch is kept in sync.
 
 > The updater **public** key is already embedded in `tauri.conf.json`. The
 > **private** key in `.tauri-keys/` is gitignored — keep it safe. If you lose it,
@@ -83,16 +82,27 @@ paste into `license.rs`. **Doing this invalidates every previously issued key.**
 
 ## 3. Website
 
-A static, trilingual (EN/HU/DE) site in `website/`. Deploy it anywhere; GitHub
-Pages is easiest:
+A static, trilingual (EN/HU/DE) site, developed in `website/` on `main`. Live at:
 
-1. Push the repo.
-2. Settings → Pages → deploy from `main` / `/website` (or copy `website/` to a
-   `gh-pages` branch).
-3. Update `GITHUB_REPO` and `BUY_URL` in `website/i18n.js`.
+**https://bogroliakiraly.github.io/boostforge/**
+
+GitHub Pages only serves from a branch root (not an arbitrary subfolder), so
+the published copy lives on a separate **`gh-pages`** branch containing just
+that folder's contents. After editing anything under `website/` on `main`,
+republish with:
+
+```bash
+git subtree split --prefix website -b gh-pages-update
+git push origin gh-pages-update:gh-pages --force
+git branch -D gh-pages-update
+```
+
+Still need to set: `BUY_URL` in `website/i18n.js` once you have a real Stripe
+Payment Link — until then the "Get Pro" button explains that purchases aren't
+open yet instead of linking somewhere broken.
 
 The "Download" button points at your GitHub Releases `/latest`, so it always
-serves the newest installer.
+serves the newest installer once you've tagged at least one release.
 
 ---
 

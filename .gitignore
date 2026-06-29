@@ -7,6 +7,9 @@ dist-ssr
 src-tauri/target
 src-tauri/gen
 
+# Downloads now come from GitHub Releases, not a local copy
+website/*.exe
+
 # Secrets — NEVER commit signing keys
 .tauri-keys/
 .toolchain/

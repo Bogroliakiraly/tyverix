@@ -134,7 +134,7 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
               </button>
             </div>
             <a
-              href="https://OWNER.github.io/boostforge/#pricing"
+              href="https://bogroliakiraly.github.io/boostforge/#pricing"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 text-sm text-accent hover:underline"
