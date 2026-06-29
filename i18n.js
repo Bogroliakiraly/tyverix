@@ -1,12 +1,9 @@
 /* BoostForge marketing site — trilingual content (EN / HU / DE). */
 
-// For now the installer ships right next to this site (website/BoostForge-Setup.exe),
-// so the Download button works with no server setup at all. Once you publish a real
-// GitHub repo and start tagging releases, switch this back to the Releases URL so the
-// button always serves the newest build automatically:
-//   const GITHUB_REPO = "OWNER/REPO";
-//   const DOWNLOAD_URL = `https://github.com/${GITHUB_REPO}/releases/latest/download/BoostForge-Setup.exe`;
-const DOWNLOAD_URL = "./BoostForge-Setup.exe";
+// Points at the latest GitHub Release page (the installer's filename changes
+// per version, so this links to the release rather than guessing the name).
+const GITHUB_REPO = "Bogroliakiraly/boostforge";
+const DOWNLOAD_URL = `https://github.com/${GITHUB_REPO}/releases/latest`;
 // Replace with your Stripe Payment Link / Checkout URL once payments are set up:
 const BUY_URL = "https://buy.stripe.com/your-payment-link";
 
