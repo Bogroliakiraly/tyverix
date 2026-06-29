@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-bg-base text-text-primary font-sans antialiased;
+    margin: 0;
+    overflow: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Disable the rubber-band overscroll that feels non-native. */
+    overscroll-behavior: none;
+  }
+
+  /* Allow text selection only where it is genuinely useful. */
+  .selectable {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-bg-surface border border-border-subtle rounded-2xl shadow-card;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2
+      text-sm font-medium transition-colors duration-150 disabled:opacity-50
+      disabled:pointer-events-none select-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-hover;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-text-secondary hover:bg-bg-hover hover:text-text-primary;
+  }
+
+  .btn-outline {
+    @apply btn border border-border-strong text-text-primary hover:bg-bg-hover;
+  }
+
+  .btn-danger {
+    @apply btn bg-bad/15 text-bad hover:bg-bad/25;
+  }
+}
+
+/* Thin, unobtrusive scrollbars that match the dark theme. */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2f3a;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4150;
+  background-clip: padding-box;
+}

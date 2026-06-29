@@ -1,0 +1,56 @@
+name: Release
+
+# Build, sign and publish BoostForge whenever you push a version tag, e.g.:
+#   git tag v0.1.1 && git push origin v0.1.1
+#
+# tauri-action creates a GitHub Release with the NSIS installer, the signed
+# updater artifacts, AND a `latest.json` manifest. Existing installs poll that
+# manifest (configured in tauri.conf.json) and offer the update automatically.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   TAURI_SIGNING_PRIVATE_KEY           contents of .tauri-keys/boostforge.key
+#   TAURI_SIGNING_PRIVATE_KEY_PASSWORD  the password you chose for that key
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Build, sign and publish
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: "BoostForge ${{ github.ref_name }}"
+          releaseBody: "See the assets below to download and install."
+          releaseDraft: false
+          prerelease: false
+          includeUpdaterJson: true
