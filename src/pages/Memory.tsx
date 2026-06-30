@@ -3,6 +3,7 @@ import { MemoryStick, Sparkles, ShieldCheck } from "lucide-react";
 import { freeMemory, isElevated } from "../lib/api";
 import type { MemoryFreeResult } from "../lib/types";
 import { Card, SectionTitle, Spinner, Toggle } from "../components/ui";
+import { ProGate } from "../components/ProGate";
 import { formatBytes } from "../lib/format";
 import { useConfirm } from "../store/useConfirm";
 import { toast } from "../store/useToast";
@@ -55,6 +56,7 @@ export function Memory() {
       : 0;
 
   return (
+    <ProGate>
     <div className="space-y-5">
       <Card>
         <SectionTitle title={t("mem.title")} subtitle={t("mem.subtitle")} />
@@ -100,6 +102,7 @@ export function Memory() {
         </div>
       </Card>
     </div>
+    </ProGate>
   );
 }
 

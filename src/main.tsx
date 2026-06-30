@@ -4,12 +4,15 @@ import App from "./App";
 import "./styles.css";
 import { I18nProvider } from "./i18n";
 import { useLicense } from "./store/useLicense";
+import { useAuth } from "./store/useAuth";
 
 function Root() {
   const refresh = useLicense((s) => s.refresh);
+  const initAuth = useAuth((s) => s.init);
   useEffect(() => {
     refresh();
-  }, [refresh]);
+    initAuth();
+  }, [refresh, initAuth]);
   return <App />;
 }
 

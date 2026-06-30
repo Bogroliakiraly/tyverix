@@ -3,6 +3,7 @@ import { Wifi, Zap } from "lucide-react";
 import { measureLatency } from "../lib/api";
 import type { LatencyResult } from "../lib/types";
 import { Badge, Card, EmptyState, SectionTitle, Spinner } from "../components/ui";
+import { ProGate } from "../components/ProGate";
 import { Sparkline } from "../components/Sparkline";
 import { toast } from "../store/useToast";
 import { useT } from "../i18n";
@@ -40,6 +41,7 @@ export function Network() {
     jitterTone === "good" ? t("net.stable") : jitterTone === "accent" ? t("net.moderate") : t("net.unstable");
 
   return (
+    <ProGate>
     <div className="space-y-5">
       <Card>
         <SectionTitle title={t("net.title")} subtitle={t("net.subtitle")} />
@@ -139,6 +141,7 @@ export function Network() {
         </Card>
       )}
     </div>
+    </ProGate>
   );
 }
 

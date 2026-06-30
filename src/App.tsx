@@ -28,10 +28,12 @@ import { Tools } from "./pages/Tools";
 import { Safety } from "./pages/Safety";
 import { Settings } from "./pages/Settings";
 import { isElevated } from "./lib/api";
+import { useNav } from "./store/useNav";
 import { useT } from "./i18n";
 
 export default function App() {
-  const [page, setPage] = useState("dashboard");
+  const page = useNav((s) => s.page);
+  const setPage = useNav((s) => s.go);
   const [elevated, setElevated] = useState<boolean | null>(null);
   const { t } = useT();
 

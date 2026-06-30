@@ -18,6 +18,10 @@ tools/license-private.pem
 # Claude Code session state
 .claude/
 
+# Local env (Supabase URL/key) — use .env.example as the template
+.env
+.env.local
+
 # Editor / OS
 .vscode/*
 !.vscode/extensions.json

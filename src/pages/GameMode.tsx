@@ -9,6 +9,7 @@ import {
 } from "../lib/api";
 import type { GameModeStatus, PowerPlan } from "../lib/types";
 import { Badge, Card, SectionTitle, Spinner } from "../components/ui";
+import { ProGate } from "../components/ProGate";
 import { useConfirm } from "../store/useConfirm";
 import { toast } from "../store/useToast";
 import { useT } from "../i18n";
@@ -81,6 +82,7 @@ export function GameMode() {
   const detected = status?.detected_games ?? [];
 
   return (
+    <ProGate>
     <div className="space-y-5">
       {!active && detected.length > 0 && (
         <Card className="border-accent/40 bg-accent/5">
@@ -170,6 +172,7 @@ export function GameMode() {
         </div>
       </Card>
     </div>
+    </ProGate>
   );
 }
 

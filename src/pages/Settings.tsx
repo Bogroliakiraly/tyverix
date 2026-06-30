@@ -10,6 +10,9 @@ import {
   PlayCircle,
 } from "lucide-react";
 import { Badge, Card, SectionTitle, Spinner } from "../components/ui";
+import { AccountCard } from "../components/AccountCard";
+import { AdminPanel } from "../components/AdminPanel";
+import { ProGate } from "../components/ProGate";
 import {
   activateLicense,
   deactivateLicense,
@@ -85,6 +88,9 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
           ))}
         </div>
       </Card>
+
+      {/* Online account (Supabase) — hidden when not configured */}
+      <AccountCard />
 
       {/* Subscription */}
       <Card>
@@ -176,7 +182,12 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
         </div>
       </Card>
 
-      <AutoCleanupCard />
+      <ProGate>
+        <AutoCleanupCard />
+      </ProGate>
+
+      {/* Admin: issue Pro license keys (vendor-only, hidden when unconfigured) */}
+      <AdminPanel />
 
       {/* About */}
       <Card>
