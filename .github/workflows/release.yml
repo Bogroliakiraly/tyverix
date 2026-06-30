@@ -38,6 +38,15 @@ jobs:
         with:
           workspaces: src-tauri
 
+      # The Supabase publishable key + URL are PUBLIC (safe to ship), but the
+      # local .env is gitignored, so recreate it here. Without this the released
+      # build (and every auto-update) would lose the account / admin features.
+      - name: Configure Supabase (public keys)
+        shell: pwsh
+        run: |
+          "VITE_SUPABASE_URL=https://unpaishxbfrtbkkxrcxq.supabase.co" | Out-File -FilePath .env -Encoding ascii
+          "VITE_SUPABASE_ANON_KEY=sb_publishable_M2RB1FF5KwFP7DoKwgkCDA_RuXNDfEm" | Out-File -FilePath .env -Append -Encoding ascii
+
       - name: Install frontend dependencies
         run: npm ci
 
