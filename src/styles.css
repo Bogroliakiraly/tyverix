@@ -28,6 +28,16 @@
     -webkit-user-select: text;
     user-select: text;
   }
+
+  /* Form controls must always accept text input. On WebView2 (Windows) an
+     inherited `user-select: none` blocks typing/caret placement entirely, so
+     re-enable it for every field regardless of an explicit .selectable. */
+  input,
+  textarea,
+  select {
+    -webkit-user-select: text;
+    user-select: text;
+  }
 }
 
 @layer components {
