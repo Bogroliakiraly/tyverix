@@ -6,7 +6,7 @@
  * account area will explain that sign-up isn't available yet).
  */
 window.BF_CONFIG = {
-  SUPABASE_URL: "", // e.g. "https://abcdxyz.supabase.co"
-  SUPABASE_ANON_KEY: "", // anon / public key
+  SUPABASE_URL: "https://unpaishxbfrtbkkxrcxq.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_M2RB1FF5KwFP7DoKwgkCDA_RuXNDfEm", // publishable (public) key
   DOWNLOAD_URL: "https://github.com/Bogroliakiraly/boostforge/releases/latest",
 };
