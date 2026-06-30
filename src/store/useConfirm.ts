@@ -7,11 +7,15 @@ import { create } from "zustand";
  */
 export interface ConfirmRequest {
   title: string;
-  what: string;
-  why: string;
-  benefit: string;
-  downside: string;
+  /** Simple single-message mode (e.g. "Really close?"). When set, the detailed
+   *  what/why/benefit/downside rows are not shown. */
+  message?: string;
+  what?: string;
+  why?: string;
+  benefit?: string;
+  downside?: string;
   confirmLabel?: string;
+  cancelLabel?: string;
   danger?: boolean;
   /** Offer to create a System Restore point before proceeding. */
   offerRestorePoint?: boolean;

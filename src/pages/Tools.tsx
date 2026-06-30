@@ -16,6 +16,8 @@ import type {
   UpdateInfo,
   WindowsInfo,
 } from "../lib/types";
+import { Download, FileText, ExternalLink } from "lucide-react";
+import { openUrl } from "@tauri-apps/plugin-opener";
 import { Badge, Card, EmptyState, SectionTitle, Spinner } from "../components/ui";
 import { formatBytes, formatUptime } from "../lib/format";
 import { toast } from "../store/useToast";
@@ -155,29 +157,77 @@ function DiskHealthTab() {
   );
 }
 
+/** Best-effort, honest vendor links: official download page + release notes.
+ *  BoostForge never guesses whether a driver is "outdated" — it points you to
+ *  the manufacturer's own page so you can compare versions and read the actual
+ *  changelog there. Unknown vendors fall back to a web search. */
+function driverLinks(d: DriverInfo): { download: string; notes: string } {
+  const s = `${d.provider} ${d.device_name}`.toLowerCase();
+  const search = (suffix: string) =>
+    `https://www.google.com/search?q=${encodeURIComponent(`${d.device_name} ${d.provider} ${suffix}`)}`;
+  if (s.includes("nvidia"))
+    return { download: "https://www.nvidia.com/Download/index.aspx", notes: "https://www.nvidia.com/en-us/geforce/drivers/" };
+  if (s.includes("amd") || s.includes("advanced micro devices") || s.includes("radeon"))
+    return { download: "https://www.amd.com/en/support/download/drivers.html", notes: "https://www.amd.com/en/resources/support-articles/release-notes.html" };
+  if (s.includes("intel"))
+    return { download: "https://www.intel.com/content/www/us/en/download-center/home.html", notes: search("driver release notes") };
+  if (s.includes("realtek"))
+    return { download: "https://www.realtek.com/Download/List?cate_id=584", notes: search("driver release notes") };
+  return { download: search("driver download"), notes: search("driver release notes") };
+}
+
+function DriverRow({ d }: { d: DriverInfo }) {
+  const { t } = useT();
+  const links = driverLinks(d);
+  return (
+    <div className="flex items-center justify-between gap-3 rounded-xl border border-border-subtle p-3">
+      <div className="min-w-0">
+        <p className="truncate font-medium" title={d.device_name}>{d.device_name}</p>
+        <p className="text-xs text-text-secondary">
+          {d.provider} · v{d.driver_version}{d.driver_date ? ` · ${d.driver_date}` : ""}
+        </p>
+      </div>
+      <div className="flex shrink-0 gap-1.5">
+        <button className="btn-outline" onClick={() => openUrl(links.download)}>
+          <Download className="h-4 w-4" /> {t("tools.drivers.update")}
+        </button>
+        <button className="btn-ghost" onClick={() => openUrl(links.notes)}>
+          <FileText className="h-4 w-4" /> {t("tools.drivers.notes")}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function DriversTab() {
   const { t } = useT();
   const { data, loading } = useAsync<DriverInfo[]>(listDrivers);
+
+  function openWindowsUpdate() {
+    openUrl("ms-settings:windowsupdate").catch(() =>
+      openUrl("https://support.microsoft.com/windows/update-drivers-manually-in-windows-ec62f46c-ff14-c91d-eead-d7126dc1f7b6"),
+    );
+  }
+
   return (
     <Card>
       <SectionTitle title={t("tools.drivers.title")} subtitle={t("tools.drivers.subtitle")} />
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border-subtle bg-bg-base px-3 py-2.5">
+        <p className="max-w-xl text-xs text-text-secondary">{t("tools.drivers.hint")}</p>
+        <button className="btn-outline shrink-0" onClick={openWindowsUpdate}>
+          <ExternalLink className="h-4 w-4" /> {t("tools.drivers.windowsUpdate")}
+        </button>
+      </div>
       {loading ? (
         <Spinner label={t("tools.drivers.reading")} />
+      ) : (data ?? []).length === 0 ? (
+        <EmptyState title={t("tools.nothing")} />
       ) : (
-        <SimpleTable
-          head={[
-            t("tools.drivers.colDevice"),
-            t("tools.drivers.colProvider"),
-            t("tools.drivers.colVersion"),
-            t("tools.drivers.colDate"),
-          ]}
-          rows={(data ?? []).map((d) => [
-            d.device_name,
-            d.provider,
-            d.driver_version,
-            d.driver_date ?? "—",
-          ])}
-        />
+        <div className="max-h-[60vh] space-y-2 overflow-auto">
+          {(data ?? []).map((d, i) => (
+            <DriverRow key={i} d={d} />
+          ))}
+        </div>
       )}
     </Card>
   );

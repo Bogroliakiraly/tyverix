@@ -27,19 +27,48 @@ import { Network } from "./pages/Network";
 import { Tools } from "./pages/Tools";
 import { Safety } from "./pages/Safety";
 import { Settings } from "./pages/Settings";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { isElevated } from "./lib/api";
 import { useNav } from "./store/useNav";
+import { useConfirm } from "./store/useConfirm";
 import { useT } from "./i18n";
 
 export default function App() {
   const page = useNav((s) => s.page);
   const setPage = useNav((s) => s.go);
   const [elevated, setElevated] = useState<boolean | null>(null);
+  const ask = useConfirm((s) => s.ask);
   const { t } = useT();
 
   useEffect(() => {
     isElevated().then(setElevated).catch(() => setElevated(null));
   }, []);
+
+  // Intercept window close (title-bar X or Alt+F4) and confirm first, so the
+  // app can't be shut down by accident mid-task.
+  useEffect(() => {
+    const win = getCurrentWindow();
+    let unlisten: (() => void) | undefined;
+    let closing = false;
+    win
+      .onCloseRequested(async (event) => {
+        if (closing) return;
+        event.preventDefault();
+        const { ok } = await ask({
+          title: t("close.title"),
+          message: t("close.message"),
+          confirmLabel: t("close.confirm"),
+          cancelLabel: t("close.cancel"),
+          danger: true,
+        });
+        if (ok) {
+          closing = true;
+          await win.destroy();
+        }
+      })
+      .then((u) => (unlisten = u));
+    return () => unlisten?.();
+  }, [ask, t]);
 
   const nav: NavItem[] = [
     { id: "dashboard", label: t("nav.dashboard"), icon: GaugeIcon },

@@ -10,10 +10,12 @@
     "core:window:allow-unmaximize",
     "core:window:allow-toggle-maximize",
     "core:window:allow-close",
+    "core:window:allow-destroy",
     "core:window:allow-start-dragging",
     "updater:default",
     "process:default",
     "process:allow-restart",
+    "opener:default",
     {
       "identifier": "http:default",
       "allow": [{ "url": "https://*.supabase.co/*" }]

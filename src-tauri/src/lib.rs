@@ -8,6 +8,61 @@ mod util;
 
 use state::AppState;
 
+/// True when the current process token is elevated (running as administrator).
+#[cfg(windows)]
+fn is_process_elevated() -> bool {
+    use windows::Win32::Foundation::{CloseHandle, HANDLE};
+    use windows::Win32::Security::{GetTokenInformation, TokenElevation, TOKEN_ELEVATION, TOKEN_QUERY};
+    use windows::Win32::System::Threading::{GetCurrentProcess, OpenProcessToken};
+    unsafe {
+        let mut token = HANDLE::default();
+        if OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut token).is_err() {
+            return false;
+        }
+        let mut elevation = TOKEN_ELEVATION::default();
+        let mut size = 0u32;
+        let ok = GetTokenInformation(
+            token,
+            TokenElevation,
+            Some(&mut elevation as *mut _ as *mut core::ffi::c_void),
+            std::mem::size_of::<TOKEN_ELEVATION>() as u32,
+            &mut size,
+        )
+        .is_ok();
+        let _ = CloseHandle(token);
+        ok && elevation.TokenIsElevated != 0
+    }
+}
+
+/// Relaunches this executable elevated via the UAC "runas" verb. Returns true if
+/// the elevated process was started (so the caller should exit), false if the
+/// user declined the prompt or it failed (caller keeps running unelevated).
+#[cfg(windows)]
+fn relaunch_as_admin() -> bool {
+    use std::os::windows::ffi::OsStrExt;
+    use windows::core::PCWSTR;
+    use windows::Win32::UI::Shell::ShellExecuteW;
+    use windows::Win32::UI::WindowsAndMessaging::SW_NORMAL;
+
+    let Ok(exe) = std::env::current_exe() else {
+        return false;
+    };
+    let exe_w: Vec<u16> = exe.as_os_str().encode_wide().chain(std::iter::once(0)).collect();
+    let verb_w: Vec<u16> = "runas".encode_utf16().chain(std::iter::once(0)).collect();
+    let result = unsafe {
+        ShellExecuteW(
+            None,
+            PCWSTR(verb_w.as_ptr()),
+            PCWSTR(exe_w.as_ptr()),
+            PCWSTR::null(),
+            PCWSTR::null(),
+            SW_NORMAL,
+        )
+    };
+    // ShellExecuteW returns a value > 32 on success.
+    result.0 as isize > 32
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // Launched by the Task Scheduler entry created by `schedule::set_cleanup_schedule`.
@@ -17,10 +72,22 @@ pub fn run() {
         return;
     }
 
+    // BoostForge performs admin-only operations (power plans, standby purge,
+    // restore points). Always run elevated: if we're not, relaunch via UAC and
+    // hand off to the elevated instance. If the user declines, fall through and
+    // run unelevated (the UI clearly shows "Not running as administrator").
+    #[cfg(windows)]
+    {
+        if !is_process_elevated() && relaunch_as_admin() {
+            return;
+        }
+    }
+
     tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_opener::init())
         .manage(AppState::new())
         .invoke_handler(tauri::generate_handler![
             // Live monitoring

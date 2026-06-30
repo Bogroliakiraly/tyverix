@@ -1,6 +1,16 @@
 import { create } from "zustand";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase, isSupabaseConfigured, type LicenseRow } from "../lib/supabase";
+import { useLicense } from "./useLicense";
+
+/** Free trial = 1 day counted from the account's registration date. */
+const TRIAL_MS = 24 * 60 * 60 * 1000;
+
+function applyAccountTrial(user: User | null) {
+  const createdAt = user?.created_at;
+  const until = createdAt ? new Date(new Date(createdAt).getTime() + TRIAL_MS).toISOString() : null;
+  useLicense.getState().setTrialUntil(until);
+}
 
 interface AuthState {
   /** True once the initial session has been resolved (or auth is unconfigured). */
@@ -28,9 +38,11 @@ export const useAuth = create<AuthState>((set, get) => ({
     }
     supabase.auth.getSession().then(({ data }) => {
       set({ session: data.session, user: data.session?.user ?? null, ready: true });
+      applyAccountTrial(data.session?.user ?? null);
     });
     supabase.auth.onAuthStateChange((_event, session) => {
       set({ session, user: session?.user ?? null });
+      applyAccountTrial(session?.user ?? null);
     });
   },
 

@@ -50,12 +50,16 @@ export function ConfirmDialog() {
               </button>
             </div>
 
-            <div className="space-y-3 px-5 py-4 text-sm">
-              <Row label={t("confirm.what")} value={request.what} />
-              <Row label={t("confirm.why")} value={request.why} />
-              <Row label={t("confirm.benefit")} value={request.benefit} tone="good" />
-              <Row label={t("confirm.downside")} value={request.downside} tone="warn" />
-            </div>
+            {request.message ? (
+              <div className="px-5 py-5 text-sm text-text-secondary">{request.message}</div>
+            ) : (
+              <div className="space-y-3 px-5 py-4 text-sm">
+                {request.what && <Row label={t("confirm.what")} value={request.what} />}
+                {request.why && <Row label={t("confirm.why")} value={request.why} />}
+                {request.benefit && <Row label={t("confirm.benefit")} value={request.benefit} tone="good" />}
+                {request.downside && <Row label={t("confirm.downside")} value={request.downside} tone="warn" />}
+              </div>
+            )}
 
             {request.offerRestorePoint && (
               <label className="flex items-center gap-2.5 border-t border-border-subtle px-5 py-3 text-sm cursor-pointer">
@@ -76,7 +80,7 @@ export function ConfirmDialog() {
                 className="btn-ghost"
                 onClick={() => resolveWith(false, false)}
               >
-                {t("common.cancel")}
+                {request.cancelLabel ?? t("common.cancel")}
               </button>
               <button
                 className={request.danger ? "btn-danger" : "btn-primary"}

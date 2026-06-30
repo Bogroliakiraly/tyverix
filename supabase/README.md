@@ -122,6 +122,32 @@ The email you issue to **must match** the email they register with.
 Set `revoked = true` on the row in the `licenses` table (Table editor). The app
 re-checks on next launch / sync; expired or revoked keys fall back to Free.
 
+## Support inbox (owner-only, GitHub login)
+
+Visitors who are signed in can send a support message from `account.html`. Only
+**your** GitHub account can read them, enforced by RLS — nobody else can list the
+messages even with the public key.
+
+1. **Create the table:** run [`support.sql`](support.sql) in the SQL editor. It
+   restricts read/update to the GitHub login `Bogroliakiraly` (change it there and
+   in `website/config.js` → `ADMIN_GITHUB_LOGIN` if your GitHub username differs).
+2. **Create a GitHub OAuth app:** GitHub → Settings → Developer settings →
+   OAuth Apps → New OAuth App.
+   - Homepage URL: `https://bogroliakiraly.github.io/boostforge/`
+   - **Authorization callback URL:** `https://unpaishxbfrtbkkxrcxq.supabase.co/auth/v1/callback`
+   - Copy the **Client ID** and generate a **Client secret**.
+3. **Enable GitHub in Supabase:** Authentication → Sign In / Providers → GitHub →
+   enable, paste the Client ID + secret, Save.
+4. Open **`support-admin.html`** on the site, click **Sign in with GitHub**. Only
+   your account sees the inbox; any other GitHub account is denied and signed out.
+
+## Free trial
+
+The free trial is now **1 day, counted from the account's registration date**
+(handled in the client from the Supabase account's `created_at`). There is no
+longer a per-install local trial. Non-registered users are Free; registering
+grants the 1-day Pro window.
+
 ## Future: automatic payments
 To make Pro self-serve, add a Stripe Payment Link and a webhook that calls
 `issue-license` on `checkout.session.completed`. Set the real link as `BUY_URL`
