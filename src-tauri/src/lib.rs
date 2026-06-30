@@ -20,6 +20,7 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_http::init())
         .manage(AppState::new())
         .invoke_handler(tauri::generate_handler![
             // Live monitoring

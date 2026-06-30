@@ -10,15 +10,20 @@
  * stays false and `supabase` is null.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 
 const url = import.meta.env.VITE_SUPABASE_URL;
 const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const isSupabaseConfigured = Boolean(url && anon);
 
+// Route all Supabase traffic through Tauri's HTTP layer (Rust/reqwest) instead
+// of the WebView's fetch. The webview is locked down by CSP and is subject to
+// CORS; the native layer bypasses both, so auth and REST calls work reliably.
 export const supabase: SupabaseClient | null = isSupabaseConfigured
   ? createClient(url!, anon!, {
       auth: { persistSession: true, autoRefreshToken: true },
+      global: { fetch: tauriFetch },
     })
   : null;
 
@@ -58,7 +63,7 @@ export async function issueLicense(params: {
   adminToken: string;
 }): Promise<IssuedLicense> {
   if (!url || !anon) throw new Error("Supabase is not configured");
-  const res = await fetch(`${functionsBase}/issue-license`, {
+  const res = await tauriFetch(`${functionsBase}/issue-license`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
