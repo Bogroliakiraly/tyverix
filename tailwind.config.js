@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // BoostForge palette — deep neutral surfaces with an electric accent.
+        // Tyverix palette — deep neutral surfaces with an electric accent.
         bg: {
           base: "#0a0b0f",
           surface: "#121419",

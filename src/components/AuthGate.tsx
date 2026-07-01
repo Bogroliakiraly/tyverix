@@ -7,7 +7,7 @@ import { useT } from "../i18n";
 
 /**
  * Full-screen sign-in prompt shown right at startup — registering or signing
- * in is required to use BoostForge. Supabase persists the session through
+ * in is required to use Tyverix. Supabase persists the session through
  * Tauri's own Store plugin (see lib/supabase.ts), so once signed in this
  * never reappears on later launches. Renders nothing when Supabase isn't
  * configured (should not happen in production, but keeps local dev usable).

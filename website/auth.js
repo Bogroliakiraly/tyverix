@@ -1,11 +1,11 @@
-/* Shared Supabase auth helper for the BoostForge site.
+/* Shared Supabase auth helper for the Tyverix site.
  *
  * Loads after the supabase-js UMD bundle (which exposes a global `supabase`)
  * and after config.js. Exposes `window.bfAuth` with a tiny promise-based API
  * used by account.html. Degrades gracefully when the project isn't configured.
  */
 (function () {
-  const cfg = window.BF_CONFIG || {};
+  const cfg = window.TYVERIX_CONFIG || {};
   const configured = Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY);
   let client = null;
   if (configured && window.supabase && typeof window.supabase.createClient === "function") {

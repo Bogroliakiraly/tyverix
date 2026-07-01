@@ -1,4 +1,4 @@
--- BoostForge support inbox.
+-- Tyverix support inbox.
 --
 -- Signed-in users can submit support messages; ONLY the owner's admin account
 -- (email below) can read or manage them. This is enforced at the database

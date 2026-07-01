@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    boostforge_lib::run();
+    tyverix_lib::run();
 }

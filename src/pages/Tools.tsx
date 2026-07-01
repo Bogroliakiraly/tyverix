@@ -158,7 +158,7 @@ function DiskHealthTab() {
 }
 
 /** Best-effort, honest vendor links: official download page + release notes.
- *  BoostForge never guesses whether a driver is "outdated" — it points you to
+ *  Tyverix never guesses whether a driver is "outdated" — it points you to
  *  the manufacturer's own page so you can compare versions and read the actual
  *  changelog there. Unknown vendors fall back to a web search. */
 function driverLinks(d: DriverInfo): { download: string; notes: string } {

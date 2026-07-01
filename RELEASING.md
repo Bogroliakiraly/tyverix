@@ -1,15 +1,15 @@
-# Operating BoostForge as a product
+# Operating Tyverix as a product
 
-This guide covers the three "business" systems: **auto-updates**, **licensing /
-subscriptions**, and the **website**. Everything here is real and works; the
-only things you must supply are your own GitHub repo and (for charging money) a
-Stripe account.
+This guide covers the "business" systems: **auto-updates**, **accounts &
+licensing** (Supabase), and the **website** (Vercel). Everything here is real
+and works; the only thing left unwired is charging money automatically
+(Stripe) — today, Pro is granted by issuing a signed key.
 
 ---
 
 ## 1. Auto-updates
 
-BoostForge ships with the Tauri updater wired up. The flow:
+Tyverix ships with the Tauri updater wired up. The flow:
 
 ```
 you push a git tag  →  GitHub Actions builds + signs  →  GitHub Release + latest.json
@@ -21,16 +21,22 @@ you push a git tag  →  GitHub Actions builds + signs  →  GitHub Release + la
 
 ### One-time setup — done ✅
 
-This is already configured for **github.com/Bogroliakiraly/boostforge**:
+This is already configured for **github.com/Bogroliakiraly/tyverix**:
 
 1. ~~Create a GitHub repo and push this project.~~ Done — public repo, `main` branch.
-2. ~~Replace `OWNER/REPO` in two places.~~ Done in `src-tauri/tauri.conf.json` (`plugins.updater.endpoints`) and `website/i18n.js` (`GITHUB_REPO`).
+2. ~~Point the updater endpoint + website at the repo.~~ Done in `src-tauri/tauri.conf.json` (`plugins.updater.endpoints`) and `website/i18n.js` (`GITHUB_REPO`).
 3. ~~Add two repository secrets.~~ Done — `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` are set under Settings → Secrets and variables → Actions.
-4. The marketing site is published via GitHub Pages from the `gh-pages` branch (root) — see § 3 below for how that branch is kept in sync.
+4. The marketing site is deployed via **Vercel**, connected to this GitHub repo — see § 3 below.
 
 > The updater **public** key is already embedded in `tauri.conf.json`. The
 > **private** key in `.tauri-keys/` is gitignored — keep it safe. If you lose it,
 > existing clients can never be updated again.
+
+> **Note on the Tyverix rebrand:** the Tauri app identifier changed from
+> `com.boostforge.app` to `com.tyverix.app`, and the local data folder from
+> `%LOCALAPPDATA%\BoostForge` to `%LOCALAPPDATA%\Tyverix`. Existing BoostForge
+> installs will **not** silently migrate — uninstall the old app and install
+> the new Tyverix build fresh (license keys, sessions and settings reset once).
 
 ### Shipping an update
 
@@ -42,77 +48,94 @@ git push origin main --tags
 ```
 
 GitHub Actions builds, signs and publishes the release with `latest.json`.
-Every running client picks it up automatically.
+Every running client picks it up automatically. Also re-copy the freshly built
+installer into `website/download/Tyverix-Setup.exe` so the site's direct
+download link stays current, then push `main` (Vercel redeploys automatically).
 
 ---
 
-## 2. Licensing & subscriptions
+## 2. Accounts & licensing
 
-License keys are **Ed25519-signed tokens** verified completely offline against
-the public key embedded in `src-tauri/src/commands/license.rs`. New users get a
-**7-day Pro trial** automatically.
+Two things stack together:
 
-### Issue a key manually
+- **Offline license keys** — Ed25519-signed tokens verified completely offline
+  against the public key embedded in `src-tauri/src/commands/license.rs`.
+- **Supabase accounts** — registration is required to use the app (`AuthGate`).
+  A **1-day free trial** starts from the account's registration date. Sessions
+  persist via `tauri-plugin-store`. Anti-abuse guards (one trial per device, a
+  device cap per account) live in `supabase/anti_abuse.sql` — see
+  `supabase/README.md` for the full setup (schema, edge function, anti-abuse).
+
+### Issue a key manually (CLI, no account needed)
 
 ```bash
 node tools/sign-license.mjs --email buyer@example.com --tier pro --days 31
 ```
 
-This prints a key the customer pastes into **Settings → Subscription**. A
-monthly subscription is just a 31-day key you re-issue each cycle.
+This prints a key the customer pastes into **Settings → Subscription**.
 
-### Automating with Stripe (recommended)
+### Issue a key from the app (recommended — ties it to the customer's account)
 
-1. Create a **Stripe Payment Link** (or Checkout) for a $5/month subscription.
+Settings → **Admin · Issue license keys** (only visible when Supabase is
+configured): email + number of days → generates and stores the key against
+that account, so the customer can sign in and pull it automatically.
+
+### Automating with Stripe (not yet wired up)
+
+1. Create a **Stripe Payment Link** (or Checkout) for a subscription.
 2. Put that URL in `website/i18n.js` → `BUY_URL`.
-3. Add a Stripe **webhook** on `invoice.paid` that runs `sign-license.mjs` and
-   emails the key to the customer (any small serverless function works). On
+3. Add a Stripe **webhook** on `invoice.paid` that calls the `issue-license`
+   edge function (same one the in-app Admin panel calls). On
    `customer.subscription.deleted` you simply stop re-issuing — the key expires
    on its own.
 
 > The private signing key (`tools/license-private.pem`) must live only on your
-> server / machine, never in the app or the repo. It is gitignored.
+> server / machine (and as the Supabase edge function's `LICENSE_PRIVATE_KEY`
+> secret), never in the app or the repo. It is gitignored.
 
 ### Regenerating keys
 
 `node tools/license-keygen.mjs` creates a new pair and prints the public key to
-paste into `license.rs`. **Doing this invalidates every previously issued key.**
+paste into `license.rs` (and update the edge function secret). **Doing this
+invalidates every previously issued key.**
 
 ---
 
-## 3. Website
+## 3. Website (Vercel)
 
-A static, trilingual (EN/HU/DE) site, developed in `website/` on `main`. Live at:
+A static, trilingual (EN/HU/DE) site in `website/`, deployed via **Vercel**
+connected to this GitHub repo:
 
-**https://bogroliakiraly.github.io/boostforge/**
-
-GitHub Pages only serves from a branch root (not an arbitrary subfolder), so
-the published copy lives on a separate **`gh-pages`** branch containing just
-that folder's contents. After editing anything under `website/` on `main`,
-republish with:
-
-```bash
-git subtree split --prefix website -b gh-pages-update
-git push origin gh-pages-update:gh-pages --force
-git branch -D gh-pages-update
-```
+1. Vercel → **Add New → Project → Import** this GitHub repo.
+2. Root Directory: repo root (a committed `vercel.json` at the repo root sets
+   `outputDirectory: "website"`, so no manual build/output config is needed —
+   Vercel serves the static files directly, no build step).
+3. **Domains** → add `tyverix.com` (and `www.tyverix.com`) → Vercel shows the
+   DNS records to add.
+4. In Namecheap → Domain List → tyverix.com → **Advanced DNS** → add exactly
+   the records Vercel showed (typically an `A` record for the apex domain and
+   a `CNAME` for `www`).
+5. Every push to `main` auto-deploys — no more manual `gh-pages` subtree dance.
 
 Still need to set: `BUY_URL` in `website/i18n.js` once you have a real Stripe
-Payment Link — until then the "Get Pro" button explains that purchases aren't
-open yet instead of linking somewhere broken.
+Payment Link — until then the "Get Pro" button leads to the account/registration
+page instead.
 
-The "Download" button points at your GitHub Releases `/latest`, so it always
-serves the newest installer once you've tagged at least one release.
+The "Download" button serves the installer directly from
+`website/download/Tyverix-Setup.exe` (re-copy this file after each release —
+see § 1).
 
 ---
 
 ## What you still need to provide
 
-| System        | You provide                                  |
-| ------------- | -------------------------------------------- |
-| Auto-update   | A GitHub repo + the two Actions secrets      |
-| Payments      | A Stripe account + Payment Link + webhook    |
-| Website host  | GitHub Pages (free) or any static host       |
+| System        | You provide                                          |
+| ------------- | ----------------------------------------------------- |
+| Auto-update   | A GitHub repo + the two Actions secrets               |
+| Accounts      | A Supabase project (schema.sql, support.sql, anti_abuse.sql, issue-license fn) |
+| Domain        | tyverix.com (Namecheap) pointed at Vercel via DNS     |
+| Payments      | A Stripe account + Payment Link + webhook (not yet wired) |
+| Website host  | Vercel (free tier is enough for a static site)        |
 
-Everything else — signing, verification, the trial, the update UI, the build
-pipeline — is already implemented.
+Everything else — signing, verification, the trial, device anti-abuse, the
+update UI, the build pipeline — is already implemented.

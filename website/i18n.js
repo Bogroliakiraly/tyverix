@@ -1,8 +1,8 @@
-/* BoostForge marketing site — trilingual content (EN / HU / DE). */
+/* Tyverix marketing site — trilingual content (EN / HU / DE). */
 
 // Points at the latest GitHub Release page (the installer's filename changes
 // per version, so this links to the release rather than guessing the name).
-const GITHUB_REPO = "Bogroliakiraly/boostforge";
+const GITHUB_REPO = "Bogroliakiraly/tyverix";
 const DOWNLOAD_URL = `https://github.com/${GITHUB_REPO}/releases/latest`;
 // Replace with your Stripe Payment Link / Checkout URL once payments are set up:
 const BUY_URL = "https://buy.stripe.com/your-payment-link";
@@ -19,7 +19,7 @@ const I18N = {
     "hero.title1": "Optimize Windows for gaming —",
     "hero.title2": "the honest way.",
     "hero.sub":
-      "BoostForge boosts real performance using only measurable, reversible and safe changes. No placebo tweaks, no fake FPS, no risky registry hacks.",
+      "Tyverix boosts real performance using only measurable, reversible and safe changes. No placebo tweaks, no fake FPS, no risky registry hacks.",
     "hero.ctaDownload": "Download free",
     "hero.ctaPro": "See Pro",
     "hero.hint": "Windows 10 & 11 · Free 1-day Pro trial included",
@@ -29,10 +29,10 @@ const I18N = {
       "Live monitoring, safe cleanup, a reversible Game Mode and a full diagnostics toolkit.",
     "shots.eyebrow": "See it for yourself",
     "shots.title": "The actual app, not a mockup",
-    "shots.sub": "Real screens from a running BoostForge install.",
+    "shots.sub": "Real screens from a running Tyverix install.",
     "pricing.comingSoon": "Online Pro purchases aren't open yet — download the free version below for now, and check back soon.",
     "honesty.eyebrow": "Honesty by design",
-    "honesty.title": "What BoostForge will never do",
+    "honesty.title": "What Tyverix will never do",
     "honesty.sub":
       "Trust is the product. These are the lines we refuse to cross.",
     "pricing.eyebrow": "Pricing",
@@ -46,7 +46,7 @@ const I18N = {
     "pricing.note":
       "Pro unlocks Game Mode, the memory optimizer and automation. A 1-day trial is included — no card required.",
     "download.eyebrow": "Get started",
-    "download.title": "Download BoostForge",
+    "download.title": "Download Tyverix",
     "download.sub": "A 1–4 MB installer. Updates arrive automatically inside the app.",
     "download.cta": "Download for Windows",
     "download.req": "Windows 10 / 11 · 64-bit · WebView2",
@@ -83,7 +83,7 @@ const I18N = {
     "hero.title1": "Optimalizáld a Windowst játékra —",
     "hero.title2": "őszintén.",
     "hero.sub":
-      "A BoostForge valódi teljesítményt nyújt, kizárólag mérhető, visszafordítható és biztonságos változtatásokkal. Nincs placebo, nincs hamis FPS, nincs kockázatos registry-trükk.",
+      "A Tyverix valódi teljesítményt nyújt, kizárólag mérhető, visszafordítható és biztonságos változtatásokkal. Nincs placebo, nincs hamis FPS, nincs kockázatos registry-trükk.",
     "hero.ctaDownload": "Ingyenes letöltés",
     "hero.ctaPro": "Pro megtekintése",
     "hero.hint": "Windows 10 és 11 · 1 napos ingyenes Pro próbával",
@@ -93,10 +93,10 @@ const I18N = {
       "Élő figyelés, biztonságos tisztítás, visszafordítható Játék mód és teljes diagnosztikai eszköztár.",
     "shots.eyebrow": "Nézd meg magad",
     "shots.title": "A valódi app, nem makett",
-    "shots.sub": "Valódi képernyők egy futó BoostForge telepítésről.",
+    "shots.sub": "Valódi képernyők egy futó Tyverix telepítésről.",
     "pricing.comingSoon": "Az online Pro-vásárlás még nem elérhető — addig töltsd le az ingyenes verziót lent, és nézz vissza hamarosan.",
     "honesty.eyebrow": "Tervezetten őszinte",
-    "honesty.title": "Amit a BoostForge soha nem tesz",
+    "honesty.title": "Amit a Tyverix soha nem tesz",
     "honesty.sub": "A bizalom maga a termék. Ezeket a határokat nem lépjük át.",
     "pricing.eyebrow": "Árazás",
     "pricing.title": "Kezdd ingyen. Válts, ha készen állsz.",
@@ -109,7 +109,7 @@ const I18N = {
     "pricing.note":
       "A Pro feloldja a Játék módot, a memória-optimalizálót és az automatizálást. 1 napos próba jár hozzá — kártya nélkül.",
     "download.eyebrow": "Első lépések",
-    "download.title": "Töltsd le a BoostForge-ot",
+    "download.title": "Töltsd le a Tyverixet",
     "download.sub": "1–4 MB-os telepítő. A frissítések automatikusan érkeznek az appban.",
     "download.cta": "Letöltés Windowsra",
     "download.req": "Windows 10 / 11 · 64 bites · WebView2",
@@ -146,7 +146,7 @@ const I18N = {
     "hero.title1": "Windows fürs Gaming optimieren —",
     "hero.title2": "ehrlich.",
     "hero.sub":
-      "BoostForge steigert echte Leistung ausschließlich mit messbaren, umkehrbaren und sicheren Änderungen. Keine Placebos, keine gefälschten FPS, keine riskanten Registry-Hacks.",
+      "Tyverix steigert echte Leistung ausschließlich mit messbaren, umkehrbaren und sicheren Änderungen. Keine Placebos, keine gefälschten FPS, keine riskanten Registry-Hacks.",
     "hero.ctaDownload": "Kostenlos laden",
     "hero.ctaPro": "Pro ansehen",
     "hero.hint": "Windows 10 & 11 · 1 Tag Pro-Test inklusive",
@@ -156,10 +156,10 @@ const I18N = {
       "Live-Überwachung, sichere Bereinigung, ein umkehrbarer Spielmodus und ein komplettes Diagnose-Toolkit.",
     "shots.eyebrow": "Sieh es selbst",
     "shots.title": "Die echte App, kein Mockup",
-    "shots.sub": "Echte Bildschirme aus einer laufenden BoostForge-Installation.",
+    "shots.sub": "Echte Bildschirme aus einer laufenden Tyverix-Installation.",
     "pricing.comingSoon": "Online-Pro-Käufe sind noch nicht möglich — lade vorerst unten die kostenlose Version herunter und schau bald wieder vorbei.",
     "honesty.eyebrow": "Ehrlich konzipiert",
-    "honesty.title": "Was BoostForge niemals tut",
+    "honesty.title": "Was Tyverix niemals tut",
     "honesty.sub": "Vertrauen ist das Produkt. Diese Grenzen überschreiten wir nicht.",
     "pricing.eyebrow": "Preise",
     "pricing.title": "Gratis starten. Upgraden, wenn du bereit bist.",
@@ -172,7 +172,7 @@ const I18N = {
     "pricing.note":
       "Pro schaltet Spielmodus, Speicher-Optimierer und Automatisierung frei. 1-Tag-Test inklusive — ohne Karte.",
     "download.eyebrow": "Loslegen",
-    "download.title": "BoostForge herunterladen",
+    "download.title": "Tyverix herunterladen",
     "download.sub": "Ein 1–4 MB Installer. Updates kommen automatisch in der App an.",
     "download.cta": "Für Windows laden",
     "download.req": "Windows 10 / 11 · 64-Bit · WebView2",
@@ -395,7 +395,7 @@ function setupBuyButton() {
 
   // 2) Otherwise, if online accounts are configured, "Get Pro" leads to the
   //    account page where the visitor can register / sign in.
-  const cfg = window.BF_CONFIG || {};
+  const cfg = window.TYVERIX_CONFIG || {};
   if (cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY) {
     buy.href = "account.html";
     return;
@@ -415,7 +415,7 @@ function init() {
   // Prefer the site config's URL (a direct, self-hosted installer) so the
   // download lands straight on the visitor's machine instead of routing them
   // to a GitHub release page. The `download` attribute forces a save dialog.
-  const dl = (window.BF_CONFIG && window.BF_CONFIG.DOWNLOAD_URL) || DOWNLOAD_URL;
+  const dl = (window.TYVERIX_CONFIG && window.TYVERIX_CONFIG.DOWNLOAD_URL) || DOWNLOAD_URL;
   const dlEl = document.getElementById("download-link");
   dlEl.href = dl;
   dlEl.setAttribute("download", "");

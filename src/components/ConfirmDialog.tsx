@@ -5,7 +5,7 @@ import { useConfirm } from "../store/useConfirm";
 import { useT } from "../i18n";
 
 /**
- * The single, app-wide confirmation surface. It enforces BoostForge's safety
+ * The single, app-wide confirmation surface. It enforces Tyverix's safety
  * contract: nothing impactful runs without showing what changes, why, the
  * expected benefit and the potential downside.
  */

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generates the Ed25519 key pair used to sign BoostForge license keys.
+ * Generates the Ed25519 key pair used to sign Tyverix license keys.
  *
  *   node tools/license-keygen.mjs
  *

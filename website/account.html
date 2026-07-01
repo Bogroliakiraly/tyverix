@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BoostForge — Account</title>
+    <title>Tyverix — Account</title>
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -81,7 +81,7 @@
   <body>
     <nav>
       <div class="bar">
-        <a class="logo" href="index.html"><span class="mark">⚡</span> BoostForge</a>
+        <a class="logo" href="index.html"><span class="mark">⚡</span> Tyverix</a>
         <div class="langs" id="langs">
           <button data-lang="en">EN</button>
           <button data-lang="hu">HU</button>
@@ -156,7 +156,7 @@
       const T = {
         en: {
           back: "← Back to site", title: "Your account",
-          subtitle: "Sign in or create an account to manage your BoostForge subscription.",
+          subtitle: "Sign in or create an account to manage your Tyverix subscription.",
           notConfigured: "Online accounts aren't enabled yet. You can still download the free app from the home page.",
           tabSignIn: "Sign in", tabSignUp: "Register", email: "Email", password: "Password",
           signIn: "Sign in", signUp: "Create account", signOut: "Sign out",
@@ -165,8 +165,8 @@
           subUntil: "Valid until {date}",
           subNoneMsg: "Your account has no active Pro subscription yet. Once Pro is granted, your license key appears here automatically.",
           keyLabel: "Your license key", copy: "Copy", copied: "Copied!",
-          keyHelp: "Paste this in BoostForge → Settings → Subscription, or sign in inside the app to sync it automatically.",
-          download: "Download BoostForge",
+          keyHelp: "Paste this in Tyverix → Settings → Subscription, or sign in inside the app to sync it automatically.",
+          download: "Download Tyverix",
           supportTitle: "Need help?",
           supportHelp: "Send us a message — we'll reply by email.",
           supportSend: "Send message",
@@ -178,7 +178,7 @@
         },
         hu: {
           back: "← Vissza a főoldalra", title: "A fiókod",
-          subtitle: "Jelentkezz be vagy hozz létre fiókot a BoostForge előfizetésed kezeléséhez.",
+          subtitle: "Jelentkezz be vagy hozz létre fiókot a Tyverix előfizetésed kezeléséhez.",
           notConfigured: "Az online fiókok még nincsenek bekapcsolva. Az ingyenes appot a főoldalról letöltheted.",
           tabSignIn: "Bejelentkezés", tabSignUp: "Regisztráció", email: "Email", password: "Jelszó",
           signIn: "Bejelentkezés", signUp: "Fiók létrehozása", signOut: "Kijelentkezés",
@@ -187,8 +187,8 @@
           subUntil: "Érvényes eddig: {date}",
           subNoneMsg: "Ehhez a fiókhoz még nincs aktív Pro előfizetés. Amint kapsz Pro-t, a licenckulcsod itt automatikusan megjelenik.",
           keyLabel: "A licenckulcsod", copy: "Másolás", copied: "Másolva!",
-          keyHelp: "Illeszd be a BoostForge → Beállítások → Előfizetés mezőbe, vagy jelentkezz be az appban az automatikus szinkronhoz.",
-          download: "BoostForge letöltése",
+          keyHelp: "Illeszd be a Tyverix → Beállítások → Előfizetés mezőbe, vagy jelentkezz be az appban az automatikus szinkronhoz.",
+          download: "Tyverix letöltése",
           supportTitle: "Segítség kell?",
           supportHelp: "Írj nekünk — emailben válaszolunk.",
           supportSend: "Üzenet küldése",
@@ -200,7 +200,7 @@
         },
         de: {
           back: "← Zurück zur Seite", title: "Dein Konto",
-          subtitle: "Melde dich an oder erstelle ein Konto, um dein BoostForge-Abo zu verwalten.",
+          subtitle: "Melde dich an oder erstelle ein Konto, um dein Tyverix-Abo zu verwalten.",
           notConfigured: "Online-Konten sind noch nicht aktiviert. Die kostenlose App kannst du auf der Startseite laden.",
           tabSignIn: "Anmelden", tabSignUp: "Registrieren", email: "E-Mail", password: "Passwort",
           signIn: "Anmelden", signUp: "Konto erstellen", signOut: "Abmelden",
@@ -209,8 +209,8 @@
           subUntil: "Gültig bis {date}",
           subNoneMsg: "Dieses Konto hat noch kein aktives Pro-Abo. Sobald Pro gewährt wird, erscheint dein Schlüssel hier automatisch.",
           keyLabel: "Dein Lizenzschlüssel", copy: "Kopieren", copied: "Kopiert!",
-          keyHelp: "Füge ihn in BoostForge → Einstellungen → Abo ein, oder melde dich in der App an, um automatisch zu synchronisieren.",
-          download: "BoostForge herunterladen",
+          keyHelp: "Füge ihn in Tyverix → Einstellungen → Abo ein, oder melde dich in der App an, um automatisch zu synchronisieren.",
+          download: "Tyverix herunterladen",
           supportTitle: "Brauchst du Hilfe?",
           supportHelp: "Schreib uns — wir antworten per E-Mail.",
           supportSend: "Nachricht senden",
@@ -263,7 +263,7 @@
       }
 
       async function render() {
-        const dl = (window.BF_CONFIG && window.BF_CONFIG.DOWNLOAD_URL) || "index.html#download";
+        const dl = (window.TYVERIX_CONFIG && window.TYVERIX_CONFIG.DOWNLOAD_URL) || "index.html#download";
         $("downloadBtn").href = dl;
         $("downloadBtn").setAttribute("download", "");
         $("downloadBtn").removeAttribute("target");

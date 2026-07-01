@@ -1,4 +1,4 @@
--- BoostForge accounts + licensing schema (Supabase / Postgres).
+-- Tyverix accounts + licensing schema (Supabase / Postgres).
 --
 -- Run this once in the Supabase SQL editor (or via `supabase db push`). It is
 -- idempotent enough to re-run during setup.

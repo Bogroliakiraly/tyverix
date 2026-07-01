@@ -1,9 +1,9 @@
 {
-  "name": "boostforge",
+  "name": "tyverix",
   "private": true,
-  "version": "0.1.7",
+  "version": "0.1.8",
   "type": "module",
-  "description": "BoostForge — a trustworthy Windows gaming optimization tool. Every action is measurable, reversible and safe.",
+  "description": "Tyverix — a trustworthy Windows gaming optimization tool. Every action is measurable, reversible and safe.",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

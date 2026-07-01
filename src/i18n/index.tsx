@@ -46,8 +46,8 @@ const en: Dict = {
   "common.pro": "Pro",
   "common.trial": "Trial",
 
-  "close.title": "Close BoostForge?",
-  "close.message": "Are you sure you want to close BoostForge? Any running task will stop.",
+  "close.title": "Close Tyverix?",
+  "close.message": "Are you sure you want to close Tyverix? Any running task will stop.",
   "close.confirm": "Close",
   "close.cancel": "Keep open",
 
@@ -105,10 +105,10 @@ const en: Dict = {
   "mem.downside":
     "Background apps reload their pages when you next switch to them, so they feel briefly slower. This is not a permanent speed boost.",
   "mem.honest":
-    "BoostForge shows the real, OS-measured change — not an invented number. The effect varies and may be small if RAM is already free.",
+    "Tyverix shows the real, OS-measured change — not an invented number. The effect varies and may be small if RAM is already free.",
 
   "license.title": "Subscription",
-  "license.subtitle": "BoostForge Pro unlocks the full toolkit.",
+  "license.subtitle": "Tyverix Pro unlocks the full toolkit.",
   "license.status": "Status",
   "license.activate": "Activate",
   "license.deactivate": "Deactivate",
@@ -116,7 +116,7 @@ const en: Dict = {
   "license.trialRemaining": "{n} days left in your free trial",
   "license.daysRemaining": "{n} days remaining",
   "license.expires": "Renews / expires",
-  "license.getPro": "Get BoostForge Pro",
+  "license.getPro": "Get Tyverix Pro",
   "license.expired": "Your subscription has expired — please renew.",
   "license.activated": "Pro activated. Thank you!",
   "license.proBadge": "Pro feature",
@@ -137,7 +137,7 @@ const en: Dict = {
   "plans.pro.5": "Scheduled automatic cleanup",
 
   "auth.title": "Online account",
-  "auth.subtitle": "Create a free account or sign in to use BoostForge.",
+  "auth.subtitle": "Create a free account or sign in to use Tyverix.",
   "auth.tabSignIn": "Sign in",
   "auth.tabSignUp": "Register",
   "auth.email": "Email",
@@ -170,21 +170,21 @@ const en: Dict = {
   "update.check": "Check for updates",
   "update.checking": "Checking for updates…",
   "update.available": "Update available",
-  "update.upToDate": "BoostForge is up to date.",
+  "update.upToDate": "Tyverix is up to date.",
   "update.install": "Install now",
   "update.later": "Later",
   "update.downloading": "Downloading update…",
   "update.newVersion": "Version {v} is available.",
   "update.restart": "Installing and restarting…",
 
-  "settings.about": "About BoostForge",
+  "settings.about": "About Tyverix",
   "settings.aboutBody":
-    "BoostForge is built on one principle: every optimization must be measurable, reversible and safe. No fake benchmarks, no placebo boosts. When a metric cannot be read accurately, BoostForge says so instead of inventing a number.",
+    "Tyverix is built on one principle: every optimization must be measurable, reversible and safe. No fake benchmarks, no placebo boosts. When a metric cannot be read accurately, Tyverix says so instead of inventing a number.",
   "settings.language": "Language",
   "settings.permissions": "Permissions",
   "settings.account": "Subscription",
-  "settings.willNot": "What BoostForge deliberately will NOT do",
-  "settings.version": "Version 0.1.7 · Windows 10 & 11",
+  "settings.willNot": "What Tyverix deliberately will NOT do",
+  "settings.version": "Version 0.1.8 · Windows 10 & 11",
   "settings.willNot.1": "Disable Windows services for marginal, unmeasurable gains.",
   "settings.willNot.2": "Delete the Prefetch folder (it speeds up app launches).",
   "settings.willNot.3": "Claim fixed FPS gains it cannot verify.",
@@ -192,7 +192,7 @@ const en: Dict = {
   "settings.willNot.5": "Fabricate GPU / temperature / FPS / RAM readings.",
 
   "settings.autoclean.title": "Automatic cleanup",
-  "settings.autoclean.subtitle": "A real Windows scheduled task — visible and removable outside BoostForge too.",
+  "settings.autoclean.subtitle": "A real Windows scheduled task — visible and removable outside Tyverix too.",
   "settings.autoclean.disable": "Disable",
   "settings.autoclean.enable": "Enable daily cleanup",
   "settings.autoclean.runNow": "Run now",
@@ -200,11 +200,11 @@ const en: Dict = {
   "settings.autoclean.lastRun": "Last run: {date} · freed {size} across {n} files.",
   "settings.autoclean.confirmTitle": "Schedule automatic cleanup",
   "settings.autoclean.confirmWhat":
-    "Creates a Windows Task Scheduler entry that runs BoostForge's cleaner daily at {time}, clearing temp files, Windows temp and the GPU shader cache — the same safe targets the manual cleaner uses.",
+    "Creates a Windows Task Scheduler entry that runs Tyverix's cleaner daily at {time}, clearing temp files, Windows temp and the GPU shader cache — the same safe targets the manual cleaner uses.",
   "settings.autoclean.confirmWhy": "So disk space and shader-cache health are kept up without remembering to clean manually.",
   "settings.autoclean.confirmBenefit": "Reclaims disk space automatically; you can see exactly what it did under 'Last run' below.",
   "settings.autoclean.confirmDownside":
-    "Runs even if you forget about it. Turn it off here or delete the 'BoostForge Auto Clean' task in Task Scheduler at any time.",
+    "Runs even if you forget about it. Turn it off here or delete the 'Tyverix Auto Clean' task in Task Scheduler at any time.",
   "settings.autoclean.confirmLabel": "Schedule it",
   "settings.autoclean.toastScheduled": "Scheduled",
   "settings.autoclean.toastDisabled": "Schedule disabled",
@@ -227,7 +227,7 @@ const en: Dict = {
 
   "startup.title": "Startup applications",
   "startup.subtitle":
-    "Disabling is fully reversible — BoostForge preserves the original entry so it can be restored exactly.",
+    "Disabling is fully reversible — Tyverix preserves the original entry so it can be restored exactly.",
   "startup.reading": "Reading startup entries…",
   "startup.empty": "No startup programs found",
   "startup.emptyMsg": "Nothing is configured to launch automatically for your account.",
@@ -278,10 +278,10 @@ const en: Dict = {
   "safety.regDesc": "Exports the HKCU & HKLM Run keys to a timestamped .reg file.",
   "safety.backupReg": "Back up registry keys",
   "safety.historyTitle": "Change history",
-  "safety.historySubtitle": "Every reversible change BoostForge made. Undo restores the exact previous state.",
+  "safety.historySubtitle": "Every reversible change Tyverix made. Undo restores the exact previous state.",
   "safety.reading": "Reading change history…",
   "safety.empty": "No changes yet",
-  "safety.emptyMsg": "Reversible actions you take in BoostForge will appear here.",
+  "safety.emptyMsg": "Reversible actions you take in Tyverix will appear here.",
   "safety.reverted": "Reverted",
   "safety.undo": "Undo",
   "safety.toastFailedHistory": "Could not read history",
@@ -300,7 +300,7 @@ const en: Dict = {
 
   "game.detectedPrefix": "Detected running:",
   "game.detectedNote":
-    "BoostForge never engages Game Mode automatically — this is just informational. Switch it on yourself if you want it.",
+    "Tyverix never engages Game Mode automatically — this is just informational. Switch it on yourself if you want it.",
   "game.engageNow": "Engage now",
   "game.toastFailedRead": "Failed to read power state",
   "game.heading": "Game Mode",
@@ -319,7 +319,7 @@ const en: Dict = {
   "game.effectCloseOn": "Everything restored automatically",
   "game.whenOff": "When off:",
   "game.note":
-    "Note: BoostForge does not claim to add FPS. It removes power-saving throttling that can cause stutter. Results depend on your hardware.",
+    "Note: Tyverix does not claim to add FPS. It removes power-saving throttling that can cause stutter. Results depend on your hardware.",
   "game.plansTitle": "Power plans",
   "game.plansSubtitle": "Switch directly, or let Game Mode manage it for you.",
   "game.readingPlans": "Reading power plans…",
@@ -460,7 +460,7 @@ const en: Dict = {
   "tools.drivers.colProvider": "Provider",
   "tools.drivers.colVersion": "Version",
   "tools.drivers.colDate": "Date",
-  "tools.drivers.hint": "BoostForge links you to the manufacturer's official driver page so you can compare versions and read the real changelog — it never guesses or fakes an \"outdated\" status.",
+  "tools.drivers.hint": "Tyverix links you to the manufacturer's official driver page so you can compare versions and read the real changelog — it never guesses or fakes an \"outdated\" status.",
   "tools.drivers.windowsUpdate": "Windows Update (drivers)",
   "tools.drivers.update": "Download",
   "tools.drivers.notes": "What changed",
@@ -477,13 +477,13 @@ const en: Dict = {
   "tools.software.colPublisher": "Publisher",
   "tools.software.colSize": "Size",
   "tools.services.title": "Services",
-  "tools.services.subtitle": "Read-only view. BoostForge does not disable system services — that risks breaking Windows for little gain.",
+  "tools.services.subtitle": "Read-only view. Tyverix does not disable system services — that risks breaking Windows for little gain.",
   "tools.services.reading": "Reading services…",
   "tools.services.colService": "Service",
   "tools.services.colStatus": "Status",
   "tools.services.colStartType": "Start type",
   "tools.largeFiles.title": "Large file finder",
-  "tools.largeFiles.subtitle": "Locate space hogs. BoostForge never deletes them for you.",
+  "tools.largeFiles.subtitle": "Locate space hogs. Tyverix never deletes them for you.",
   "tools.largeFiles.rootPlaceholder": "Folder to scan",
   "tools.largeFiles.scan": "Scan",
   "tools.largeFiles.colFile": "File",
@@ -516,8 +516,8 @@ const hu: Dict = {
   "common.pro": "Pro",
   "common.trial": "Próba",
 
-  "close.title": "Bezárod a BoostForge-ot?",
-  "close.message": "Biztosan bezárod a BoostForge-ot? A futó műveletek leállnak.",
+  "close.title": "Bezárod a Tyverixet?",
+  "close.message": "Biztosan bezárod a Tyverixet? A futó műveletek leállnak.",
   "close.confirm": "Bezárás",
   "close.cancel": "Maradjon nyitva",
 
@@ -575,10 +575,10 @@ const hu: Dict = {
   "mem.downside":
     "A háttéralkalmazások a következő váltáskor újratöltik a lapjaikat, ezért rövid ideig lassabbnak tűnnek. Ez nem tartós gyorsítás.",
   "mem.honest":
-    "A BoostForge a valós, OS által mért változást mutatja — nem kitalált számot. A hatás változó, és kicsi lehet, ha a RAM már szabad.",
+    "A Tyverix a valós, OS által mért változást mutatja — nem kitalált számot. A hatás változó, és kicsi lehet, ha a RAM már szabad.",
 
   "license.title": "Előfizetés",
-  "license.subtitle": "A BoostForge Pro feloldja a teljes eszköztárat.",
+  "license.subtitle": "A Tyverix Pro feloldja a teljes eszköztárat.",
   "license.status": "Állapot",
   "license.activate": "Aktiválás",
   "license.deactivate": "Kikapcsolás",
@@ -586,7 +586,7 @@ const hu: Dict = {
   "license.trialRemaining": "{n} nap van hátra az ingyenes próbából",
   "license.daysRemaining": "{n} nap van hátra",
   "license.expires": "Megújul / lejár",
-  "license.getPro": "BoostForge Pro beszerzése",
+  "license.getPro": "Tyverix Pro beszerzése",
   "license.expired": "Az előfizetésed lejárt — kérlek újítsd meg.",
   "license.activated": "Pro aktiválva. Köszönjük!",
   "license.proBadge": "Pro funkció",
@@ -607,7 +607,7 @@ const hu: Dict = {
   "plans.pro.5": "Ütemezett automatikus tisztítás",
 
   "auth.title": "Online fiók",
-  "auth.subtitle": "Hozz létre egy ingyenes fiókot vagy jelentkezz be a BoostForge használatához.",
+  "auth.subtitle": "Hozz létre egy ingyenes fiókot vagy jelentkezz be a Tyverix használatához.",
   "auth.tabSignIn": "Bejelentkezés",
   "auth.tabSignUp": "Regisztráció",
   "auth.email": "Email",
@@ -640,21 +640,21 @@ const hu: Dict = {
   "update.check": "Frissítések keresése",
   "update.checking": "Frissítések keresése…",
   "update.available": "Elérhető frissítés",
-  "update.upToDate": "A BoostForge naprakész.",
+  "update.upToDate": "A Tyverix naprakész.",
   "update.install": "Telepítés most",
   "update.later": "Később",
   "update.downloading": "Frissítés letöltése…",
   "update.newVersion": "A(z) {v} verzió elérhető.",
   "update.restart": "Telepítés és újraindítás…",
 
-  "settings.about": "A BoostForge-ról",
+  "settings.about": "A Tyverixről",
   "settings.aboutBody":
-    "A BoostForge egyetlen elvre épül: minden optimalizálásnak mérhetőnek, visszafordíthatónak és biztonságosnak kell lennie. Nincs hamis benchmark, nincs placebo. Ha egy érték nem olvasható ki pontosan, a BoostForge ezt jelzi, ahelyett hogy kitalálna egy számot.",
+    "A Tyverix egyetlen elvre épül: minden optimalizálásnak mérhetőnek, visszafordíthatónak és biztonságosnak kell lennie. Nincs hamis benchmark, nincs placebo. Ha egy érték nem olvasható ki pontosan, a Tyverix ezt jelzi, ahelyett hogy kitalálna egy számot.",
   "settings.language": "Nyelv",
   "settings.permissions": "Jogosultságok",
   "settings.account": "Előfizetés",
-  "settings.willNot": "Amit a BoostForge szándékosan NEM tesz",
-  "settings.version": "0.1.7 verzió · Windows 10 és 11",
+  "settings.willNot": "Amit a Tyverix szándékosan NEM tesz",
+  "settings.version": "0.1.8 verzió · Windows 10 és 11",
   "settings.willNot.1": "Windows-szolgáltatásokat letiltani jelentéktelen, nem mérhető nyereségért.",
   "settings.willNot.2": "Törölni a Prefetch mappát (az gyorsítja az appindítást).",
   "settings.willNot.3": "Fix FPS-nyereséget ígérni, amit nem tud igazolni.",
@@ -662,7 +662,7 @@ const hu: Dict = {
   "settings.willNot.5": "GPU-, hőmérséklet-, FPS- vagy RAM-értéket kitalálni.",
 
   "settings.autoclean.title": "Automatikus tisztítás",
-  "settings.autoclean.subtitle": "Valódi Windows ütemezett feladat — a BoostForge-on kívül is látható és törölhető.",
+  "settings.autoclean.subtitle": "Valódi Windows ütemezett feladat — a Tyverixen kívül is látható és törölhető.",
   "settings.autoclean.disable": "Letiltás",
   "settings.autoclean.enable": "Napi tisztítás engedélyezése",
   "settings.autoclean.runNow": "Futtatás most",
@@ -670,11 +670,11 @@ const hu: Dict = {
   "settings.autoclean.lastRun": "Legutóbbi futás: {date} · felszabadult {size}, {n} fájlból.",
   "settings.autoclean.confirmTitle": "Automatikus tisztítás ütemezése",
   "settings.autoclean.confirmWhat":
-    "Egy Windows ütemezett feladatot hoz létre, amely naponta {time}-kor lefuttatja a BoostForge tisztítóját: temp fájlok, Windows temp és a GPU shader gyorsítótár — ugyanazok a biztonságos célok, mint a kézi tisztítónál.",
+    "Egy Windows ütemezett feladatot hoz létre, amely naponta {time}-kor lefuttatja a Tyverix tisztítóját: temp fájlok, Windows temp és a GPU shader gyorsítótár — ugyanazok a biztonságos célok, mint a kézi tisztítónál.",
   "settings.autoclean.confirmWhy": "Így a tárhely és a shader-gyorsítótár állapota karban marad anélkül, hogy emlékezned kellene a kézi tisztításra.",
   "settings.autoclean.confirmBenefit": "Automatikusan visszanyeri a tárhelyet; pontosan láthatod, mit csinált a lenti 'Legutóbbi futás' alatt.",
   "settings.autoclean.confirmDownside":
-    "Akkor is lefut, ha elfelejtenéd. Bármikor kikapcsolhatod itt, vagy törölheted a 'BoostForge Auto Clean' feladatot a Feladatütemezőben.",
+    "Akkor is lefut, ha elfelejtenéd. Bármikor kikapcsolhatod itt, vagy törölheted a 'Tyverix Auto Clean' feladatot a Feladatütemezőben.",
   "settings.autoclean.confirmLabel": "Ütemezés",
   "settings.autoclean.toastScheduled": "Ütemezve",
   "settings.autoclean.toastDisabled": "Ütemezés letiltva",
@@ -697,7 +697,7 @@ const hu: Dict = {
 
   "startup.title": "Indítópult alkalmazások",
   "startup.subtitle":
-    "A letiltás teljesen visszafordítható — a BoostForge megőrzi az eredeti bejegyzést, hogy pontosan visszaállítható legyen.",
+    "A letiltás teljesen visszafordítható — a Tyverix megőrzi az eredeti bejegyzést, hogy pontosan visszaállítható legyen.",
   "startup.reading": "Indítópult-bejegyzések beolvasása…",
   "startup.empty": "Nem találtunk indítópult-programot",
   "startup.emptyMsg": "Semmi nincs beállítva, hogy automatikusan elinduljon a fiókodnál.",
@@ -748,10 +748,10 @@ const hu: Dict = {
   "safety.regDesc": "Exportálja a HKCU és HKLM Run kulcsokat egy időbélyegzett .reg fájlba.",
   "safety.backupReg": "Registry-kulcsok mentése",
   "safety.historyTitle": "Változási előzmények",
-  "safety.historySubtitle": "Minden visszafordítható változás, amit a BoostForge végzett. A visszavonás pontosan visszaállítja az előző állapotot.",
+  "safety.historySubtitle": "Minden visszafordítható változás, amit a Tyverix végzett. A visszavonás pontosan visszaállítja az előző állapotot.",
   "safety.reading": "Változási előzmények beolvasása…",
   "safety.empty": "Még nincs változás",
-  "safety.emptyMsg": "A BoostForge-ban végzett visszafordítható műveletek itt jelennek meg.",
+  "safety.emptyMsg": "A Tyverixben végzett visszafordítható műveletek itt jelennek meg.",
   "safety.reverted": "Visszaállítva",
   "safety.undo": "Visszavonás",
   "safety.toastFailedHistory": "Az előzmények beolvasása nem sikerült",
@@ -770,7 +770,7 @@ const hu: Dict = {
 
   "game.detectedPrefix": "Futó program észlelve:",
   "game.detectedNote":
-    "A BoostForge soha nem kapcsolja be automatikusan a Játék módot — ez csak információ. Kapcsold be magad, ha szeretnéd.",
+    "A Tyverix soha nem kapcsolja be automatikusan a Játék módot — ez csak információ. Kapcsold be magad, ha szeretnéd.",
   "game.engageNow": "Bekapcsolás most",
   "game.toastFailedRead": "Az energiaállapot beolvasása nem sikerült",
   "game.heading": "Játék mód",
@@ -789,7 +789,7 @@ const hu: Dict = {
   "game.effectCloseOn": "Minden automatikusan visszaáll",
   "game.whenOff": "Kikapcsolt állapotban:",
   "game.note":
-    "Megjegyzés: a BoostForge nem ígér FPS-növekedést. Csak megszünteti az energiatakarékos korlátozásokat, amelyek akadást (stuttert) okozhatnak — az eredmény a hardvertől függ.",
+    "Megjegyzés: a Tyverix nem ígér FPS-növekedést. Csak megszünteti az energiatakarékos korlátozásokat, amelyek akadást (stuttert) okozhatnak — az eredmény a hardvertől függ.",
   "game.plansTitle": "Energiatervek",
   "game.plansSubtitle": "Válts közvetlenül egy tervre, vagy hagyd, hogy a Játék mód kezelje helyetted.",
   "game.readingPlans": "Energiatervek beolvasása…",
@@ -930,7 +930,7 @@ const hu: Dict = {
   "tools.drivers.colProvider": "Gyártó",
   "tools.drivers.colVersion": "Verzió",
   "tools.drivers.colDate": "Dátum",
-  "tools.drivers.hint": "A BoostForge a gyártó hivatalos illesztőprogram-oldalára visz, hogy összevethesd a verziókat és elolvashasd a valódi changelogot — soha nem talál ki vagy hamisít „elavult” állapotot.",
+  "tools.drivers.hint": "A Tyverix a gyártó hivatalos illesztőprogram-oldalára visz, hogy összevethesd a verziókat és elolvashasd a valódi changelogot — soha nem talál ki vagy hamisít „elavult” állapotot.",
   "tools.drivers.windowsUpdate": "Windows Update (illesztők)",
   "tools.drivers.update": "Letöltés",
   "tools.drivers.notes": "Mi változott",
@@ -947,13 +947,13 @@ const hu: Dict = {
   "tools.software.colPublisher": "Kiadó",
   "tools.software.colSize": "Méret",
   "tools.services.title": "Szolgáltatások",
-  "tools.services.subtitle": "Csak megtekinthető nézet. A BoostForge nem tilt le rendszerszolgáltatást — az kockázatos lenne csekély nyereségért.",
+  "tools.services.subtitle": "Csak megtekinthető nézet. A Tyverix nem tilt le rendszerszolgáltatást — az kockázatos lenne csekély nyereségért.",
   "tools.services.reading": "Szolgáltatások beolvasása…",
   "tools.services.colService": "Szolgáltatás",
   "tools.services.colStatus": "Állapot",
   "tools.services.colStartType": "Indítási típus",
   "tools.largeFiles.title": "Nagy fájl kereső",
-  "tools.largeFiles.subtitle": "Megtalálja a helyfaló fájlokat. A BoostForge soha nem törli őket helyetted.",
+  "tools.largeFiles.subtitle": "Megtalálja a helyfaló fájlokat. A Tyverix soha nem törli őket helyetted.",
   "tools.largeFiles.rootPlaceholder": "Vizsgálandó mappa",
   "tools.largeFiles.scan": "Keresés",
   "tools.largeFiles.colFile": "Fájl",
@@ -986,8 +986,8 @@ const de: Dict = {
   "common.pro": "Pro",
   "common.trial": "Test",
 
-  "close.title": "BoostForge schließen?",
-  "close.message": "Möchtest du BoostForge wirklich schließen? Laufende Aufgaben werden gestoppt.",
+  "close.title": "Tyverix schließen?",
+  "close.message": "Möchtest du Tyverix wirklich schließen? Laufende Aufgaben werden gestoppt.",
   "close.confirm": "Schließen",
   "close.cancel": "Offen lassen",
 
@@ -1045,10 +1045,10 @@ const de: Dict = {
   "mem.downside":
     "Hintergrund-Apps laden ihre Seiten beim nächsten Wechsel neu und wirken kurz langsamer. Das ist kein dauerhafter Leistungsschub.",
   "mem.honest":
-    "BoostForge zeigt die echte, vom Betriebssystem gemessene Änderung — keine erfundene Zahl. Der Effekt variiert und kann klein sein, wenn RAM bereits frei ist.",
+    "Tyverix zeigt die echte, vom Betriebssystem gemessene Änderung — keine erfundene Zahl. Der Effekt variiert und kann klein sein, wenn RAM bereits frei ist.",
 
   "license.title": "Abonnement",
-  "license.subtitle": "BoostForge Pro schaltet das volle Toolkit frei.",
+  "license.subtitle": "Tyverix Pro schaltet das volle Toolkit frei.",
   "license.status": "Status",
   "license.activate": "Aktivieren",
   "license.deactivate": "Deaktivieren",
@@ -1056,7 +1056,7 @@ const de: Dict = {
   "license.trialRemaining": "{n} Tage Testzeit übrig",
   "license.daysRemaining": "{n} Tage übrig",
   "license.expires": "Verlängert / läuft ab",
-  "license.getPro": "BoostForge Pro holen",
+  "license.getPro": "Tyverix Pro holen",
   "license.expired": "Ihr Abonnement ist abgelaufen — bitte verlängern.",
   "license.activated": "Pro aktiviert. Vielen Dank!",
   "license.proBadge": "Pro-Funktion",
@@ -1077,7 +1077,7 @@ const de: Dict = {
   "plans.pro.5": "Geplante automatische Bereinigung",
 
   "auth.title": "Online-Konto",
-  "auth.subtitle": "Erstelle ein kostenloses Konto oder melde dich an, um BoostForge zu nutzen.",
+  "auth.subtitle": "Erstelle ein kostenloses Konto oder melde dich an, um Tyverix zu nutzen.",
   "auth.tabSignIn": "Anmelden",
   "auth.tabSignUp": "Registrieren",
   "auth.email": "E-Mail",
@@ -1110,21 +1110,21 @@ const de: Dict = {
   "update.check": "Nach Updates suchen",
   "update.checking": "Suche nach Updates…",
   "update.available": "Update verfügbar",
-  "update.upToDate": "BoostForge ist aktuell.",
+  "update.upToDate": "Tyverix ist aktuell.",
   "update.install": "Jetzt installieren",
   "update.later": "Später",
   "update.downloading": "Update wird geladen…",
   "update.newVersion": "Version {v} ist verfügbar.",
   "update.restart": "Installiere und starte neu…",
 
-  "settings.about": "Über BoostForge",
+  "settings.about": "Über Tyverix",
   "settings.aboutBody":
-    "BoostForge folgt einem Grundsatz: Jede Optimierung muss messbar, umkehrbar und sicher sein. Keine gefälschten Benchmarks, keine Placebos. Wenn ein Wert nicht genau gelesen werden kann, sagt BoostForge das, statt eine Zahl zu erfinden.",
+    "Tyverix folgt einem Grundsatz: Jede Optimierung muss messbar, umkehrbar und sicher sein. Keine gefälschten Benchmarks, keine Placebos. Wenn ein Wert nicht genau gelesen werden kann, sagt Tyverix das, statt eine Zahl zu erfinden.",
   "settings.language": "Sprache",
   "settings.permissions": "Berechtigungen",
   "settings.account": "Abonnement",
-  "settings.willNot": "Was BoostForge bewusst NICHT tut",
-  "settings.version": "Version 0.1.7 · Windows 10 & 11",
+  "settings.willNot": "Was Tyverix bewusst NICHT tut",
+  "settings.version": "Version 0.1.8 · Windows 10 & 11",
   "settings.willNot.1": "Windows-Dienste für geringe, nicht messbare Vorteile deaktivieren.",
   "settings.willNot.2": "Den Prefetch-Ordner löschen (er beschleunigt den App-Start).",
   "settings.willNot.3": "Feste FPS-Gewinne behaupten, die es nicht belegen kann.",
@@ -1132,7 +1132,7 @@ const de: Dict = {
   "settings.willNot.5": "GPU-, Temperatur-, FPS- oder RAM-Werte erfinden.",
 
   "settings.autoclean.title": "Automatische Bereinigung",
-  "settings.autoclean.subtitle": "Eine echte Windows-Aufgabenplanung — auch außerhalb von BoostForge sichtbar und entfernbar.",
+  "settings.autoclean.subtitle": "Eine echte Windows-Aufgabenplanung — auch außerhalb von Tyverix sichtbar und entfernbar.",
   "settings.autoclean.disable": "Deaktivieren",
   "settings.autoclean.enable": "Tägliche Bereinigung aktivieren",
   "settings.autoclean.runNow": "Jetzt ausführen",
@@ -1140,11 +1140,11 @@ const de: Dict = {
   "settings.autoclean.lastRun": "Letzter Lauf: {date} · {size} freigegeben in {n} Dateien.",
   "settings.autoclean.confirmTitle": "Automatische Bereinigung planen",
   "settings.autoclean.confirmWhat":
-    "Erstellt einen Windows-Aufgabenplanungseintrag, der täglich um {time} den BoostForge-Bereiniger ausführt: Temp-Dateien, Windows-Temp und den GPU-Shader-Cache — dieselben sicheren Ziele wie der manuelle Bereiniger.",
+    "Erstellt einen Windows-Aufgabenplanungseintrag, der täglich um {time} den Tyverix-Bereiniger ausführt: Temp-Dateien, Windows-Temp und den GPU-Shader-Cache — dieselben sicheren Ziele wie der manuelle Bereiniger.",
   "settings.autoclean.confirmWhy": "So bleiben Speicherplatz und Shader-Cache gepflegt, ohne ans manuelle Bereinigen denken zu müssen.",
   "settings.autoclean.confirmBenefit": "Gibt automatisch Speicherplatz frei; das Ergebnis siehst du unten unter „Letzter Lauf“.",
   "settings.autoclean.confirmDownside":
-    "Läuft auch, wenn du es vergisst. Du kannst es hier jederzeit deaktivieren oder die Aufgabe „BoostForge Auto Clean“ in der Aufgabenplanung löschen.",
+    "Läuft auch, wenn du es vergisst. Du kannst es hier jederzeit deaktivieren oder die Aufgabe „Tyverix Auto Clean“ in der Aufgabenplanung löschen.",
   "settings.autoclean.confirmLabel": "Planen",
   "settings.autoclean.toastScheduled": "Geplant",
   "settings.autoclean.toastDisabled": "Planung deaktiviert",
@@ -1167,7 +1167,7 @@ const de: Dict = {
 
   "startup.title": "Autostart-Anwendungen",
   "startup.subtitle":
-    "Das Deaktivieren ist vollständig umkehrbar — BoostForge bewahrt den Originaleintrag, damit er exakt wiederhergestellt werden kann.",
+    "Das Deaktivieren ist vollständig umkehrbar — Tyverix bewahrt den Originaleintrag, damit er exakt wiederhergestellt werden kann.",
   "startup.reading": "Autostart-Einträge werden gelesen…",
   "startup.empty": "Keine Autostart-Programme gefunden",
   "startup.emptyMsg": "Für dein Konto ist kein automatischer Start konfiguriert.",
@@ -1218,10 +1218,10 @@ const de: Dict = {
   "safety.regDesc": "Exportiert die HKCU- und HKLM-Run-Schlüssel in eine zeitgestempelte .reg-Datei.",
   "safety.backupReg": "Registry-Schlüssel sichern",
   "safety.historyTitle": "Änderungsverlauf",
-  "safety.historySubtitle": "Jede umkehrbare Änderung, die BoostForge vorgenommen hat. Rückgängig stellt genau den vorherigen Zustand wieder her.",
+  "safety.historySubtitle": "Jede umkehrbare Änderung, die Tyverix vorgenommen hat. Rückgängig stellt genau den vorherigen Zustand wieder her.",
   "safety.reading": "Änderungsverlauf wird gelesen…",
   "safety.empty": "Noch keine Änderungen",
-  "safety.emptyMsg": "Umkehrbare Aktionen, die du in BoostForge durchführst, erscheinen hier.",
+  "safety.emptyMsg": "Umkehrbare Aktionen, die du in Tyverix durchführst, erscheinen hier.",
   "safety.reverted": "Zurückgesetzt",
   "safety.undo": "Rückgängig",
   "safety.toastFailedHistory": "Verlauf konnte nicht gelesen werden",
@@ -1240,7 +1240,7 @@ const de: Dict = {
 
   "game.detectedPrefix": "Laufend erkannt:",
   "game.detectedNote":
-    "BoostForge aktiviert den Spielmodus niemals automatisch — das ist nur eine Information. Schalte ihn selbst ein, wenn du möchtest.",
+    "Tyverix aktiviert den Spielmodus niemals automatisch — das ist nur eine Information. Schalte ihn selbst ein, wenn du möchtest.",
   "game.engageNow": "Jetzt aktivieren",
   "game.toastFailedRead": "Energiestatus konnte nicht gelesen werden",
   "game.heading": "Spielmodus",
@@ -1259,7 +1259,7 @@ const de: Dict = {
   "game.effectCloseOn": "Alles wird automatisch wiederhergestellt",
   "game.whenOff": "Wenn aus:",
   "game.note":
-    "Hinweis: BoostForge behauptet nicht, FPS hinzuzufügen. Es entfernt energiesparende Drosselung, die Ruckler verursachen kann. Die Ergebnisse hängen von deiner Hardware ab.",
+    "Hinweis: Tyverix behauptet nicht, FPS hinzuzufügen. Es entfernt energiesparende Drosselung, die Ruckler verursachen kann. Die Ergebnisse hängen von deiner Hardware ab.",
   "game.plansTitle": "Energiesparpläne",
   "game.plansSubtitle": "Direkt wechseln, oder den Spielmodus für dich verwalten lassen.",
   "game.readingPlans": "Energiesparpläne werden gelesen…",
@@ -1400,7 +1400,7 @@ const de: Dict = {
   "tools.drivers.colProvider": "Anbieter",
   "tools.drivers.colVersion": "Version",
   "tools.drivers.colDate": "Datum",
-  "tools.drivers.hint": "BoostForge verlinkt dich zur offiziellen Treiberseite des Herstellers, damit du Versionen vergleichen und den echten Changelog lesen kannst — es rät nie und täuscht keinen „veralteten\" Status vor.",
+  "tools.drivers.hint": "Tyverix verlinkt dich zur offiziellen Treiberseite des Herstellers, damit du Versionen vergleichen und den echten Changelog lesen kannst — es rät nie und täuscht keinen „veralteten\" Status vor.",
   "tools.drivers.windowsUpdate": "Windows Update (Treiber)",
   "tools.drivers.update": "Herunterladen",
   "tools.drivers.notes": "Was sich geändert hat",
@@ -1417,13 +1417,13 @@ const de: Dict = {
   "tools.software.colPublisher": "Herausgeber",
   "tools.software.colSize": "Größe",
   "tools.services.title": "Dienste",
-  "tools.services.subtitle": "Nur lesbare Ansicht. BoostForge deaktiviert keine Systemdienste — das riskiert, Windows für wenig Nutzen zu beschädigen.",
+  "tools.services.subtitle": "Nur lesbare Ansicht. Tyverix deaktiviert keine Systemdienste — das riskiert, Windows für wenig Nutzen zu beschädigen.",
   "tools.services.reading": "Dienste werden gelesen…",
   "tools.services.colService": "Dienst",
   "tools.services.colStatus": "Status",
   "tools.services.colStartType": "Starttyp",
   "tools.largeFiles.title": "Große-Dateien-Finder",
-  "tools.largeFiles.subtitle": "Findet Speicherfresser. BoostForge löscht sie niemals für dich.",
+  "tools.largeFiles.subtitle": "Findet Speicherfresser. Tyverix löscht sie niemals für dich.",
   "tools.largeFiles.rootPlaceholder": "Zu durchsuchender Ordner",
   "tools.largeFiles.scan": "Scannen",
   "tools.largeFiles.colFile": "Datei",
@@ -1443,7 +1443,7 @@ interface I18nValue {
 const I18nContext = createContext<I18nValue | null>(null);
 
 function detectDefault(): Lang {
-  const stored = localStorage.getItem("boostforge.lang") as Lang | null;
+  const stored = localStorage.getItem("tyverix.lang") as Lang | null;
   if (stored && DICTS[stored]) return stored;
   const sys = navigator.language.slice(0, 2).toLowerCase();
   if (sys === "hu" || sys === "de") return sys;
@@ -1454,7 +1454,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(detectDefault);
 
   useEffect(() => {
-    localStorage.setItem("boostforge.lang", lang);
+    localStorage.setItem("tyverix.lang", lang);
     document.documentElement.lang = lang;
   }, [lang]);
 

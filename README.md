@@ -1,9 +1,9 @@
-# BoostForge
+# Tyverix
 
 A trustworthy Windows gaming optimization tool. **Every optimization is
 measurable, reversible and safe.** No fake benchmarks, no placebo "FPS boosts",
 no registry tweaks without a documented, verifiable benefit. When a metric
-cannot be read accurately (e.g. live GPU load), BoostForge says *"Not available"*
+cannot be read accurately (e.g. live GPU load), Tyverix says *"Not available"*
 instead of inventing a number.
 
 > Windows 10 & Windows 11 only.
@@ -34,7 +34,7 @@ instead of inventing a number.
 | Windows Update check      | Windows Update agent COM API                                        | n/a        |
 | Safety                   | System Restore points, registry export, full undo history           | ✅          |
 
-Things BoostForge **deliberately refuses to do**: disable system services for
+Things Tyverix **deliberately refuses to do**: disable system services for
 marginal gains, delete the Prefetch folder, claim fixed FPS numbers, or make
 irreversible changes without a clear warning.
 
@@ -61,8 +61,8 @@ npm run tauri:build
 
 Output:
 
-- `src-tauri/target/release/BoostForge.exe` — the standalone binary
-- `src-tauri/target/release/bundle/nsis/BoostForge_0.1.0_x64-setup.exe` — installer
+- `src-tauri/target/release/Tyverix.exe` — the standalone binary
+- `src-tauri/target/release/bundle/nsis/Tyverix_0.1.0_x64-setup.exe` — installer
 
 ## Notes on permissions
 
@@ -73,7 +73,7 @@ without them:
 - System Restore point creation
 - Cleaning `C:\Windows\Temp`
 
-Run BoostForge as administrator to enable these.
+Run Tyverix as administrator to enable these.
 
 ## Architecture
 

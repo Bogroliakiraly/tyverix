@@ -1,4 +1,4 @@
--- BoostForge anti-abuse: one free trial per device, and a device cap per
+-- Tyverix anti-abuse: one free trial per device, and a device cap per
 -- account, so people can't farm endless 1-day trials with throwaway emails on
 -- the same PC, or hand one paid login around to an unlimited number of
 -- installs. "Device" = this Windows installation's stable MachineGuid (read

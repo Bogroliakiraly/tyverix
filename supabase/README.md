@@ -1,4 +1,4 @@
-# BoostForge — accounts & licensing (Supabase)
+# Tyverix — accounts & licensing (Supabase)
 
 This wires up online accounts and subscription-driven Pro, while keeping the
 existing offline Ed25519 license keys as the unit of entitlement. Nothing here

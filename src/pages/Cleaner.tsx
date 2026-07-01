@@ -110,7 +110,7 @@ export function Cleaner() {
     try {
       if (restore) {
         try {
-          await createRestorePoint("BoostForge — before cleanup");
+          await createRestorePoint("Tyverix — before cleanup");
           toast.success(t("clean.toastRestoreCreated"));
         } catch (e) {
           toast.warn(t("clean.toastRestoreSkipped"), String(e));

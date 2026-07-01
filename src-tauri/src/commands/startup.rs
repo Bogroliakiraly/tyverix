@@ -1,8 +1,8 @@
 //! Startup application manager.
 //!
 //! Reversibility is the whole point here: disabling a registry entry does not
-//! delete it. Instead BoostForge moves the value into a private backup key
-//! (`HKCU\Software\BoostForge\DisabledStartup`) and can restore it byte-for-byte.
+//! delete it. Instead Tyverix moves the value into a private backup key
+//! (`HKCU\Software\Tyverix\DisabledStartup`) and can restore it byte-for-byte.
 //! Startup-folder shortcuts are moved into a "(disabled)" sub-folder.
 
 use serde::Serialize;
@@ -14,8 +14,8 @@ use crate::error::{AppError, AppResult};
 use crate::state::AppState;
 
 const RUN_PATH: &str = r"Software\Microsoft\Windows\CurrentVersion\Run";
-const BACKUP_HKCU: &str = r"Software\BoostForge\DisabledStartup\HKCU";
-const BACKUP_HKLM: &str = r"Software\BoostForge\DisabledStartup\HKLM";
+const BACKUP_HKCU: &str = r"Software\Tyverix\DisabledStartup\HKCU";
+const BACKUP_HKLM: &str = r"Software\Tyverix\DisabledStartup\HKLM";
 
 #[derive(Serialize)]
 pub struct StartupItem {
@@ -208,7 +208,7 @@ fn toggle_registry(
 fn collect_folder(items: &mut Vec<StartupItem>, dir: Option<std::path::PathBuf>, code: &str, source: &str) {
     let Some(dir) = dir else { return };
     push_shortcuts(items, &dir, code, source, true);
-    let disabled = dir.join("BoostForge (disabled)");
+    let disabled = dir.join("Tyverix (disabled)");
     push_shortcuts(items, &disabled, code, source, false);
 }
 
@@ -248,7 +248,7 @@ fn push_shortcuts(
 
 fn toggle_folder(dir: Option<std::path::PathBuf>, name: &str, enable: bool) -> AppResult<()> {
     let dir = dir.ok_or_else(|| AppError::other("startup folder not found"))?;
-    let disabled = dir.join("BoostForge (disabled)");
+    let disabled = dir.join("Tyverix (disabled)");
     let file = format!("{name}.lnk");
     if enable {
         std::fs::create_dir_all(&dir)?;

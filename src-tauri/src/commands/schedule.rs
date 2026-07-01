@@ -1,8 +1,8 @@
 //! Scheduled automatic cleanup, built on the same vetted targets as the
 //! manual cleaner (`commands::cleaner`) — never anything new or riskier.
 //! The schedule itself is a normal Windows Task Scheduler entry (`schtasks`),
-//! so it is fully visible and removable outside BoostForge too, and it
-//! launches BoostForge with `--auto-clean`, which runs headlessly and exits.
+//! so it is fully visible and removable outside Tyverix too, and it
+//! launches Tyverix with `--auto-clean`, which runs headlessly and exits.
 
 use std::path::PathBuf;
 
@@ -12,7 +12,7 @@ use crate::commands::cleaner::{clean_targets_impl, CleanResult};
 use crate::error::{AppError, AppResult};
 use crate::util::{app_data_dir, run_command};
 
-const TASK_NAME: &str = "BoostForge Auto Clean";
+const TASK_NAME: &str = "Tyverix Auto Clean";
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct CleanupSchedule {

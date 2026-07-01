@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Issues a signed BoostForge license key.
+ * Issues a signed Tyverix license key.
  *
  *   node tools/sign-license.mjs --email user@example.com --tier pro --days 31
  *

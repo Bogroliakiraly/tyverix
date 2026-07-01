@@ -123,11 +123,11 @@ pub fn parse_ps_array<T: DeserializeOwned>(json: &str) -> AppResult<Vec<T>> {
     }
 }
 
-/// Returns `%LOCALAPPDATA%\BoostForge`, creating it if necessary.
+/// Returns `%LOCALAPPDATA%\Tyverix`, creating it if necessary.
 pub fn app_data_dir() -> AppResult<PathBuf> {
     let base = std::env::var("LOCALAPPDATA")
         .map_err(|_| AppError::other("LOCALAPPDATA is not set"))?;
-    let dir = PathBuf::from(base).join("BoostForge");
+    let dir = PathBuf::from(base).join("Tyverix");
     std::fs::create_dir_all(&dir)?;
     Ok(dir)
 }

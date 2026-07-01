@@ -2,7 +2,7 @@
 //!
 //! Game Mode's only system change is switching to a High/Ultimate Performance
 //! power plan — a real, measurable change that prevents CPU core-parking and
-//! down-clocking. The previous plan is saved and restored exactly. BoostForge
+//! down-clocking. The previous plan is saved and restored exactly. Tyverix
 //! intentionally makes no unverifiable "FPS boost" claims.
 
 use serde::{Deserialize, Serialize};

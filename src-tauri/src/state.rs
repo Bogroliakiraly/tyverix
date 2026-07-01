@@ -12,7 +12,7 @@ use sysinfo::{Networks, System};
 use crate::error::AppResult;
 use crate::util::app_data_dir;
 
-/// A single reversible change the user made through BoostForge.
+/// A single reversible change the user made through Tyverix.
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ActionRecord {
     pub id: String,

@@ -1,4 +1,4 @@
-//! Offline license validation for the BoostForge subscription.
+//! Offline license validation for the Tyverix subscription.
 //!
 //! License keys are Ed25519-signed tokens of the form `payload.signature`
 //! (both base64url). The payload carries the buyer's email, tier and an expiry

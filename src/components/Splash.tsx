@@ -51,7 +51,7 @@ export function Splash() {
         transition={{ delay: 0.25, duration: 0.4 }}
       >
         <span className="text-xl font-semibold tracking-tight text-text-primary">
-          BoostForge
+          Tyverix
         </span>
         <span className="text-xs text-text-muted">{t("nav.tagline")}</span>
       </motion.div>

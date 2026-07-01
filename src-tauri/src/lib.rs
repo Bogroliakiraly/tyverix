@@ -1,4 +1,4 @@
-//! BoostForge backend entry point. Wires up shared state and registers every
+//! Tyverix backend entry point. Wires up shared state and registers every
 //! Tauri command exposed to the React UI.
 
 mod commands;
@@ -72,7 +72,7 @@ pub fn run() {
         return;
     }
 
-    // BoostForge performs admin-only operations (power plans, standby purge,
+    // Tyverix performs admin-only operations (power plans, standby purge,
     // restore points). Always run elevated: if we're not, relaunch via UAC and
     // hand off to the elevated instance. If the user declines, fall through and
     // run unelevated (the UI clearly shows "Not running as administrator").
@@ -140,5 +140,5 @@ pub fn run() {
             commands::stats::get_daily_stats,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running BoostForge");
+        .expect("error while running Tyverix");
 }

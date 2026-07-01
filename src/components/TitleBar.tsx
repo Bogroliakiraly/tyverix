@@ -5,7 +5,7 @@ import { useT } from "../i18n";
 
 /**
  * Custom, frameless title bar (the OS chrome is disabled in tauri.conf.json)
- * so the window feels native to BoostForge's dark theme. The draggable region
+ * so the window feels native to Tyverix's dark theme. The draggable region
  * uses Tauri's `data-tauri-drag-region` attribute.
  */
 export function TitleBar({ elevated }: { elevated: boolean | null }) {
@@ -21,7 +21,7 @@ export function TitleBar({ elevated }: { elevated: boolean | null }) {
         <div className="flex h-6 w-6 items-center justify-center rounded-md bg-accent/20">
           <Zap className="h-3.5 w-3.5 text-accent" />
         </div>
-        <span className="text-sm font-semibold tracking-tight">BoostForge</span>
+        <span className="text-sm font-semibold tracking-tight">Tyverix</span>
         {elevated === false && (
           <Badge tone="warn">{t("common.notAdministrator")}</Badge>
         )}

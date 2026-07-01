@@ -42,7 +42,7 @@ export function Safety() {
   async function makeRestorePoint() {
     setBusy("rp");
     try {
-      await createRestorePoint("BoostForge — manual checkpoint");
+      await createRestorePoint("Tyverix — manual checkpoint");
       toast.success(t("safety.toastRestoreCreated"));
     } catch (e) {
       toast.error(t("safety.toastRestoreFailed"), String(e) + " (requires admin + System Restore enabled)");

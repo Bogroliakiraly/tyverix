@@ -1,6 +1,6 @@
 name: Release
 
-# Build, sign and publish BoostForge whenever you push a version tag, e.g.:
+# Build, sign and publish Tyverix whenever you push a version tag, e.g.:
 #   git tag v0.1.1 && git push origin v0.1.1
 #
 # tauri-action creates a GitHub Release with the NSIS installer, the signed
@@ -8,7 +8,7 @@ name: Release
 # manifest (configured in tauri.conf.json) and offer the update automatically.
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
-#   TAURI_SIGNING_PRIVATE_KEY           contents of .tauri-keys/boostforge.key
+#   TAURI_SIGNING_PRIVATE_KEY           contents of .tauri-keys/tyverix.key
 #   TAURI_SIGNING_PRIVATE_KEY_PASSWORD  the password you chose for that key
 
 on:
@@ -58,7 +58,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "BoostForge ${{ github.ref_name }}"
+          releaseName: "Tyverix ${{ github.ref_name }}"
           releaseBody: "See the assets below to download and install."
           releaseDraft: false
           prerelease: false

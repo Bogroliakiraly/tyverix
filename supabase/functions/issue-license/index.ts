@@ -1,4 +1,4 @@
-// BoostForge — admin-only license issuer (Supabase Edge Function, Deno).
+// Tyverix — admin-only license issuer (Supabase Edge Function, Deno).
 //
 // Mints an Ed25519-signed Pro key (identical format to tools/sign-license.mjs),
 // stores it in the `licenses` table via the service-role key, and returns it.
