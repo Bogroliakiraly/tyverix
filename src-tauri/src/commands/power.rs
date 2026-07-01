@@ -14,13 +14,13 @@
 //! depends entirely on the game and the hardware.
 
 use serde::{Deserialize, Serialize};
-use tauri::State;
+use tauri::{Manager, State};
 use winreg::enums::*;
 use winreg::RegKey;
 
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
-use crate::util::{parse_ps_array, run_command, run_powershell};
+use crate::util::{blocking, parse_ps_array, run_command, run_powershell};
 
 const ULTIMATE_GUID: &str = "e9a42b02-d5df-448d-aa00-03f14749eb61";
 const HIGH_PERF_GUID: &str = "8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c";
@@ -33,24 +33,28 @@ pub struct PowerPlan {
 }
 
 #[tauri::command]
-pub fn list_power_plans() -> AppResult<Vec<PowerPlan>> {
-    parse_powercfg_list()
+pub async fn list_power_plans() -> AppResult<Vec<PowerPlan>> {
+    blocking(parse_powercfg_list).await
 }
 
 #[tauri::command]
-pub fn set_power_plan(state: State<AppState>, guid: String) -> AppResult<()> {
-    let previous = active_plan_guid().ok();
-    set_active(&guid)?;
-    if let Some(prev) = previous {
-        if prev != guid {
-            state.record(
-                "power_plan",
-                format!("Switched power plan to {}", plan_name(&guid)),
-                serde_json::json!({ "previous_guid": prev }),
-            );
+pub async fn set_power_plan(app: tauri::AppHandle, guid: String) -> AppResult<()> {
+    blocking(move || {
+        let state = app.state::<AppState>();
+        let previous = active_plan_guid().ok();
+        set_active(&guid)?;
+        if let Some(prev) = previous {
+            if prev != guid {
+                state.record(
+                    "power_plan",
+                    format!("Switched power plan to {}", plan_name(&guid)),
+                    serde_json::json!({ "previous_guid": prev }),
+                );
+            }
         }
-    }
-    Ok(())
+        Ok(())
+    })
+    .await
 }
 
 #[derive(Serialize)]
@@ -61,8 +65,7 @@ pub struct GameModeStatus {
     pub detected_games: Vec<String>,
 }
 
-#[tauri::command]
-pub fn get_game_mode_status(state: State<AppState>) -> AppResult<GameModeStatus> {
+fn get_game_mode_status_sync(state: &State<AppState>) -> AppResult<GameModeStatus> {
     let game = state
         .game
         .lock()
@@ -71,91 +74,108 @@ pub fn get_game_mode_status(state: State<AppState>) -> AppResult<GameModeStatus>
         active: game.active,
         previous_plan: game.previous_plan.clone(),
         applied_plan: game.applied_plan.clone(),
-        detected_games: detect_games(&state),
+        detected_games: detect_games(state),
     })
 }
 
 #[tauri::command]
-pub fn apply_game_mode(state: State<AppState>) -> AppResult<GameModeStatus> {
-    let target = ensure_performance_plan()?;
-    let previous = active_plan_guid().ok();
-    set_active(&target)?;
-
-    let game_dvr_previous = disable_game_dvr();
-
-    let detected = detect_game_processes(&state);
-    let mut gpu_pref_previous = Vec::new();
-    let mut boosted_pids = Vec::new();
-    for g in &detected {
-        if let Some(exe) = &g.exe_path {
-            gpu_pref_previous.push((exe.clone(), set_gpu_preference_for(exe)));
-        }
-        if boost_process_priority(g.pid) {
-            boosted_pids.push(g.pid);
-        }
-    }
-
-    {
-        let mut game = state
-            .game
-            .lock()
-            .map_err(|_| AppError::other("game state locked"))?;
-        game.active = true;
-        game.previous_plan = previous.clone();
-        game.applied_plan = Some(target.clone());
-        game.game_dvr_previous = game_dvr_previous;
-        game.gpu_pref_previous = gpu_pref_previous;
-        game.boosted_pids = boosted_pids;
-    }
-
-    if let Some(prev) = previous {
-        state.record(
-            "game_mode",
-            "Engaged Game Mode (performance power plan)".into(),
-            serde_json::json!({ "previous_guid": prev }),
-        );
-    }
-
-    get_game_mode_status(state)
+pub async fn get_game_mode_status(app: tauri::AppHandle) -> AppResult<GameModeStatus> {
+    blocking(move || {
+        let state = app.state::<AppState>();
+        get_game_mode_status_sync(&state)
+    })
+    .await
 }
 
 #[tauri::command]
-pub fn restore_game_mode(state: State<AppState>) -> AppResult<GameModeStatus> {
-    let (previous, game_dvr_previous, gpu_pref_previous, boosted_pids) = {
-        let game = state
-            .game
-            .lock()
-            .map_err(|_| AppError::other("game state locked"))?;
-        (
-            game.previous_plan.clone(),
-            game.game_dvr_previous,
-            game.gpu_pref_previous.clone(),
-            game.boosted_pids.clone(),
-        )
-    };
-    if let Some(prev) = previous {
-        set_active(&prev)?;
-    }
-    restore_game_dvr(game_dvr_previous);
-    for (exe, prev) in &gpu_pref_previous {
-        restore_gpu_preference_for(exe, prev.as_ref());
-    }
-    for pid in &boosted_pids {
-        restore_process_priority(*pid);
-    }
-    {
-        let mut game = state
-            .game
-            .lock()
-            .map_err(|_| AppError::other("game state locked"))?;
-        game.active = false;
-        game.applied_plan = None;
-        game.previous_plan = None;
-        game.game_dvr_previous = None;
-        game.gpu_pref_previous = Vec::new();
-        game.boosted_pids = Vec::new();
-    }
-    get_game_mode_status(state)
+pub async fn apply_game_mode(app: tauri::AppHandle) -> AppResult<GameModeStatus> {
+    blocking(move || {
+        let state = app.state::<AppState>();
+        let target = ensure_performance_plan()?;
+        let previous = active_plan_guid().ok();
+        set_active(&target)?;
+
+        let game_dvr_previous = disable_game_dvr();
+
+        let detected = detect_game_processes(&state);
+        let mut gpu_pref_previous = Vec::new();
+        let mut boosted_pids = Vec::new();
+        for g in &detected {
+            if let Some(exe) = &g.exe_path {
+                gpu_pref_previous.push((exe.clone(), set_gpu_preference_for(exe)));
+            }
+            if boost_process_priority(g.pid) {
+                boosted_pids.push(g.pid);
+            }
+        }
+
+        {
+            let mut game = state
+                .game
+                .lock()
+                .map_err(|_| AppError::other("game state locked"))?;
+            game.active = true;
+            game.previous_plan = previous.clone();
+            game.applied_plan = Some(target.clone());
+            game.game_dvr_previous = game_dvr_previous;
+            game.gpu_pref_previous = gpu_pref_previous;
+            game.boosted_pids = boosted_pids;
+        }
+
+        if let Some(prev) = previous {
+            state.record(
+                "game_mode",
+                "Engaged Game Mode (performance power plan)".into(),
+                serde_json::json!({ "previous_guid": prev }),
+            );
+        }
+
+        get_game_mode_status_sync(&state)
+    })
+    .await
+}
+
+#[tauri::command]
+pub async fn restore_game_mode(app: tauri::AppHandle) -> AppResult<GameModeStatus> {
+    blocking(move || {
+        let state = app.state::<AppState>();
+        let (previous, game_dvr_previous, gpu_pref_previous, boosted_pids) = {
+            let game = state
+                .game
+                .lock()
+                .map_err(|_| AppError::other("game state locked"))?;
+            (
+                game.previous_plan.clone(),
+                game.game_dvr_previous,
+                game.gpu_pref_previous.clone(),
+                game.boosted_pids.clone(),
+            )
+        };
+        if let Some(prev) = previous {
+            set_active(&prev)?;
+        }
+        restore_game_dvr(game_dvr_previous);
+        for (exe, prev) in &gpu_pref_previous {
+            restore_gpu_preference_for(exe, prev.as_ref());
+        }
+        for pid in &boosted_pids {
+            restore_process_priority(*pid);
+        }
+        {
+            let mut game = state
+                .game
+                .lock()
+                .map_err(|_| AppError::other("game state locked"))?;
+            game.active = false;
+            game.applied_plan = None;
+            game.previous_plan = None;
+            game.game_dvr_previous = None;
+            game.gpu_pref_previous = Vec::new();
+            game.boosted_pids = Vec::new();
+        }
+        get_game_mode_status_sync(&state)
+    })
+    .await
 }
 
 /// Sets a power plan active. Public so the undo system can reuse it.

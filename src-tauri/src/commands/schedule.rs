@@ -99,50 +99,57 @@ fn status_from(schedule: CleanupSchedule) -> CleanupScheduleStatus {
 }
 
 #[tauri::command]
-pub fn get_cleanup_schedule() -> AppResult<CleanupScheduleStatus> {
-    Ok(status_from(read_schedule()?))
+pub async fn get_cleanup_schedule() -> AppResult<CleanupScheduleStatus> {
+    crate::util::blocking(move || Ok(status_from(read_schedule()?))).await
 }
 
 #[tauri::command]
-pub fn set_cleanup_schedule(
+pub async fn set_cleanup_schedule(
     enabled: bool,
     time: String,
     target_ids: Vec<String>,
 ) -> AppResult<CleanupScheduleStatus> {
-    if !is_valid_time(&time) {
-        return Err(AppError::other("Time must be in HH:MM 24-hour format"));
-    }
-    let schedule = CleanupSchedule {
-        enabled,
-        time: time.clone(),
-        target_ids,
-    };
-    write_schedule(&schedule)?;
+    crate::util::blocking(move || {
+        if !is_valid_time(&time) {
+            return Err(AppError::other("Time must be in HH:MM 24-hour format"));
+        }
+        let schedule = CleanupSchedule {
+            enabled,
+            time: time.clone(),
+            target_ids,
+        };
+        write_schedule(&schedule)?;
 
-    if enabled {
-        let exe = std::env::current_exe()?;
-        let exe = exe.to_string_lossy().to_string();
-        let action = format!("\"{exe}\" --auto-clean");
-        run_command(
-            "schtasks",
-            &[
-                "/create", "/tn", TASK_NAME, "/tr", &action, "/sc", "daily", "/st", &time, "/f",
-            ],
-        )?;
-    } else {
-        // Best-effort: the task may not exist yet, which is not an error here.
-        let _ = run_command("schtasks", &["/delete", "/tn", TASK_NAME, "/f"]);
-    }
+        if enabled {
+            let exe = std::env::current_exe()?;
+            let exe = exe.to_string_lossy().to_string();
+            let action = format!("\"{exe}\" --auto-clean");
+            run_command(
+                "schtasks",
+                &[
+                    "/create", "/tn", TASK_NAME, "/tr", &action, "/sc", "daily", "/st", &time,
+                    "/f",
+                ],
+            )?;
+        } else {
+            // Best-effort: the task may not exist yet, which is not an error here.
+            let _ = run_command("schtasks", &["/delete", "/tn", TASK_NAME, "/f"]);
+        }
 
-    Ok(status_from(schedule))
+        Ok(status_from(schedule))
+    })
+    .await
 }
 
 #[tauri::command]
-pub fn run_scheduled_cleanup_now() -> AppResult<CleanResult> {
-    let schedule = read_schedule()?;
-    let result = clean_targets_impl(schedule.target_ids, |_, _, _, _| {})?;
-    write_log(&result)?;
-    Ok(result)
+pub async fn run_scheduled_cleanup_now() -> AppResult<CleanResult> {
+    crate::util::blocking(move || {
+        let schedule = read_schedule()?;
+        let result = clean_targets_impl(schedule.target_ids, |_, _, _, _| {})?;
+        write_log(&result)?;
+        Ok(result)
+    })
+    .await
 }
 
 fn is_valid_time(time: &str) -> bool {

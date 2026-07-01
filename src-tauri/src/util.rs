@@ -131,3 +131,22 @@ pub fn app_data_dir() -> AppResult<PathBuf> {
     std::fs::create_dir_all(&dir)?;
     Ok(dir)
 }
+
+/// Runs a blocking closure on Tauri's dedicated blocking thread pool.
+///
+/// Tauri v2 executes a plain (non-`async`) `#[tauri::command]` fn directly on
+/// the app's main thread. A single slow command — a big file-delete loop, a
+/// PowerShell/WMI query, a multi-second network probe — used to freeze the
+/// *entire* UI until it finished (every other page's commands queue up behind
+/// it). Every command in this app is now `async fn` and immediately hands its
+/// real work to this helper, which runs it off the main thread via
+/// `spawn_blocking`, so one slow operation never blocks anything else.
+pub async fn blocking<F, T>(f: F) -> AppResult<T>
+where
+    F: FnOnce() -> AppResult<T> + Send + 'static,
+    T: Send + 'static,
+{
+    tauri::async_runtime::spawn_blocking(f)
+        .await
+        .map_err(|e| AppError::other(format!("background task failed: {e}")))?
+}

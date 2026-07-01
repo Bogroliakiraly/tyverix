@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use sysinfo::Disks;
 
 use crate::error::AppResult;
-use crate::util::{parse_ps_array, run_powershell};
+use crate::util::{blocking, parse_ps_array, run_powershell};
 
 #[derive(Serialize)]
 pub struct DiskInfo {
@@ -21,24 +21,27 @@ pub struct DiskInfo {
 }
 
 #[tauri::command]
-pub fn list_disks() -> AppResult<Vec<DiskInfo>> {
-    let disks = Disks::new_with_refreshed_list();
-    Ok(disks
-        .iter()
-        .map(|d| DiskInfo {
-            name: d.name().to_string_lossy().to_string(),
-            mount_point: d.mount_point().to_string_lossy().to_string(),
-            file_system: d.file_system().to_string_lossy().to_string(),
-            total: d.total_space(),
-            available: d.available_space(),
-            removable: d.is_removable(),
-            kind: match d.kind() {
-                sysinfo::DiskKind::SSD => "SSD".into(),
-                sysinfo::DiskKind::HDD => "HDD".into(),
-                sysinfo::DiskKind::Unknown(_) => "Unknown".into(),
-            },
-        })
-        .collect())
+pub async fn list_disks() -> AppResult<Vec<DiskInfo>> {
+    blocking(move || {
+        let disks = Disks::new_with_refreshed_list();
+        Ok(disks
+            .iter()
+            .map(|d| DiskInfo {
+                name: d.name().to_string_lossy().to_string(),
+                mount_point: d.mount_point().to_string_lossy().to_string(),
+                file_system: d.file_system().to_string_lossy().to_string(),
+                total: d.total_space(),
+                available: d.available_space(),
+                removable: d.is_removable(),
+                kind: match d.kind() {
+                    sysinfo::DiskKind::SSD => "SSD".into(),
+                    sysinfo::DiskKind::HDD => "HDD".into(),
+                    sysinfo::DiskKind::Unknown(_) => "Unknown".into(),
+                },
+            })
+            .collect())
+    })
+    .await
 }
 
 #[derive(Serialize)]
@@ -52,10 +55,12 @@ pub struct PhysicalDiskHealth {
 }
 
 #[tauri::command]
-pub fn disk_health() -> AppResult<Vec<PhysicalDiskHealth>> {
-    // Get-PhysicalDisk reports health; reliability counters add wear/temp when
-    // the drive exposes them (many consumer drives do not — hence Option).
-    let script = r#"
+pub async fn disk_health() -> AppResult<Vec<PhysicalDiskHealth>> {
+    blocking(move || {
+        // Get-PhysicalDisk reports health; reliability counters add wear/temp
+        // when the drive exposes them (many consumer drives do not — hence
+        // Option).
+        let script = r#"
 $ErrorActionPreference='SilentlyContinue'
 $out = foreach ($d in Get-PhysicalDisk) {
   $rc = $d | Get-StorageReliabilityCounter
@@ -71,34 +76,36 @@ $out = foreach ($d in Get-PhysicalDisk) {
 $out | ConvertTo-Json -Depth 3
 "#;
 
-    #[derive(Deserialize)]
-    struct Raw {
-        #[serde(rename = "FriendlyName")]
-        friendly_name: Option<String>,
-        #[serde(rename = "MediaType")]
-        media_type: Option<String>,
-        #[serde(rename = "HealthStatus")]
-        health_status: Option<String>,
-        #[serde(rename = "Size")]
-        size: Option<u64>,
-        #[serde(rename = "Wear")]
-        wear: Option<i64>,
-        #[serde(rename = "Temperature")]
-        temperature: Option<i64>,
-    }
+        #[derive(Deserialize)]
+        struct Raw {
+            #[serde(rename = "FriendlyName")]
+            friendly_name: Option<String>,
+            #[serde(rename = "MediaType")]
+            media_type: Option<String>,
+            #[serde(rename = "HealthStatus")]
+            health_status: Option<String>,
+            #[serde(rename = "Size")]
+            size: Option<u64>,
+            #[serde(rename = "Wear")]
+            wear: Option<i64>,
+            #[serde(rename = "Temperature")]
+            temperature: Option<i64>,
+        }
 
-    let raw: Vec<Raw> = parse_ps_array(&run_powershell(script)?)?;
-    Ok(raw
-        .into_iter()
-        .map(|r| PhysicalDiskHealth {
-            friendly_name: r.friendly_name.unwrap_or_else(|| "Disk".into()),
-            media_type: r.media_type.unwrap_or_else(|| "Unknown".into()),
-            health_status: r.health_status.unwrap_or_else(|| "Unknown".into()),
-            size: r.size.unwrap_or(0),
-            wear: r.wear,
-            temperature: r.temperature,
-        })
-        .collect())
+        let raw: Vec<Raw> = parse_ps_array(&run_powershell(script)?)?;
+        Ok(raw
+            .into_iter()
+            .map(|r| PhysicalDiskHealth {
+                friendly_name: r.friendly_name.unwrap_or_else(|| "Disk".into()),
+                media_type: r.media_type.unwrap_or_else(|| "Unknown".into()),
+                health_status: r.health_status.unwrap_or_else(|| "Unknown".into()),
+                size: r.size.unwrap_or(0),
+                wear: r.wear,
+                temperature: r.temperature,
+            })
+            .collect())
+    })
+    .await
 }
 
 #[derive(Serialize)]
@@ -109,12 +116,15 @@ pub struct FileEntry {
 }
 
 #[tauri::command]
-pub fn find_large_files(root: String, min_bytes: u64) -> AppResult<Vec<FileEntry>> {
-    let mut found = Vec::new();
-    walk(Path::new(&root), min_bytes, &mut found, 0);
-    found.sort_by(|a, b| b.size.cmp(&a.size));
-    found.truncate(200);
-    Ok(found)
+pub async fn find_large_files(root: String, min_bytes: u64) -> AppResult<Vec<FileEntry>> {
+    blocking(move || {
+        let mut found = Vec::new();
+        walk(Path::new(&root), min_bytes, &mut found, 0);
+        found.sort_by(|a, b| b.size.cmp(&a.size));
+        found.truncate(200);
+        Ok(found)
+    })
+    .await
 }
 
 fn walk(dir: &Path, min: u64, out: &mut Vec<FileEntry>, depth: usize) {

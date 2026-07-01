@@ -79,9 +79,12 @@ pub fn record_memory_freed(bytes: i64) {
 /// Returns up to the last 14 days, oldest first, for the Dashboard's summary
 /// card and mini chart.
 #[tauri::command]
-pub fn get_daily_stats() -> AppResult<Vec<DailyStat>> {
-    let mut stats = read_all();
-    stats.sort_by(|a, b| a.date.cmp(&b.date));
-    let take = stats.len().saturating_sub(14);
-    Ok(stats.split_off(take))
+pub async fn get_daily_stats() -> AppResult<Vec<DailyStat>> {
+    crate::util::blocking(move || {
+        let mut stats = read_all();
+        stats.sort_by(|a, b| a.date.cmp(&b.date));
+        let take = stats.len().saturating_sub(14);
+        Ok(stats.split_off(take))
+    })
+    .await
 }

@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tyverix — Support inbox (admin)</title>
     <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
@@ -21,7 +23,7 @@
       nav { border-bottom: 1px solid var(--border); background: rgba(10,11,15,0.72); backdrop-filter: blur(12px); }
       nav .bar { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
       .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-      .logo .mark { width: 30px; height: 30px; border-radius: 9px; background: rgba(91,140,255,0.18); display: grid; place-items: center; }
+      .logo .mark { width: 32px; height: 32px; object-fit: contain; display: block; }
       main { padding: 48px 0; }
       h1 { font-size: 24px; font-weight: 800; }
       .muted { color: var(--text-2); font-size: 14px; }
@@ -51,7 +53,7 @@
   <body>
     <nav>
       <div class="bar">
-        <a class="logo" href="index.html"><span class="mark">⚡</span> Tyverix</a>
+        <a class="logo" href="index.html"><img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix</a>
         <a class="muted" href="account.html">← Account</a>
       </div>
     </nav>

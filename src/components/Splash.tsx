@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-import { Zap } from "lucide-react";
 import { useT } from "../i18n";
+import logo from "../assets/logo.png";
 
 /**
  * Startup splash: shown for a few seconds while the window first paints, then
@@ -30,17 +30,18 @@ export function Splash() {
           />
         ))}
         <motion.div
-          className="grid h-16 w-16 place-items-center rounded-2xl bg-accent/15 shadow-glow"
+          className="grid h-24 w-24 place-items-center"
           initial={{ opacity: 0, scale: 0.6, rotate: -20 }}
           animate={{ opacity: 1, scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 18 }}
         >
-          <motion.div
-            animate={{ rotate: [0, -8, 8, 0] }}
+          <motion.img
+            src={logo}
+            alt="Tyverix"
+            className="h-20 w-20 object-contain drop-shadow-[0_0_18px_rgba(91,140,255,0.45)]"
+            animate={{ rotate: [0, -6, 6, 0] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-          >
-            <Zap className="h-8 w-8 text-accent" fill="currentColor" />
-          </motion.div>
+          />
         </motion.div>
       </div>
 

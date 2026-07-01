@@ -239,53 +239,59 @@ fn clean_memory_dumps() -> (u64, u64, Vec<String>) {
 }
 
 #[tauri::command]
-pub fn scan_clean_targets() -> AppResult<Vec<CleanTarget>> {
-    let mut out = Vec::new();
-    for spec in specs() {
-        let (size, count) = if spec.id == "recycle_bin" {
-            recycle_bin_size()
-        } else if spec.id == "memory_dumps" {
-            memory_dump_size()
-        } else {
-            let mut total = 0u64;
-            let mut files = 0u64;
-            for p in &spec.paths {
-                let (s, c) = dir_size(p);
-                total += s;
-                files += c;
-            }
-            (total, files)
-        };
+pub async fn scan_clean_targets() -> AppResult<Vec<CleanTarget>> {
+    crate::util::blocking(move || {
+        let mut out = Vec::new();
+        for spec in specs() {
+            let (size, count) = if spec.id == "recycle_bin" {
+                recycle_bin_size()
+            } else if spec.id == "memory_dumps" {
+                memory_dump_size()
+            } else {
+                let mut total = 0u64;
+                let mut files = 0u64;
+                for p in &spec.paths {
+                    let (s, c) = dir_size(p);
+                    total += s;
+                    files += c;
+                }
+                (total, files)
+            };
 
-        out.push(CleanTarget {
-            id: spec.id.to_string(),
-            name: spec.name.to_string(),
-            description: spec.description.to_string(),
-            benefit: spec.benefit.to_string(),
-            downside: spec.downside.to_string(),
-            path: spec.paths.first().map(|p| p.to_string_lossy().to_string()),
-            size_bytes: size,
-            file_count: count,
-            category: spec.category.to_string(),
-            permanent: spec.permanent,
-        });
-    }
-    Ok(out)
+            out.push(CleanTarget {
+                id: spec.id.to_string(),
+                name: spec.name.to_string(),
+                description: spec.description.to_string(),
+                benefit: spec.benefit.to_string(),
+                downside: spec.downside.to_string(),
+                path: spec.paths.first().map(|p| p.to_string_lossy().to_string()),
+                size_bytes: size,
+                file_count: count,
+                category: spec.category.to_string(),
+                permanent: spec.permanent,
+            });
+        }
+        Ok(out)
+    })
+    .await
 }
 
 #[tauri::command]
-pub fn clean_targets(app: tauri::AppHandle, ids: Vec<String>) -> AppResult<CleanResult> {
-    clean_targets_impl(ids, |processed, total, freed_bytes, removed_files| {
-        let _ = app.emit(
-            "clean-progress",
-            CleanProgress {
-                processed,
-                total,
-                freed_bytes,
-                removed_files,
-            },
-        );
+pub async fn clean_targets(app: tauri::AppHandle, ids: Vec<String>) -> AppResult<CleanResult> {
+    crate::util::blocking(move || {
+        clean_targets_impl(ids, |processed, total, freed_bytes, removed_files| {
+            let _ = app.emit(
+                "clean-progress",
+                CleanProgress {
+                    processed,
+                    total,
+                    freed_bytes,
+                    removed_files,
+                },
+            );
+        })
     })
+    .await
 }
 
 /// Shared cleanup logic. `on_progress(processed, total, freed_bytes,

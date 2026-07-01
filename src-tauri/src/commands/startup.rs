@@ -6,12 +6,13 @@
 //! Startup-folder shortcuts are moved into a "(disabled)" sub-folder.
 
 use serde::Serialize;
-use tauri::State;
+use tauri::Manager;
 use winreg::enums::*;
 use winreg::RegKey;
 
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
+use crate::util::blocking;
 
 const RUN_PATH: &str = r"Software\Microsoft\Windows\CurrentVersion\Run";
 const BACKUP_HKCU: &str = r"Software\Tyverix\DisabledStartup\HKCU";
@@ -39,107 +40,114 @@ fn run_values(root: RegKey, path: &str) -> Vec<(String, String)> {
 }
 
 #[tauri::command]
-pub fn list_startup_items() -> AppResult<Vec<StartupItem>> {
-    let mut items = Vec::new();
-    let hkcu = RegKey::predef(HKEY_CURRENT_USER);
-    let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
+pub async fn list_startup_items() -> AppResult<Vec<StartupItem>> {
+    blocking(move || {
+        let mut items = Vec::new();
+        let hkcu = RegKey::predef(HKEY_CURRENT_USER);
+        let hklm = RegKey::predef(HKEY_LOCAL_MACHINE);
 
-    // Enabled registry entries.
-    for (name, cmd) in run_values(RegKey::predef(HKEY_CURRENT_USER), RUN_PATH) {
-        items.push(StartupItem {
-            id: format!("hr::{name}"),
-            name: name.clone(),
-            command: cmd,
-            location: "registry_hkcu_run".into(),
-            enabled: true,
-            source: "Current user".into(),
-        });
-    }
-    for (name, cmd) in run_values(RegKey::predef(HKEY_LOCAL_MACHINE), RUN_PATH) {
-        items.push(StartupItem {
-            id: format!("mr::{name}"),
-            name: name.clone(),
-            command: cmd,
-            location: "registry_hklm_run".into(),
-            enabled: true,
-            source: "All users".into(),
-        });
-    }
+        // Enabled registry entries.
+        for (name, cmd) in run_values(RegKey::predef(HKEY_CURRENT_USER), RUN_PATH) {
+            items.push(StartupItem {
+                id: format!("hr::{name}"),
+                name: name.clone(),
+                command: cmd,
+                location: "registry_hkcu_run".into(),
+                enabled: true,
+                source: "Current user".into(),
+            });
+        }
+        for (name, cmd) in run_values(RegKey::predef(HKEY_LOCAL_MACHINE), RUN_PATH) {
+            items.push(StartupItem {
+                id: format!("mr::{name}"),
+                name: name.clone(),
+                command: cmd,
+                location: "registry_hklm_run".into(),
+                enabled: true,
+                source: "All users".into(),
+            });
+        }
 
-    // Disabled entries we previously backed up.
-    for (name, cmd) in run_values(hkcu, BACKUP_HKCU) {
-        items.push(StartupItem {
-            id: format!("hr::{name}"),
-            name: name.clone(),
-            command: cmd,
-            location: "registry_hkcu_run".into(),
-            enabled: false,
-            source: "Current user".into(),
-        });
-    }
-    for (name, cmd) in run_values(hklm, BACKUP_HKLM) {
-        items.push(StartupItem {
-            id: format!("mr::{name}"),
-            name: name.clone(),
-            command: cmd,
-            location: "registry_hklm_run".into(),
-            enabled: false,
-            source: "All users".into(),
-        });
-    }
+        // Disabled entries we previously backed up.
+        for (name, cmd) in run_values(hkcu, BACKUP_HKCU) {
+            items.push(StartupItem {
+                id: format!("hr::{name}"),
+                name: name.clone(),
+                command: cmd,
+                location: "registry_hkcu_run".into(),
+                enabled: false,
+                source: "Current user".into(),
+            });
+        }
+        for (name, cmd) in run_values(hklm, BACKUP_HKLM) {
+            items.push(StartupItem {
+                id: format!("mr::{name}"),
+                name: name.clone(),
+                command: cmd,
+                location: "registry_hklm_run".into(),
+                enabled: false,
+                source: "All users".into(),
+            });
+        }
 
-    // Startup-folder shortcuts.
-    collect_folder(&mut items, startup_folder_user(), "uf", "Startup folder (user)");
-    collect_folder(
-        &mut items,
-        startup_folder_common(),
-        "cf",
-        "Startup folder (all users)",
-    );
+        // Startup-folder shortcuts.
+        collect_folder(&mut items, startup_folder_user(), "uf", "Startup folder (user)");
+        collect_folder(
+            &mut items,
+            startup_folder_common(),
+            "cf",
+            "Startup folder (all users)",
+        );
 
-    items.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
-    Ok(items)
+        items.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+        Ok(items)
+    })
+    .await
 }
 
 #[tauri::command]
-pub fn set_startup_enabled(
-    state: State<AppState>,
+pub async fn set_startup_enabled(
+    app: tauri::AppHandle,
     id: String,
     enabled: bool,
 ) -> AppResult<()> {
-    let (code, name) = id
-        .split_once("::")
-        .ok_or_else(|| AppError::other("malformed startup id"))?;
+    blocking(move || {
+        let state = app.state::<AppState>();
+        let (code, name) = id
+            .split_once("::")
+            .ok_or_else(|| AppError::other("malformed startup id"))?;
 
-    match code {
-        "hr" => toggle_registry(
-            RegKey::predef(HKEY_CURRENT_USER),
-            RUN_PATH,
-            BACKUP_HKCU,
-            name,
-            enabled,
-        )?,
-        "mr" => toggle_registry(
-            RegKey::predef(HKEY_LOCAL_MACHINE),
-            RUN_PATH,
-            BACKUP_HKLM,
-            name,
-            enabled,
-        )?,
-        "uf" => toggle_folder(startup_folder_user(), name, enabled)?,
-        "cf" => toggle_folder(startup_folder_common(), name, enabled)?,
-        _ => return Err(AppError::other("unknown startup location")),
-    }
+        match code {
+            "hr" => toggle_registry(
+                RegKey::predef(HKEY_CURRENT_USER),
+                RUN_PATH,
+                BACKUP_HKCU,
+                name,
+                enabled,
+            )?,
+            "mr" => toggle_registry(
+                RegKey::predef(HKEY_LOCAL_MACHINE),
+                RUN_PATH,
+                BACKUP_HKLM,
+                name,
+                enabled,
+            )?,
+            "uf" => toggle_folder(startup_folder_user(), name, enabled)?,
+            "cf" => toggle_folder(startup_folder_common(), name, enabled)?,
+            _ => return Err(AppError::other("unknown startup location")),
+        }
 
-    state.record(
-        "startup_toggle",
-        format!(
-            "{} startup item “{name}”",
-            if enabled { "Enabled" } else { "Disabled" }
-        ),
-        serde_json::json!({ "id": id, "restore_enabled": !enabled }),
-    );
-    Ok(())
+        state.record(
+            "startup_toggle",
+            format!(
+                "{} startup item “{name}”",
+                if enabled { "Enabled" } else { "Disabled" }
+            ),
+            serde_json::json!({ "id": id, "restore_enabled": !enabled }),
+        );
+        Ok(())
+    })
+    .await
 }
 
 /// Re-applies the opposite of a recorded toggle. Used by the undo system; does

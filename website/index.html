@@ -30,7 +30,9 @@
     <meta name="twitter:image" content="https://tyverix.com/screenshots/dashboard.png" />
 
     <meta name="theme-color" content="#0a0b0f" />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -113,9 +115,8 @@
       }
       .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
       .logo .mark {
-        width: 30px; height: 30px; border-radius: 9px;
-        background: rgba(91, 140, 255, 0.18);
-        display: grid; place-items: center;
+        width: 32px; height: 32px; object-fit: contain;
+        display: block;
       }
       .nav-right { display: flex; align-items: center; gap: 18px; }
       .nav-links { display: flex; gap: 22px; font-size: 14px; color: var(--text-2); }
@@ -335,7 +336,7 @@
     <nav>
       <div class="wrap">
         <a class="logo" href="#">
-          <span class="mark">⚡</span> Tyverix
+          <img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix
         </a>
         <div class="nav-right">
           <div class="nav-links">

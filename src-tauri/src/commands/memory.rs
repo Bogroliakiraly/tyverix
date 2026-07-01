@@ -48,7 +48,8 @@ pub struct MemoryFreeResult {
 }
 
 #[tauri::command]
-pub fn free_memory(purge_standby: bool) -> AppResult<MemoryFreeResult> {
+pub async fn free_memory(purge_standby: bool) -> AppResult<MemoryFreeResult> {
+    crate::util::blocking(move || {
     let mut sys = System::new();
     sys.refresh_memory();
     let before = sys.available_memory();
@@ -78,6 +79,8 @@ pub fn free_memory(purge_standby: bool) -> AppResult<MemoryFreeResult> {
         processes_trimmed,
         standby_purged,
     })
+    })
+    .await
 }
 
 /// Trims the working set of every process we are allowed to open, except our

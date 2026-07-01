@@ -7,7 +7,9 @@
     <meta name="description" content="Sign in or create a free Tyverix account to manage your subscription and license key." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tyverix.com/account.html" />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
@@ -32,7 +34,7 @@
       nav .bar { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px;
         display: flex; align-items: center; justify-content: space-between; }
       .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-      .logo .mark { width: 30px; height: 30px; border-radius: 9px; background: rgba(91,140,255,0.18); display: grid; place-items: center; }
+      .logo .mark { width: 32px; height: 32px; object-fit: contain; display: block; }
       .langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
       .langs button { background: none; border: none; color: var(--text-2); cursor: pointer; font-size: 13px; padding: 4px 9px; border-radius: 7px; font-family: inherit; }
       .langs button.active { background: var(--elevated); color: var(--text); }
@@ -84,7 +86,7 @@
   <body>
     <nav>
       <div class="bar">
-        <a class="logo" href="index.html"><span class="mark">⚡</span> Tyverix</a>
+        <a class="logo" href="index.html"><img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix</a>
         <div class="langs" id="langs">
           <button data-lang="en">EN</button>
           <button data-lang="hu">HU</button>

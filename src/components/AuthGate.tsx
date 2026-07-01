@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { LogIn, UserPlus, Mail, Zap } from "lucide-react";
+import { LogIn, UserPlus, Mail } from "lucide-react";
 import { useAuth } from "../store/useAuth";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { toast } from "../store/useToast";
 import { useT } from "../i18n";
+import logo from "../assets/logo.png";
 
 /**
  * Full-screen sign-in prompt shown right at startup — registering or signing
@@ -49,9 +50,7 @@ export function AuthGate() {
     <div className="fixed inset-0 z-[150] flex items-center justify-center bg-bg-base p-6">
       <div className="w-full max-w-sm card p-6">
         <div className="mb-5 flex flex-col items-center gap-2 text-center">
-          <div className="grid h-12 w-12 place-items-center rounded-2xl bg-accent/15">
-            <Zap className="h-6 w-6 text-accent" />
-          </div>
+          <img src={logo} alt="Tyverix" className="h-14 w-14 object-contain" />
           <h2 className="text-lg font-semibold">{t("auth.title")}</h2>
           <p className="text-sm text-text-secondary">{t("auth.subtitle")}</p>
         </div>

@@ -29,52 +29,55 @@ pub struct LatencyResult {
 }
 
 #[tauri::command]
-pub fn measure_latency(host: String, port: u16, samples: u32) -> AppResult<LatencyResult> {
-    let samples = samples.clamp(1, 20);
-    let target = format!("{host}:{port}");
-    let addr = target
-        .to_socket_addrs()
-        .map_err(|e| AppError::other(format!("could not resolve {host}: {e}")))?
-        .next()
-        .ok_or_else(|| AppError::other(format!("could not resolve {host}")))?;
+pub async fn measure_latency(host: String, port: u16, samples: u32) -> AppResult<LatencyResult> {
+    crate::util::blocking(move || {
+        let samples = samples.clamp(1, 20);
+        let target = format!("{host}:{port}");
+        let addr = target
+            .to_socket_addrs()
+            .map_err(|e| AppError::other(format!("could not resolve {host}: {e}")))?
+            .next()
+            .ok_or_else(|| AppError::other(format!("could not resolve {host}")))?;
 
-    let mut times = Vec::new();
-    let mut lost = 0u32;
-    for i in 0..samples {
-        let start = Instant::now();
-        match TcpStream::connect_timeout(&addr, Duration::from_secs(2)) {
-            Ok(_) => times.push(start.elapsed().as_secs_f64() * 1000.0),
-            Err(_) => lost += 1,
+        let mut times = Vec::new();
+        let mut lost = 0u32;
+        for i in 0..samples {
+            let start = Instant::now();
+            match TcpStream::connect_timeout(&addr, Duration::from_secs(2)) {
+                Ok(_) => times.push(start.elapsed().as_secs_f64() * 1000.0),
+                Err(_) => lost += 1,
+            }
+            if i + 1 < samples {
+                std::thread::sleep(Duration::from_millis(150));
+            }
         }
-        if i + 1 < samples {
-            std::thread::sleep(Duration::from_millis(150));
+
+        if times.is_empty() {
+            return Err(AppError::other(format!(
+                "{host}:{port} did not accept a connection — it may be offline or block this port"
+            )));
         }
-    }
 
-    if times.is_empty() {
-        return Err(AppError::other(format!(
-            "{host}:{port} did not accept a connection — it may be offline or block this port"
-        )));
-    }
+        let avg = times.iter().sum::<f64>() / times.len() as f64;
+        let min = times.iter().cloned().fold(f64::INFINITY, f64::min);
+        let max = times.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
+        let variance = times.iter().map(|t| (t - avg).powi(2)).sum::<f64>() / times.len() as f64;
+        let jitter = variance.sqrt();
 
-    let avg = times.iter().sum::<f64>() / times.len() as f64;
-    let min = times.iter().cloned().fold(f64::INFINITY, f64::min);
-    let max = times.iter().cloned().fold(f64::NEG_INFINITY, f64::max);
-    let variance = times.iter().map(|t| (t - avg).powi(2)).sum::<f64>() / times.len() as f64;
-    let jitter = variance.sqrt();
-
-    Ok(LatencyResult {
-        host,
-        port,
-        sent: samples,
-        received: times.len() as u32,
-        lost,
-        min_ms: round2(min),
-        max_ms: round2(max),
-        avg_ms: round2(avg),
-        jitter_ms: round2(jitter),
-        samples_ms: times.into_iter().map(round2).collect(),
+        Ok(LatencyResult {
+            host,
+            port,
+            sent: samples,
+            received: times.len() as u32,
+            lost,
+            min_ms: round2(min),
+            max_ms: round2(max),
+            avg_ms: round2(avg),
+            jitter_ms: round2(jitter),
+            samples_ms: times.into_iter().map(round2).collect(),
+        })
     })
+    .await
 }
 
 fn round2(v: f64) -> f64 {

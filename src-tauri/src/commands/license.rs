@@ -105,8 +105,7 @@ fn free_status() -> LicenseStatus {
     }
 }
 
-#[tauri::command]
-pub fn get_license_status() -> AppResult<LicenseStatus> {
+fn get_license_status_sync() -> AppResult<LicenseStatus> {
     let path = license_path()?;
     let Ok(key) = std::fs::read_to_string(&path) else {
         return Ok(free_status());
@@ -140,23 +139,34 @@ pub fn get_license_status() -> AppResult<LicenseStatus> {
 }
 
 #[tauri::command]
-pub fn activate_license(key: String) -> AppResult<LicenseStatus> {
-    let payload = verify_key(&key).map_err(AppError::other)?;
-    let days = days_until(&payload.expires);
-    if days.map(|d| d < 0).unwrap_or(true) {
-        return Err(AppError::other(
-            "this license key has expired — please renew your subscription",
-        ));
-    }
-    std::fs::write(license_path()?, key.trim())?;
-    get_license_status()
+pub async fn get_license_status() -> AppResult<LicenseStatus> {
+    crate::util::blocking(get_license_status_sync).await
 }
 
 #[tauri::command]
-pub fn deactivate_license() -> AppResult<LicenseStatus> {
-    let path = license_path()?;
-    if path.exists() {
-        std::fs::remove_file(path)?;
-    }
-    get_license_status()
+pub async fn activate_license(key: String) -> AppResult<LicenseStatus> {
+    crate::util::blocking(move || {
+        let payload = verify_key(&key).map_err(AppError::other)?;
+        let days = days_until(&payload.expires);
+        if days.map(|d| d < 0).unwrap_or(true) {
+            return Err(AppError::other(
+                "this license key has expired — please renew your subscription",
+            ));
+        }
+        std::fs::write(license_path()?, key.trim())?;
+        get_license_status_sync()
+    })
+    .await
+}
+
+#[tauri::command]
+pub async fn deactivate_license() -> AppResult<LicenseStatus> {
+    crate::util::blocking(move || {
+        let path = license_path()?;
+        if path.exists() {
+            std::fs::remove_file(path)?;
+        }
+        get_license_status_sync()
+    })
+    .await
 }

@@ -7,7 +7,9 @@
     <meta name="description" content="Every Tyverix release, what changed and when — new features, fixes and improvements to the honest Windows gaming optimizer." />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tyverix.com/changelog.html" />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
@@ -23,7 +25,7 @@
       nav { border-bottom: 1px solid var(--border); background: rgba(10,11,15,0.72); backdrop-filter: blur(12px); position: sticky; top: 0; }
       nav .bar { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
       .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-      .logo .mark { width: 30px; height: 30px; border-radius: 9px; background: rgba(91,140,255,0.18); display: grid; place-items: center; }
+      .logo .mark { width: 32px; height: 32px; object-fit: contain; display: block; }
       .langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
       .langs button { background: none; border: none; color: var(--text-2); cursor: pointer; font-size: 13px; padding: 4px 9px; border-radius: 7px; font-family: inherit; }
       .langs button.active { background: var(--elevated); color: var(--text); }
@@ -55,7 +57,7 @@
   <body>
     <nav>
       <div class="bar">
-        <a class="logo" href="index.html"><span class="mark">⚡</span> Tyverix</a>
+        <a class="logo" href="index.html"><img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix</a>
         <div class="langs" id="langs">
           <button data-lang="en">EN</button>
           <button data-lang="hu">HU</button>
@@ -81,6 +83,10 @@
           latest: "Latest",
           back: "← Back to site",
           entries: [
+            { v: "0.1.10", date: "2026-07-03", items: [
+              "New logo, everywhere — the app, the website, the installer",
+              "Major stability fix: a slow operation (like a big cleanup) no longer freezes the rest of the app — every page stays responsive while it finishes in the background",
+            ]},
             { v: "0.1.9", date: "2026-07-03", items: [
               "Game Mode now also turns off Xbox Game Bar's background recording overhead, sets detected games to \"high performance\" in Windows' GPU preference, and gives them a small scheduling priority boost — still no invented FPS numbers, just real, reversible changes",
             ]},
@@ -137,6 +143,10 @@
           latest: "Legfrissebb",
           back: "← Vissza a főoldalra",
           entries: [
+            { v: "0.1.10", date: "2026.07.03", items: [
+              "Új logó, mindenhol — az appban, a weboldalon, a telepítőben",
+              "Nagy stabilitási javítás: egy lassú művelet (pl. nagy tisztítás) mostantól nem fagyasztja le az app többi részét — minden oldal reszponzív marad, amíg a háttérben lefut",
+            ]},
             { v: "0.1.9", date: "2026.07.03", items: [
               "A Game Mode mostantól kikapcsolja az Xbox Game Bar háttér-felvételi terhelését, a felismert játékokat „magas teljesítmény” GPU-preferenciára állítja, és kicsit megemeli az ütemezési prioritásukat — továbbra sem ígérünk kitalált FPS-számot, csak valós, visszafordítható változtatásokat",
             ]},
@@ -193,6 +203,10 @@
           latest: "Neueste",
           back: "← Zurück zur Seite",
           entries: [
+            { v: "0.1.10", date: "03.07.2026", items: [
+              "Neues Logo, überall — in der App, auf der Website, im Installer",
+              "Wichtige Stabilitätsverbesserung: eine langsame Operation (z. B. eine große Bereinigung) friert den Rest der App nicht mehr ein — jede Seite bleibt reaktionsfähig, während sie im Hintergrund läuft",
+            ]},
             { v: "0.1.9", date: "03.07.2026", items: [
               "Der Spielmodus schaltet jetzt auch die Hintergrundaufnahme der Xbox Game Bar aus, setzt erkannte Spiele auf „hohe Leistung“ in der GPU-Präferenz von Windows und gibt ihnen einen kleinen Priorität-Boost — immer noch keine erfundenen FPS-Zahlen, nur echte, umkehrbare Änderungen",
             ]},
