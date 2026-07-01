@@ -5,9 +5,20 @@
 use std::path::{Path, PathBuf};
 
 use serde::Serialize;
+use tauri::Emitter;
 
 use crate::error::AppResult;
 use crate::util::run_powershell;
+
+/// Emitted after each selected target finishes, so the UI can show a real
+/// progress bar instead of a single indefinite spinner during a big cleanup.
+#[derive(Clone, Serialize)]
+struct CleanProgress {
+    processed: usize,
+    total: usize,
+    freed_bytes: u64,
+    removed_files: u64,
+}
 
 #[derive(Serialize, Clone)]
 pub struct CleanTarget {
@@ -263,13 +274,35 @@ pub fn scan_clean_targets() -> AppResult<Vec<CleanTarget>> {
 }
 
 #[tauri::command]
-pub fn clean_targets(ids: Vec<String>) -> AppResult<CleanResult> {
+pub fn clean_targets(app: tauri::AppHandle, ids: Vec<String>) -> AppResult<CleanResult> {
+    clean_targets_impl(ids, |processed, total, freed_bytes, removed_files| {
+        let _ = app.emit(
+            "clean-progress",
+            CleanProgress {
+                processed,
+                total,
+                freed_bytes,
+                removed_files,
+            },
+        );
+    })
+}
+
+/// Shared cleanup logic. `on_progress(processed, total, freed_bytes,
+/// removed_files)` is called after each target finishes; the interactive
+/// command reports it to the UI as a Tauri event, while the scheduled/headless
+/// callers (which have no window to report to) pass a no-op.
+pub(crate) fn clean_targets_impl(
+    ids: Vec<String>,
+    mut on_progress: impl FnMut(usize, usize, u64, u64),
+) -> AppResult<CleanResult> {
     let mut freed = 0u64;
     let mut removed = 0u64;
     let mut errors = Vec::new();
 
     let all = specs();
-    for id in ids {
+    let total = ids.len();
+    for (i, id) in ids.into_iter().enumerate() {
         let Some(spec) = all.iter().find(|s| s.id == id) else {
             continue;
         };
@@ -278,26 +311,26 @@ pub fn clean_targets(ids: Vec<String>) -> AppResult<CleanResult> {
                 Ok(_) => {}
                 Err(e) => errors.push(format!("Recycle Bin: {e}")),
             }
-            continue;
-        }
-        if spec.id == "memory_dumps" {
+        } else if spec.id == "memory_dumps" {
             let (f, r, mut errs) = clean_memory_dumps();
             freed += f;
             removed += r;
             if errors.len() < 20 {
                 errors.append(&mut errs);
             }
-            continue;
-        }
-        for p in &spec.paths {
-            let (f, r, mut errs) = clean_dir_contents(p);
-            freed += f;
-            removed += r;
-            // Keep the error list bounded so the UI stays readable.
-            if errors.len() < 20 {
-                errors.append(&mut errs);
+        } else {
+            for p in &spec.paths {
+                let (f, r, mut errs) = clean_dir_contents(p);
+                freed += f;
+                removed += r;
+                // Keep the error list bounded so the UI stays readable.
+                if errors.len() < 20 {
+                    errors.append(&mut errs);
+                }
             }
         }
+
+        on_progress(i + 1, total, freed, removed);
     }
 
     errors.truncate(20);

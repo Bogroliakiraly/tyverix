@@ -7,6 +7,7 @@ import { I18nProvider } from "./i18n";
 import { useLicense } from "./store/useLicense";
 import { useAuth } from "./store/useAuth";
 import { Splash } from "./components/Splash";
+import { AuthGate } from "./components/AuthGate";
 
 const SPLASH_MS = 2400;
 
@@ -25,6 +26,7 @@ function Root() {
   return (
     <>
       <App />
+      <AuthGate />
       <AnimatePresence>{showSplash && <Splash />}</AnimatePresence>
     </>
   );

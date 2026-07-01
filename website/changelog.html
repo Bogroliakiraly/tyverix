@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BoostForge — Changelog</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0b0f; --surface: #121419; --elevated: #181b22; --border: #242833;
+        --accent: #5b8cff; --accent-hover: #6f9bff; --good: #3ddc84; --warn: #f5b14c;
+        --text: #eef1f7; --text-2: #9aa3b2; --text-3: #5f6776;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+      a { color: inherit; text-decoration: none; }
+      .wrap { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+      nav { border-bottom: 1px solid var(--border); background: rgba(10,11,15,0.72); backdrop-filter: blur(12px); position: sticky; top: 0; }
+      nav .bar { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+      .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+      .logo .mark { width: 30px; height: 30px; border-radius: 9px; background: rgba(91,140,255,0.18); display: grid; place-items: center; }
+      .langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+      .langs button { background: none; border: none; color: var(--text-2); cursor: pointer; font-size: 13px; padding: 4px 9px; border-radius: 7px; font-family: inherit; }
+      .langs button.active { background: var(--elevated); color: var(--text); }
+      main { padding: 56px 0 80px; }
+      h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+      .sub { color: var(--text-2); margin-top: 8px; font-size: 15px; }
+      .entry { position: relative; padding: 28px 0 28px 26px; border-left: 2px solid var(--border); }
+      .entry:first-child { padding-top: 36px; }
+      .entry:last-child { border-left-color: transparent; }
+      .entry::before {
+        content: ""; position: absolute; left: -7px; top: 34px; width: 12px; height: 12px;
+        border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(91,140,255,0.18);
+      }
+      .entry:first-child::before { background: var(--good); box-shadow: 0 0 0 4px rgba(61,220,132,0.18); }
+      .ver-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+      .ver { font-size: 18px; font-weight: 700; }
+      .date { font-size: 13px; color: var(--text-3); }
+      .badge-latest {
+        font-size: 11px; font-weight: 600; color: var(--good); background: rgba(61,220,132,0.14);
+        border: 1px solid rgba(61,220,132,0.35); border-radius: 999px; padding: 2px 9px;
+      }
+      ul.changes { list-style: none; display: grid; gap: 8px; }
+      ul.changes li { font-size: 14px; color: var(--text-2); display: flex; gap: 10px; }
+      ul.changes li .dot { color: var(--accent); flex-shrink: 0; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="bar">
+        <a class="logo" href="index.html"><span class="mark">⚡</span> BoostForge</a>
+        <div class="langs" id="langs">
+          <button data-lang="en">EN</button>
+          <button data-lang="hu">HU</button>
+          <button data-lang="de">DE</button>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="wrap">
+        <h1 id="pageTitle"></h1>
+        <p class="sub" id="pageSub"></p>
+        <div id="list"></div>
+      </div>
+    </main>
+
+    <script>
+      const DATA = {
+        en: {
+          title: "Changelog",
+          sub: "What's new in BoostForge, release by release.",
+          latest: "Latest",
+          entries: [
+            { v: "0.1.5", date: "2026-07-01", items: [
+              "Sign-in prompt right at launch (remembered — you won't be asked twice)",
+              "A real progress bar while cleaning, instead of a single spinner",
+              "Diagnostics pages (Drivers, Services, Windows Update) now time out instead of hanging when Windows is slow to respond",
+              "This changelog page",
+            ]},
+            { v: "0.1.4", date: "2026-07-01", items: [
+              "Support inbox with its own admin login",
+              "Free vs Pro comparison shown right in the app",
+              "Startup animation",
+              "“Select all” in the disk cleaner",
+              "Generating a license key for yourself now offers one-click activation on this device",
+            ]},
+            { v: "0.1.3", date: "2026-06-30", items: [
+              "Free trial is now 1 day, counted from your account's registration",
+              "Confirmation before closing the app, so it can't be shut mid-task by accident",
+              "Runs elevated (as administrator) automatically",
+              "Driver update links: official download page + release notes per device",
+              "Support inbox groundwork",
+            ]},
+            { v: "0.1.2", date: "2026-06-30", items: [
+              "Online accounts: register and sign in from the website or the app",
+              "Admin panel to issue Pro license keys for any number of days",
+              "Free vs Pro gating enforced (Game Mode, Memory, Network, Scheduled cleanup are Pro)",
+              "The installer now downloads directly from the site",
+            ]},
+            { v: "0.1.1", date: "2026-06-29", items: [
+              "Automatic updates verified end-to-end",
+            ]},
+            { v: "0.1.0", date: "2026-06-29", items: [
+              "Initial release: live system monitor, safe disk cleaner, Game Mode, memory optimizer, network latency check, scheduled cleanup, startup manager, safety net (restore points & undo)",
+              "English, Hungarian and German",
+            ]},
+          ],
+        },
+        hu: {
+          title: "Újdonságok",
+          sub: "Mi változott a BoostForge-ban, kiadásról kiadásra.",
+          latest: "Legfrissebb",
+          entries: [
+            { v: "0.1.5", date: "2026.07.01", items: [
+              "Bejelentkezési képernyő közvetlenül induláskor (megjegyzi — nem kérdezi kétszer)",
+              "Valódi folyamatjelző csík tisztításkor egyetlen pörgő ikon helyett",
+              "A diagnosztikai oldalak (Illesztőprogramok, Szolgáltatások, Windows Update) most időtúllépéssel térnek vissza ahelyett, hogy örökre lefagynának, ha a Windows lassan válaszol",
+              "Ez az újdonságok oldal",
+            ]},
+            { v: "0.1.4", date: "2026.07.01", items: [
+              "Support beérkezett üzenetek, saját admin bejelentkezéssel",
+              "Ingyenes vs Pro összehasonlítás közvetlenül az appban",
+              "Indítási animáció",
+              "„Összes kijelölése” a lemeztisztítóban",
+              "Ha magadnak generálsz licenckulcsot, egy kattintással aktiválható ezen a gépen",
+            ]},
+            { v: "0.1.3", date: "2026.06.30", items: [
+              "Az ingyenes próba mostantól 1 nap, a fiók regisztrációjától számítva",
+              "Megerősítés bezáráskor, hogy véletlenül ne záródjon be művelet közben",
+              "Automatikusan rendszergazdaként indul",
+              "Illesztőprogram-frissítési linkek: hivatalos letöltőoldal és changelog eszközönként",
+              "Support beérkezett üzenetek alapjai",
+            ]},
+            { v: "0.1.2", date: "2026.06.30", items: [
+              "Online fiókok: regisztráció és bejelentkezés a weboldalon vagy az appban",
+              "Admin felület Pro licenckulcsok kiadásához, tetszőleges napra",
+              "Ingyenes vs Pro zárolás bevezetve (Játék mód, Memória, Hálózat, Ütemezett tisztítás Pro)",
+              "A telepítő mostantól közvetlenül a weboldalról töltődik le",
+            ]},
+            { v: "0.1.1", date: "2026.06.29", items: [
+              "Az automatikus frissítés végpontig ellenőrizve",
+            ]},
+            { v: "0.1.0", date: "2026.06.29", items: [
+              "Első kiadás: élő rendszerfigyelő, biztonságos lemeztisztító, Játék mód, memória-optimalizáló, hálózati késleltetés-mérő, ütemezett tisztítás, indítópult-kezelő, biztonsági háló (visszaállítási pontok és visszavonás)",
+              "Angol, magyar és német nyelv",
+            ]},
+          ],
+        },
+        de: {
+          title: "Änderungsprotokoll",
+          sub: "Was in BoostForge neu ist, Release für Release.",
+          latest: "Neueste",
+          entries: [
+            { v: "0.1.5", date: "01.07.2026", items: [
+              "Anmeldeaufforderung direkt beim Start (gemerkt — du wirst nicht zweimal gefragt)",
+              "Ein echter Fortschrittsbalken beim Bereinigen statt eines einzelnen Spinners",
+              "Diagnose-Seiten (Treiber, Dienste, Windows Update) brechen jetzt mit Zeitüberschreitung ab, statt sich aufzuhängen, wenn Windows langsam reagiert",
+              "Diese Änderungsprotokoll-Seite",
+            ]},
+            { v: "0.1.4", date: "01.07.2026", items: [
+              "Support-Posteingang mit eigenem Admin-Login",
+              "Gratis-vs-Pro-Vergleich direkt in der App",
+              "Start-Animation",
+              "„Alle auswählen“ im Datenträger-Bereiniger",
+              "Einen für dich selbst erzeugten Lizenzschlüssel kannst du jetzt mit einem Klick auf diesem Gerät aktivieren",
+            ]},
+            { v: "0.1.3", date: "30.06.2026", items: [
+              "Der kostenlose Test ist jetzt 1 Tag, gezählt ab der Kontoregistrierung",
+              "Bestätigung vor dem Schließen der App, damit sie nicht versehentlich mitten in einer Aufgabe beendet wird",
+              "Startet automatisch erhöht (als Administrator)",
+              "Treiber-Update-Links: offizielle Download-Seite + Release Notes je Gerät",
+              "Grundlage für den Support-Posteingang",
+            ]},
+            { v: "0.1.2", date: "30.06.2026", items: [
+              "Online-Konten: Registrierung und Anmeldung über die Website oder die App",
+              "Admin-Panel zum Ausstellen von Pro-Lizenzschlüsseln für beliebig viele Tage",
+              "Gratis-vs-Pro-Sperre eingeführt (Spielmodus, Speicher, Netzwerk, geplante Bereinigung sind Pro)",
+              "Der Installer wird jetzt direkt von der Website heruntergeladen",
+            ]},
+            { v: "0.1.1", date: "29.06.2026", items: [
+              "Automatische Updates Ende-zu-Ende verifiziert",
+            ]},
+            { v: "0.1.0", date: "29.06.2026", items: [
+              "Erste Veröffentlichung: Live-Systemmonitor, sicherer Datenträger-Bereiniger, Spielmodus, Speicher-Optimierer, Netzwerklatenz-Prüfung, geplante Bereinigung, Autostart-Manager, Sicherheitsnetz (Wiederherstellungspunkte & Rückgängig)",
+              "Englisch, Ungarisch und Deutsch",
+            ]},
+          ],
+        },
+      };
+
+      function render(lang) {
+        const d = DATA[lang] || DATA.en;
+        document.documentElement.lang = lang;
+        document.getElementById("pageTitle").textContent = d.title;
+        document.getElementById("pageSub").textContent = d.sub;
+        document.getElementById("list").innerHTML = d.entries
+          .map(
+            (e, i) => `
+            <div class="entry">
+              <div class="ver-row">
+                <span class="ver">v${e.v}</span>
+                <span class="date">${e.date}</span>
+                ${i === 0 ? `<span class="badge-latest">${d.latest}</span>` : ""}
+              </div>
+              <ul class="changes">
+                ${e.items.map((it) => `<li><span class="dot">&#8226;</span><span>${it}</span></li>`).join("")}
+              </ul>
+            </div>`,
+          )
+          .join("");
+        document.querySelectorAll("#langs button").forEach((b) => b.classList.toggle("active", b.dataset.lang === lang));
+        try { localStorage.setItem("bf.site.lang", lang); } catch (e) {}
+      }
+
+      document.querySelectorAll("#langs button").forEach((b) =>
+        b.addEventListener("click", () => render(b.dataset.lang)),
+      );
+
+      let saved = null;
+      try { saved = localStorage.getItem("bf.site.lang"); } catch (e) {}
+      const sys = (navigator.language || "en").slice(0, 2);
+      render(saved || (["hu", "de"].includes(sys) ? sys : "en"));
+    </script>
+  </body>
+</html>

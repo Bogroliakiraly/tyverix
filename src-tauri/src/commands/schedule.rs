@@ -8,7 +8,7 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
-use crate::commands::cleaner::{clean_targets, CleanResult};
+use crate::commands::cleaner::{clean_targets_impl, CleanResult};
 use crate::error::{AppError, AppResult};
 use crate::util::{app_data_dir, run_command};
 
@@ -140,7 +140,7 @@ pub fn set_cleanup_schedule(
 #[tauri::command]
 pub fn run_scheduled_cleanup_now() -> AppResult<CleanResult> {
     let schedule = read_schedule()?;
-    let result = clean_targets(schedule.target_ids)?;
+    let result = clean_targets_impl(schedule.target_ids, |_, _, _, _| {})?;
     write_log(&result)?;
     Ok(result)
 }
@@ -159,7 +159,7 @@ pub fn run_headless_auto_clean() {
     if !schedule.enabled || schedule.target_ids.is_empty() {
         return;
     }
-    if let Ok(result) = clean_targets(schedule.target_ids.clone()) {
+    if let Ok(result) = clean_targets_impl(schedule.target_ids.clone(), |_, _, _, _| {}) {
         let _ = write_log(&result);
     }
 }

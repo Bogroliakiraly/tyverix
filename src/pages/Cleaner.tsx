@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { listen } from "@tauri-apps/api/event";
 import { RefreshCw, Trash2, Sparkles } from "lucide-react";
 import { cleanTargets, createRestorePoint, scanCleanTargets } from "../lib/api";
 import type { CleanTarget } from "../lib/types";
@@ -8,12 +10,20 @@ import { useConfirm } from "../store/useConfirm";
 import { toast } from "../store/useToast";
 import { useT } from "../i18n";
 
+interface CleanProgress {
+  processed: number;
+  total: number;
+  freed_bytes: number;
+  removed_files: number;
+}
+
 export function Cleaner() {
   const { t } = useT();
   const [targets, setTargets] = useState<CleanTarget[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [scanning, setScanning] = useState(true);
   const [cleaning, setCleaning] = useState(false);
+  const [progress, setProgress] = useState<CleanProgress | null>(null);
   const ask = useConfirm((s) => s.ask);
 
   function localized(t_: CleanTarget) {
@@ -95,6 +105,8 @@ export function Cleaner() {
     if (!ok) return;
 
     setCleaning(true);
+    setProgress({ processed: 0, total: ids.length, freed_bytes: 0, removed_files: 0 });
+    const unlisten = await listen<CleanProgress>("clean-progress", (e) => setProgress(e.payload));
     try {
       if (restore) {
         try {
@@ -119,7 +131,9 @@ export function Cleaner() {
     } catch (e) {
       toast.error(t("clean.toastFailed"), String(e));
     } finally {
+      unlisten();
       setCleaning(false);
+      setProgress(null);
     }
   }
 
@@ -190,26 +204,38 @@ export function Cleaner() {
         )}
       </Card>
 
-      <div className="sticky bottom-0 flex items-center justify-between rounded-2xl border border-border-subtle bg-bg-elevated/95 px-5 py-3 backdrop-blur">
-        <div className="flex items-center gap-2 text-sm">
-          <Sparkles className="h-4 w-4 text-accent" />
-          <span className="text-text-secondary">{t("clean.selectedToFree")}</span>
-          <span className="font-semibold">{formatBytes(totalSelected)}</span>
-        </div>
-        <button
-          className="btn-primary"
-          disabled={cleaning || selected.size === 0}
-          onClick={runClean}
-        >
-          {cleaning ? (
-            <Spinner />
-          ) : (
-            <>
+      <div className="sticky bottom-0 rounded-2xl border border-border-subtle bg-bg-elevated/95 px-5 py-3 backdrop-blur">
+        {cleaning && progress ? (
+          <div>
+            <div className="mb-1.5 flex items-center justify-between text-xs text-text-secondary">
+              <span>{t("clean.progressLabel", { n: progress.processed, total: progress.total })}</span>
+              <span className="font-medium text-text-primary">{formatBytes(progress.freed_bytes)}</span>
+            </div>
+            <div className="h-2 overflow-hidden rounded-full bg-bg-hover">
+              <motion.div
+                className="h-full rounded-full bg-accent"
+                animate={{ width: `${(progress.processed / Math.max(1, progress.total)) * 100}%` }}
+                transition={{ ease: "easeOut", duration: 0.25 }}
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <span className="text-text-secondary">{t("clean.selectedToFree")}</span>
+              <span className="font-semibold">{formatBytes(totalSelected)}</span>
+            </div>
+            <button
+              className="btn-primary"
+              disabled={cleaning || selected.size === 0}
+              onClick={runClean}
+            >
               <Trash2 className="h-4 w-4" />
               {t("clean.cleanButton")} {selected.size > 0 ? `(${selected.size})` : ""}
-            </>
-          )}
-        </button>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

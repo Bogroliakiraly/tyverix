@@ -6,7 +6,7 @@ use winreg::enums::*;
 use winreg::RegKey;
 
 use crate::error::AppResult;
-use crate::util::{parse_ps_array, run_powershell};
+use crate::util::{parse_ps_array, run_powershell, run_powershell_timeout};
 
 // --- GPU -------------------------------------------------------------------
 #[derive(Serialize)]
@@ -228,7 +228,10 @@ $out | ConvertTo-Json -Depth 2
         severity: Option<String>,
     }
 
-    let raw: Vec<Raw> = parse_ps_array(&run_powershell(script)?)?;
+    // The Windows Update agent can legitimately take much longer than a
+    // typical WMI query, especially on first run or a managed machine.
+    let raw: Vec<Raw> =
+        parse_ps_array(&run_powershell_timeout(script, std::time::Duration::from_secs(45))?)?;
     Ok(raw
         .into_iter()
         .map(|r| UpdateInfo {

@@ -139,6 +139,7 @@ const en: Dict = {
   "auth.signedUpMsg": "Check your email to confirm, then sign in.",
   "auth.noSubTitle": "No active subscription",
   "auth.noSubMsg": "This account has no active Pro subscription yet.",
+  "auth.skip": "Continue without an account",
 
   "admin.title": "Admin · Issue license keys",
   "admin.subtitle": "Vendor only. Generate signed Pro keys.",
@@ -172,7 +173,7 @@ const en: Dict = {
   "settings.permissions": "Permissions",
   "settings.account": "Subscription",
   "settings.willNot": "What BoostForge deliberately will NOT do",
-  "settings.version": "Version 0.1.4 · Windows 10 & 11",
+  "settings.version": "Version 0.1.5 · Windows 10 & 11",
   "settings.willNot.1": "Disable Windows services for marginal, unmeasurable gains.",
   "settings.willNot.2": "Delete the Prefetch folder (it speeds up app launches).",
   "settings.willNot.3": "Claim fixed FPS gains it cannot verify.",
@@ -326,6 +327,7 @@ const en: Dict = {
 
   "clean.selectAll": "Select all",
   "clean.deselectAll": "Deselect all",
+  "clean.progressLabel": "Cleaning {n} of {total}…",
   "clean.title": "Disk cleanup",
   "clean.subtitle": "Only genuinely safe, regenerable files. Each item explains the benefit and the downside.",
   "clean.scanning": "Scanning safe-to-clean locations…",
@@ -590,6 +592,7 @@ const hu: Dict = {
   "auth.signedUpMsg": "Erősítsd meg az emailben, majd jelentkezz be.",
   "auth.noSubTitle": "Nincs aktív előfizetés",
   "auth.noSubMsg": "Ehhez a fiókhoz még nincs aktív Pro előfizetés.",
+  "auth.skip": "Folytatás fiók nélkül",
 
   "admin.title": "Admin · Licenckulcsok kiadása",
   "admin.subtitle": "Csak a szolgáltatónak. Aláírt Pro kulcsok generálása.",
@@ -623,7 +626,7 @@ const hu: Dict = {
   "settings.permissions": "Jogosultságok",
   "settings.account": "Előfizetés",
   "settings.willNot": "Amit a BoostForge szándékosan NEM tesz",
-  "settings.version": "0.1.4 verzió · Windows 10 és 11",
+  "settings.version": "0.1.5 verzió · Windows 10 és 11",
   "settings.willNot.1": "Windows-szolgáltatásokat letiltani jelentéktelen, nem mérhető nyereségért.",
   "settings.willNot.2": "Törölni a Prefetch mappát (az gyorsítja az appindítást).",
   "settings.willNot.3": "Fix FPS-nyereséget ígérni, amit nem tud igazolni.",
@@ -777,6 +780,7 @@ const hu: Dict = {
 
   "clean.selectAll": "Összes kijelölése",
   "clean.deselectAll": "Kijelölés törlése",
+  "clean.progressLabel": "Tisztítás: {n}/{total}…",
   "clean.title": "Lemeztisztítás",
   "clean.subtitle": "Csak valóban biztonságos, újratermelődő fájlok. Minden elemnél látod az előnyt és a hátrányt.",
   "clean.scanning": "Biztonságosan tisztítható helyek keresése…",
@@ -1041,6 +1045,7 @@ const de: Dict = {
   "auth.signedUpMsg": "Bestätige die E-Mail und melde dich dann an.",
   "auth.noSubTitle": "Kein aktives Abo",
   "auth.noSubMsg": "Dieses Konto hat noch kein aktives Pro-Abo.",
+  "auth.skip": "Ohne Konto fortfahren",
 
   "admin.title": "Admin · Lizenzschlüssel ausstellen",
   "admin.subtitle": "Nur für Anbieter. Signierte Pro-Schlüssel erzeugen.",
@@ -1074,7 +1079,7 @@ const de: Dict = {
   "settings.permissions": "Berechtigungen",
   "settings.account": "Abonnement",
   "settings.willNot": "Was BoostForge bewusst NICHT tut",
-  "settings.version": "Version 0.1.4 · Windows 10 & 11",
+  "settings.version": "Version 0.1.5 · Windows 10 & 11",
   "settings.willNot.1": "Windows-Dienste für geringe, nicht messbare Vorteile deaktivieren.",
   "settings.willNot.2": "Den Prefetch-Ordner löschen (er beschleunigt den App-Start).",
   "settings.willNot.3": "Feste FPS-Gewinne behaupten, die es nicht belegen kann.",
@@ -1228,6 +1233,7 @@ const de: Dict = {
 
   "clean.selectAll": "Alle auswählen",
   "clean.deselectAll": "Auswahl aufheben",
+  "clean.progressLabel": "Bereinigung: {n}/{total}…",
   "clean.title": "Datenträgerbereinigung",
   "clean.subtitle": "Nur wirklich sichere, regenerierbare Dateien. Jeder Punkt erklärt Nutzen und Nachteil.",
   "clean.scanning": "Sicher bereinigbare Orte werden gescannt…",
