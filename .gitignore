@@ -29,3 +29,6 @@ tools/license-private.pem
 .DS_Store
 *.log
 *.local
+
+# Local test build (CDP-driven testing)
+src-tauri/target-test

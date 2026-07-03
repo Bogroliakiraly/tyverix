@@ -76,9 +76,14 @@ pub fn run() {
     // restore points). Always run elevated: if we're not, relaunch via UAC and
     // hand off to the elevated instance. If the user declines, fall through and
     // run unelevated (the UI clearly shows "Not running as administrator").
+    // TYVERIX_NO_ELEVATE=1 skips the prompt entirely — used for automated
+    // testing, where an elevated process could not be driven or debugged.
     #[cfg(windows)]
     {
-        if !is_process_elevated() && relaunch_as_admin() {
+        if std::env::var("TYVERIX_NO_ELEVATE").is_err()
+            && !is_process_elevated()
+            && relaunch_as_admin()
+        {
             return;
         }
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Gamepad2,
   Gauge as GaugeIcon,
@@ -90,26 +90,30 @@ export default function App() {
       <div className="flex min-h-0 flex-1">
         <Sidebar items={nav} current={page} onNavigate={setPage} />
         <main className="min-w-0 flex-1 overflow-y-auto p-6">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={page}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.18 }}
-            >
-              {page === "dashboard" && <Dashboard />}
-              {page === "game" && <GameMode />}
-              {page === "cleaner" && <Cleaner />}
-              {page === "startup" && <Startup />}
-              {page === "processes" && <Processes />}
-              {page === "memory" && <Memory />}
-              {page === "network" && <Network />}
-              {page === "tools" && <Tools />}
-              {page === "safety" && <Safety />}
-              {page === "settings" && <Settings elevated={elevated} />}
-            </motion.div>
-          </AnimatePresence>
+          {/* Page switches must never depend on an exit animation completing:
+              AnimatePresence mode="wait" permanently wedged navigation when an
+              exit animation was dropped (e.g. interrupted mid-cleanup under
+              heavy IO load) — its onExitComplete never fired, so the next page
+              never mounted and every page appeared to "stop loading" until the
+              app was restarted. A keyed motion.div swaps instantly and only
+              animates the incoming page. */}
+          <motion.div
+            key={page}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18 }}
+          >
+            {page === "dashboard" && <Dashboard />}
+            {page === "game" && <GameMode />}
+            {page === "cleaner" && <Cleaner />}
+            {page === "startup" && <Startup />}
+            {page === "processes" && <Processes />}
+            {page === "memory" && <Memory />}
+            {page === "network" && <Network />}
+            {page === "tools" && <Tools />}
+            {page === "safety" && <Safety />}
+            {page === "settings" && <Settings elevated={elevated} />}
+          </motion.div>
         </main>
       </div>
 
