@@ -139,43 +139,52 @@ pub async fn apply_game_mode(app: tauri::AppHandle) -> AppResult<GameModeStatus>
 pub async fn restore_game_mode(app: tauri::AppHandle) -> AppResult<GameModeStatus> {
     blocking(move || {
         let state = app.state::<AppState>();
-        let (previous, game_dvr_previous, gpu_pref_previous, boosted_pids) = {
-            let game = state
-                .game
-                .lock()
-                .map_err(|_| AppError::other("game state locked"))?;
-            (
-                game.previous_plan.clone(),
-                game.game_dvr_previous,
-                game.gpu_pref_previous.clone(),
-                game.boosted_pids.clone(),
-            )
-        };
-        if let Some(prev) = previous {
-            set_active(&prev)?;
-        }
-        restore_game_dvr(game_dvr_previous);
-        for (exe, prev) in &gpu_pref_previous {
-            restore_gpu_preference_for(exe, prev.as_ref());
-        }
-        for pid in &boosted_pids {
-            restore_process_priority(*pid);
-        }
-        {
-            let mut game = state
-                .game
-                .lock()
-                .map_err(|_| AppError::other("game state locked"))?;
-            game.active = false;
-            game.applied_plan = None;
-            game.previous_plan = None;
-            game.game_dvr_previous = None;
-            game.gpu_pref_previous = Vec::new();
-            game.boosted_pids = Vec::new();
-        }
+        restore_game_mode_impl(&state)?;
         get_game_mode_status_sync(&state)
     })
     .await
+}
+
+/// Undoes every Game Mode change (power plan, Game DVR, GPU preferences,
+/// process priorities). Shared by the restore command and the app-exit hook in
+/// lib.rs, so quitting the app — including from the tray icon — genuinely
+/// keeps the "everything restores on close" promise.
+pub(crate) fn restore_game_mode_impl(state: &tauri::State<AppState>) -> AppResult<()> {
+    let (previous, game_dvr_previous, gpu_pref_previous, boosted_pids) = {
+        let game = state
+            .game
+            .lock()
+            .map_err(|_| AppError::other("game state locked"))?;
+        (
+            game.previous_plan.clone(),
+            game.game_dvr_previous,
+            game.gpu_pref_previous.clone(),
+            game.boosted_pids.clone(),
+        )
+    };
+    if let Some(prev) = previous {
+        set_active(&prev)?;
+    }
+    restore_game_dvr(game_dvr_previous);
+    for (exe, prev) in &gpu_pref_previous {
+        restore_gpu_preference_for(exe, prev.as_ref());
+    }
+    for pid in &boosted_pids {
+        restore_process_priority(*pid);
+    }
+    {
+        let mut game = state
+            .game
+            .lock()
+            .map_err(|_| AppError::other("game state locked"))?;
+        game.active = false;
+        game.applied_plan = None;
+        game.previous_plan = None;
+        game.game_dvr_previous = None;
+        game.gpu_pref_previous = Vec::new();
+        game.boosted_pids = Vec::new();
+    }
+    Ok(())
 }
 
 /// Sets a power plan active. Public so the undo system can reuse it.
@@ -305,15 +314,16 @@ const KNOWN_GAMES: &[(&str, &str)] = &[
     ("eldenring.exe", "Elden Ring"),
 ];
 
-struct DetectedGame {
-    pid: u32,
-    exe_path: Option<String>,
-    label: String,
+pub(crate) struct DetectedGame {
+    pub(crate) pid: u32,
+    pub(crate) exe_path: Option<String>,
+    pub(crate) label: String,
 }
 
 /// Detects well-known game / launcher processes currently running, with their
 /// PID and full path so Game Mode can target them (GPU preference, priority).
-fn detect_game_processes(state: &State<AppState>) -> Vec<DetectedGame> {
+/// Also used by the FPS measurement (commands/fps.rs) to offer capture targets.
+pub(crate) fn detect_game_processes(state: &State<AppState>) -> Vec<DetectedGame> {
     let Ok(sys) = state.sys.lock() else {
         return Vec::new();
     };

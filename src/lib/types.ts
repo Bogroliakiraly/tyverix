@@ -220,6 +220,21 @@ export interface LatencyResult {
   samples_ms: number[];
 }
 
+export interface FpsTarget {
+  pid: number;
+  label: string;
+}
+
+/** Live measurement emitted by the backend every ~500 ms (PresentMon). */
+export interface FpsSample {
+  process: string;
+  fps: number;
+  frame_time_ms: number;
+  fps_low_1: number;
+  frames: number;
+  elapsed_secs: number;
+}
+
 export interface CleanupSchedule {
   enabled: boolean;
   time: string; // "HH:MM"

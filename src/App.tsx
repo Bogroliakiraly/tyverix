@@ -30,45 +30,37 @@ import { Settings } from "./pages/Settings";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { isElevated } from "./lib/api";
 import { useNav } from "./store/useNav";
-import { useConfirm } from "./store/useConfirm";
+import { toast } from "./store/useToast";
 import { useT } from "./i18n";
 
 export default function App() {
   const page = useNav((s) => s.page);
   const setPage = useNav((s) => s.go);
   const [elevated, setElevated] = useState<boolean | null>(null);
-  const ask = useConfirm((s) => s.ask);
   const { t } = useT();
 
   useEffect(() => {
     isElevated().then(setElevated).catch(() => setElevated(null));
   }, []);
 
-  // Intercept window close (title-bar X or Alt+F4) and confirm first, so the
-  // app can't be shut down by accident mid-task.
+  // Closing the window (title-bar X or Alt+F4) hides to the tray instead of
+  // exiting, so scheduled cleanups and Game Mode keep running. A real exit is
+  // one click away in the tray menu (Quit), which also restores Game Mode.
   useEffect(() => {
     const win = getCurrentWindow();
     let unlisten: (() => void) | undefined;
-    let closing = false;
     win
       .onCloseRequested(async (event) => {
-        if (closing) return;
         event.preventDefault();
-        const { ok } = await ask({
-          title: t("close.title"),
-          message: t("close.message"),
-          confirmLabel: t("close.confirm"),
-          cancelLabel: t("close.cancel"),
-          danger: true,
-        });
-        if (ok) {
-          closing = true;
-          await win.destroy();
+        if (!localStorage.getItem("tyv.trayHintShown")) {
+          localStorage.setItem("tyv.trayHintShown", "1");
+          toast.success(t("tray.hiddenTitle"), t("tray.hiddenMsg"));
         }
+        await win.hide();
       })
       .then((u) => (unlisten = u));
     return () => unlisten?.();
-  }, [ask, t]);
+  }, [t]);
 
   const nav: NavItem[] = [
     { id: "dashboard", label: t("nav.dashboard"), icon: GaugeIcon },

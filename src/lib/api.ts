@@ -12,6 +12,7 @@ import type {
   DiskInfo,
   DriverInfo,
   FileEntry,
+  FpsTarget,
   GameModeStatus,
   GpuInfo,
   LatencyResult,
@@ -66,6 +67,12 @@ export const getGameModeStatus = () =>
 export const applyGameMode = () => invoke<GameModeStatus>("apply_game_mode");
 export const restoreGameMode = () =>
   invoke<GameModeStatus>("restore_game_mode");
+
+// --- Real FPS measurement (PresentMon) ---------------------------------------
+export const listFpsTargets = () => invoke<FpsTarget[]>("list_fps_targets");
+export const startFpsMeasure = (pid: number, label: string) =>
+  invoke<void>("start_fps_measure", { pid, label });
+export const stopFpsMeasure = () => invoke<void>("stop_fps_measure");
 
 // --- Safety ----------------------------------------------------------------
 export const createRestorePoint = (description: string) =>

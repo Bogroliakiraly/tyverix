@@ -3,6 +3,7 @@
 
 pub mod cleaner;
 pub mod disk;
+pub mod fps;
 pub mod license;
 pub mod memory;
 pub mod monitor;

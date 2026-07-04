@@ -1,7 +1,7 @@
 {
   "name": "tyverix",
   "private": true,
-  "version": "0.1.12",
+  "version": "0.1.13",
   "type": "module",
   "description": "Tyverix — a trustworthy Windows gaming optimization tool. Every action is measurable, reversible and safe.",
   "scripts": {
@@ -15,6 +15,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
     "@tauri-apps/api": "^2.1.1",
+    "@tauri-apps/plugin-autostart": "^2.5.1",
     "@tauri-apps/plugin-http": "^2.5.9",
     "@tauri-apps/plugin-opener": "^2.5.4",
     "@tauri-apps/plugin-process": "^2.0.1",

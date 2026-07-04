@@ -11,7 +11,9 @@ import {
   Check,
   Lock,
   Mail,
+  Rocket,
 } from "lucide-react";
+import { enable as autostartEnable, disable as autostartDisable, isEnabled as autostartIsEnabled } from "@tauri-apps/plugin-autostart";
 import { Badge, Card, SectionTitle, Spinner } from "../components/ui";
 import { AccountCard } from "../components/AccountCard";
 import { AdminPanel } from "../components/AdminPanel";
@@ -185,6 +187,8 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
         </div>
       </Card>
 
+      <AutostartCard />
+
       <PlansCard />
 
       <ProGate>
@@ -241,6 +245,69 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
         </ul>
       </Card>
     </div>
+  );
+}
+
+/**
+ * Start-with-Windows toggle. Uses the OS's own per-user autostart entry via
+ * the autostart plugin; when launched this way the app starts hidden in the
+ * tray (--minimized) instead of opening a window over the desktop.
+ */
+function AutostartCard() {
+  const { t } = useT();
+  const [enabled, setEnabled] = useState<boolean | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    autostartIsEnabled()
+      .then(setEnabled)
+      .catch(() => setEnabled(null));
+  }, []);
+
+  async function toggle() {
+    if (enabled === null) return;
+    setBusy(true);
+    try {
+      if (enabled) {
+        await autostartDisable();
+        setEnabled(false);
+        toast.success(t("settings.autostart.disabled"));
+      } else {
+        await autostartEnable();
+        setEnabled(true);
+        toast.success(t("settings.autostart.enabled"), t("settings.autostart.enabledMsg"));
+      }
+    } catch (e) {
+      toast.error(t("common.error"), String(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Card>
+      <SectionTitle
+        title={t("settings.autostart.title")}
+        subtitle={t("settings.autostart.subtitle")}
+      />
+      <div className="flex items-center gap-3">
+        <Rocket className={`h-5 w-5 ${enabled ? "text-good" : "text-text-muted"}`} />
+        <p className="flex-1 text-sm text-text-secondary">
+          {enabled === null
+            ? t("common.notAvailable")
+            : enabled
+              ? t("settings.autostart.on")
+              : t("settings.autostart.off")}
+        </p>
+        <button
+          className={enabled ? "btn-outline" : "btn-primary"}
+          onClick={toggle}
+          disabled={busy || enabled === null}
+        >
+          {busy ? <Spinner /> : enabled ? t("settings.autostart.disable") : t("settings.autostart.enable")}
+        </button>
+      </div>
+    </Card>
   );
 }
 

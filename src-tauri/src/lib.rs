@@ -7,6 +7,7 @@ mod state;
 mod util;
 
 use state::AppState;
+use tauri::Manager;
 
 /// True when the current process token is elevated (running as administrator).
 #[cfg(windows)]
@@ -94,6 +95,21 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_store::Builder::default().build())
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            // When Windows starts the app automatically, it should sit quietly
+            // in the tray instead of opening a window over the user's desktop.
+            Some(vec!["--minimized"]),
+        ))
+        .setup(|app| {
+            setup_tray(app.handle())?;
+            if std::env::args().any(|a| a == "--minimized") {
+                if let Some(w) = app.get_webview_window("main") {
+                    let _ = w.hide();
+                }
+            }
+            Ok(())
+        })
         .manage(AppState::new())
         .invoke_handler(tauri::generate_handler![
             // Live monitoring
@@ -110,6 +126,10 @@ pub fn run() {
             commands::disk::list_disks,
             commands::disk::disk_health,
             commands::disk::find_large_files,
+            // Real FPS measurement (PresentMon)
+            commands::fps::list_fps_targets,
+            commands::fps::start_fps_measure,
+            commands::fps::stop_fps_measure,
             // Power & Game Mode
             commands::power::list_power_plans,
             commands::power::set_power_plan,
@@ -144,6 +164,59 @@ pub fn run() {
             commands::system_info::get_device_id,
             commands::stats::get_daily_stats,
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running Tyverix");
+        .build(tauri::generate_context!())
+        .expect("error while running Tyverix")
+        .run(|app, event| {
+            // Honors the Game Mode card's "everything restores on close"
+            // promise for every exit path, including Quit from the tray menu.
+            if let tauri::RunEvent::Exit = event {
+                commands::fps::stop_session();
+                let state = app.state::<AppState>();
+                let _ = commands::power::restore_game_mode_impl(&state);
+            }
+        });
+}
+
+/// Creates the always-present tray icon: left-click shows the window, the
+/// menu offers Open and a real Quit (closing the window only hides to tray).
+fn setup_tray(app: &tauri::AppHandle) -> tauri::Result<()> {
+    use tauri::menu::{Menu, MenuItem};
+    use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
+
+    let open = MenuItem::with_id(app, "open", "Open Tyverix", true, None::<&str>)?;
+    let quit = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+    let menu = Menu::with_items(app, &[&open, &quit])?;
+
+    let mut builder = TrayIconBuilder::with_id("main")
+        .tooltip("Tyverix")
+        .menu(&menu)
+        .show_menu_on_left_click(false)
+        .on_menu_event(|app, event| match event.id.as_ref() {
+            "open" => show_main_window(app),
+            "quit" => app.exit(0),
+            _ => {}
+        })
+        .on_tray_icon_event(|tray, event| {
+            if let TrayIconEvent::Click {
+                button: MouseButton::Left,
+                button_state: MouseButtonState::Up,
+                ..
+            } = event
+            {
+                show_main_window(tray.app_handle());
+            }
+        });
+    if let Some(icon) = app.default_window_icon() {
+        builder = builder.icon(icon.clone());
+    }
+    builder.build(app)?;
+    Ok(())
+}
+
+fn show_main_window(app: &tauri::AppHandle) {
+    if let Some(w) = app.get_webview_window("main") {
+        let _ = w.show();
+        let _ = w.unminimize();
+        let _ = w.set_focus();
+    }
 }
