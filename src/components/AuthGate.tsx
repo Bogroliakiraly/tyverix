@@ -104,6 +104,12 @@ export function AuthGate() {
               <><LogIn className="h-4 w-4" /> {t("auth.signIn")}</>
             )}
           </button>
+          <p className="pt-1 text-center text-xs text-text-muted">
+            {t("auth.helpContact")}{" "}
+            <a href="mailto:info@tyverix.com" className="selectable text-accent hover:underline">
+              info@tyverix.com
+            </a>
+          </p>
         </div>
       </div>
     </div>

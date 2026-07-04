@@ -1,7 +1,7 @@
 {
   "name": "tyverix",
   "private": true,
-  "version": "0.1.11",
+  "version": "0.1.12",
   "type": "module",
   "description": "Tyverix — a trustworthy Windows gaming optimization tool. Every action is measurable, reversible and safe.",
   "scripts": {

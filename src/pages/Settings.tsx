@@ -10,6 +10,7 @@ import {
   PlayCircle,
   Check,
   Lock,
+  Mail,
 } from "lucide-react";
 import { Badge, Card, SectionTitle, Spinner } from "../components/ui";
 import { AccountCard } from "../components/AccountCard";
@@ -200,6 +201,13 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
         <div className="mt-4 flex items-center gap-2 text-sm">
           <Info className="h-4 w-4 text-accent" />
           <span className="text-text-secondary">{t("settings.version")}</span>
+        </div>
+        <div className="mt-2 flex items-center gap-2 text-sm">
+          <Mail className="h-4 w-4 text-accent" />
+          <span className="text-text-secondary">{t("settings.contactBody")}</span>
+          <a href="mailto:info@tyverix.com" className="selectable text-accent hover:underline">
+            info@tyverix.com
+          </a>
         </div>
       </Card>
 
