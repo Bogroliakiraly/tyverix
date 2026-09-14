@@ -1,7 +1,14 @@
 /* Tyverix marketing site — trilingual content (EN / HU / DE). */
 
+// The version the site advertises and serves from website/download/. Bump this
+// in the same commit that re-copies the freshly built installer — it is the one
+// place the version appears on the site, so the badge can never drift away from
+// the file the download button actually hands over.
+const APP_VERSION = "0.1.14";
+
 // Points at the latest GitHub Release page (the installer's filename changes
 // per version, so this links to the release rather than guessing the name).
+// Only used as a fallback when config.js has no self-hosted DOWNLOAD_URL.
 const GITHUB_REPO = "Bogroliakiraly/tyverix";
 const DOWNLOAD_URL = `https://github.com/${GITHUB_REPO}/releases/latest`;
 // Replace with your Stripe Payment Link / Checkout URL once payments are set up:
@@ -15,6 +22,7 @@ const I18N = {
     "nav.download": "Download",
     "nav.account": "Account",
     "nav.changelog": "Changelog",
+    "nav.changes": "What it changes",
     "hero.pill": "No fake numbers. Ever.",
     "hero.title1": "Optimize Windows for gaming —",
     "hero.title2": "the honest way.",
@@ -50,8 +58,13 @@ const I18N = {
     "download.sub": "A 1–4 MB installer. Updates arrive automatically inside the app.",
     "download.cta": "Download for Windows",
     "download.req": "Windows 10 / 11 · 64-bit · WebView2",
+    "download.version": "Version {v} · see what changed",
+    "download.changes": "What it changes on your PC",
     "footer.tagline": "Measurable. Reversible. Safe.",
     features: [
+      ["🩺", "Hardware diagnostics", "Finds what actually costs you frames: memory below its rated speed, a 165 Hz monitor running at 60, a narrowed PCIe link, a throttling GPU. Read-only, and honest about what needs the BIOS."],
+      ["🧪", "A/B benchmark", "Measure, change one thing, measure again — with a real significance test. It will tell you when a change made no measurable difference."],
+      ["⚙️", "Performance tweaks", "Documented Windows settings only, each with its honest expected effect. Every one reversible, with your exact previous value saved first."],
       ["📊", "Live system monitor", "Real CPU, RAM, network and disk metrics — straight from the OS."],
       ["🎮", "Game Mode", "Switches to a performance power plan and restores it exactly afterward."],
       ["🧹", "Safe cleaner", "9 genuinely safe categories — temp, shader cache, Windows Update cache, thumbnails, error reports, memory dumps and more. Each item shows benefit and downside."],
@@ -67,6 +80,7 @@ const I18N = {
       "Never delete Prefetch or make irreversible changes silently.",
       "Never claim fixed FPS numbers it cannot verify.",
       "Never call a TCP latency measurement \"ping\" — it says exactly what it measured.",
+      "Never call a difference an improvement when it sits inside measurement noise — the A/B benchmark reports \"no measurable change\" instead.",
     ],
     free: ["Live system monitor", "Safe disk cleaner", "Process & startup viewer", "Diagnostics toolkit"],
     pro: ["Everything in Free", "Game Mode (power plans)", "Memory optimizer", "Network latency monitor", "Scheduled automatic cleanup", "Automatic updates & priority support"],
@@ -79,6 +93,7 @@ const I18N = {
     "nav.download": "Letöltés",
     "nav.account": "Fiók",
     "nav.changelog": "Újdonságok",
+    "nav.changes": "Mit módosít",
     "hero.pill": "Soha nincs hamis szám.",
     "hero.title1": "Optimalizáld a Windowst játékra —",
     "hero.title2": "őszintén.",
@@ -113,8 +128,13 @@ const I18N = {
     "download.sub": "1–4 MB-os telepítő. A frissítések automatikusan érkeznek az appban.",
     "download.cta": "Letöltés Windowsra",
     "download.req": "Windows 10 / 11 · 64 bites · WebView2",
+    "download.version": "{v} verzió · nézd meg, mi változott",
+    "download.changes": "Mit módosít a gépeden",
     "footer.tagline": "Mérhető. Visszafordítható. Biztonságos.",
     features: [
+      ["🩺", "Hardver-diagnosztika", "Megtalálja, ami tényleg FPS-be kerül: a névleges alatt futó memória, a 60 Hz-en álló 165 Hz-es monitor, a leszűkült PCIe-sáv, a throttle-oló GPU. Csak olvas, és őszintén megmondja, mihez kell BIOS."],
+      ["🧪", "A/B mérés", "Mérj, változtass egy dolgot, mérj újra — valódi szignifikancia-teszttel. Ki meri mondani, ha egy változtatásnak nem volt mérhető hatása."],
+      ["⚙️", "Teljesítmény-tweakek", "Kizárólag dokumentált Windows-beállítások, mindegyik a saját őszinte várható hatásával. Mind visszafordítható, a pontos előző értéked előbb elmentve."],
       ["📊", "Élő rendszerfigyelő", "Valódi CPU-, RAM-, hálózati és lemezadatok — közvetlenül az OS-ből."],
       ["🎮", "Játék mód", "Teljesítmény-energiasémára vált, majd pontosan visszaállítja az eredetit."],
       ["🧹", "Biztonságos tisztító", "9 valóban biztonságos kategória — temp, shader cache, Windows Update gyorsítótár, bélyegképek, hibajelentések, memóriaképfájlok és más. Minden tételnél látszik az előny és hátrány."],
@@ -130,6 +150,7 @@ const I18N = {
       "Soha nem töröl Prefetch-et, és nem végez visszafordíthatatlan változtatást csendben.",
       "Soha nem ígér fix FPS-számot, amit nem tud igazolni.",
       "Soha nem nevez egy TCP-késleltetés-mérést „ping”-nek — pontosan megmondja, mit mért.",
+      "Soha nem nevez javulásnak egy különbséget, ami a mérési szóráson belül van — az A/B mérés ilyenkor „nincs mérhető változás”-t ír ki.",
     ],
     free: ["Élő rendszerfigyelő", "Biztonságos lemeztisztító", "Folyamat- és indítópult-nézet", "Diagnosztikai eszköztár"],
     pro: ["Minden az Ingyenesből", "Játék mód (energiasémák)", "Memória-optimalizáló", "Hálózati késleltetés-mérő", "Ütemezett automatikus tisztítás", "Automatikus frissítés és elsőbbségi támogatás"],
@@ -142,6 +163,7 @@ const I18N = {
     "nav.download": "Download",
     "nav.account": "Konto",
     "nav.changelog": "Änderungen",
+    "nav.changes": "Was es ändert",
     "hero.pill": "Niemals gefälschte Zahlen.",
     "hero.title1": "Windows fürs Gaming optimieren —",
     "hero.title2": "ehrlich.",
@@ -176,8 +198,13 @@ const I18N = {
     "download.sub": "Ein 1–4 MB Installer. Updates kommen automatisch in der App an.",
     "download.cta": "Für Windows laden",
     "download.req": "Windows 10 / 11 · 64-Bit · WebView2",
+    "download.version": "Version {v} · sehen, was sich geändert hat",
+    "download.changes": "Was es an Ihrem PC ändert",
     "footer.tagline": "Messbar. Umkehrbar. Sicher.",
     features: [
+      ["🩺", "Hardware-Diagnose", "Findet, was wirklich Bilder kostet: Speicher unter seinem Nenntakt, ein 165-Hz-Monitor mit 60 Hz, eine verengte PCIe-Anbindung, eine drosselnde GPU. Nur lesend — und ehrlich dabei, wofür man ins BIOS muss."],
+      ["🧪", "A/B-Messung", "Messen, genau eine Sache ändern, erneut messen — mit echtem Signifikanztest. Sie sagt Ihnen auch, wenn eine Änderung keinen messbaren Unterschied gemacht hat."],
+      ["⚙️", "Performance-Tweaks", "Ausschließlich dokumentierte Windows-Einstellungen, jede mit ihrer ehrlich benannten Wirkung. Alle umkehrbar, Ihr exakter vorheriger Wert wird zuvor gesichert."],
       ["📊", "Live-Systemmonitor", "Echte CPU-, RAM-, Netzwerk- und Festplattenwerte — direkt vom Betriebssystem."],
       ["🎮", "Spielmodus", "Wechselt zu einem Leistungs-Energieplan und stellt ihn danach exakt wieder her."],
       ["🧹", "Sicherer Bereiniger", "9 wirklich sichere Kategorien — Temp, Shader-Cache, Windows Update-Cache, Miniaturansichten, Fehlerberichte, Speicherabbilder und mehr. Jeder Punkt zeigt Nutzen und Nachteil."],
@@ -193,6 +220,7 @@ const I18N = {
       "Niemals Prefetch löschen oder still unumkehrbare Änderungen vornehmen.",
       "Niemals feste FPS-Zahlen behaupten, die es nicht belegen kann.",
       "Niemals eine TCP-Latenzmessung „Ping“ nennen — die App sagt genau, was sie gemessen hat.",
+      "Niemals einen Unterschied eine Verbesserung nennen, der im Messrauschen liegt — die A/B-Messung meldet dann „keine messbare Änderung“.",
     ],
     free: ["Live-Systemmonitor", "Sicherer Festplatten-Bereiniger", "Prozess- & Autostart-Ansicht", "Diagnose-Toolkit"],
     pro: ["Alles aus Gratis", "Spielmodus (Energiepläne)", "Speicher-Optimierer", "Netzwerklatenz-Monitor", "Geplante automatische Bereinigung", "Automatische Updates & Priority-Support"],
@@ -210,6 +238,17 @@ function apply(lang) {
     const key = el.getAttribute("data-i18n");
     if (dict[key]) el.textContent = dict[key];
   });
+
+  // The version badge under the download button. It reads from APP_VERSION
+  // rather than from the file name, so it always states what the button is
+  // about to hand over.
+  const ver = document.getElementById("download-version");
+  if (ver) {
+    ver.textContent = (dict["download.version"] || I18N.en["download.version"]).replace(
+      "{v}",
+      APP_VERSION,
+    );
+  }
 
   // Feature cards
   const fg = document.getElementById("feature-grid");
@@ -418,7 +457,11 @@ function init() {
   const dl = (window.TYVERIX_CONFIG && window.TYVERIX_CONFIG.DOWNLOAD_URL) || DOWNLOAD_URL;
   const dlEl = document.getElementById("download-link");
   dlEl.href = dl;
-  dlEl.setAttribute("download", "");
+  // Name the saved file after the version so a visitor who downloads twice a
+  // few releases apart can tell the two installers apart in their Downloads
+  // folder. The attribute is ignored for cross-origin URLs, which is exactly
+  // the GitHub-release fallback case where the name is already versioned.
+  dlEl.setAttribute("download", `Tyverix-Setup-${APP_VERSION}.exe`);
   dlEl.removeAttribute("target");
   setupBuyButton();
 

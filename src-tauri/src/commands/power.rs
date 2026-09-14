@@ -198,7 +198,7 @@ pub fn set_active(guid: &str) -> AppResult<()> {
 /// through PowerShell's `ConvertTo-Json` sidesteps that entirely — non-ASCII
 /// characters are escaped as `\uXXXX` in the JSON text, which `serde_json`
 /// decodes correctly regardless of console codepage.
-fn active_plan_guid() -> AppResult<String> {
+pub(crate) fn active_plan_guid() -> AppResult<String> {
     let script = r#"
 $line = powercfg /getactivescheme
 if ($line -match '([0-9a-fA-F-]{8}-[0-9a-fA-F-]{4}-[0-9a-fA-F-]{4}-[0-9a-fA-F-]{4}-[0-9a-fA-F-]{12})') {

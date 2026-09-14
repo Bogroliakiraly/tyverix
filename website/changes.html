@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What Tyverix Changes — Reversible vs Permanent</title>
+    <meta name="description" content="Every change Tyverix can make to your PC, what exactly it writes, and whether it can be undone. Published in full so you can read it before installing." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://tyverix.com/changes.html" />
+    <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #0a0b0f; --surface: #121419; --elevated: #181b22; --border: #242833;
+        --accent: #5b8cff; --accent-hover: #6f9bff; --good: #3ddc84; --warn: #f5b14c;
+        --text: #eef1f7; --text-2: #9aa3b2; --text-3: #5f6776;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+      a { color: inherit; text-decoration: none; }
+      .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+      nav { border-bottom: 1px solid var(--border); background: rgba(10,11,15,0.72); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
+      nav .bar { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+      .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+      .logo .mark { width: 32px; height: 32px; object-fit: contain; display: block; }
+      .langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
+      .langs button { background: none; border: none; color: var(--text-2); cursor: pointer; font-size: 13px; padding: 4px 9px; border-radius: 7px; font-family: inherit; }
+      .langs button.active { background: var(--elevated); color: var(--text); }
+      .back { display: inline-block; margin-top: 28px; color: var(--text-2); font-size: 14px; }
+      .back:hover { color: var(--text); }
+      main { padding: 0 0 80px; }
+      h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; margin-top: 10px; }
+      h2 { font-size: 20px; font-weight: 700; margin: 44px 0 6px; }
+      .sub { color: var(--text-2); margin-top: 8px; font-size: 15px; }
+      .sec-sub { color: var(--text-3); font-size: 14px; margin-bottom: 16px; }
+      .row {
+        display: grid; gap: 4px; padding: 16px 18px; border: 1px solid var(--border);
+        border-radius: 14px; background: var(--surface); margin-bottom: 10px;
+      }
+      .row-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+      .row-title { font-weight: 600; font-size: 15px; }
+      .note { color: var(--text-2); font-size: 14px; }
+      .pill {
+        font-size: 11px; font-weight: 600; border-radius: 999px; padding: 2px 9px; white-space: nowrap;
+      }
+      .pill.reversible { color: var(--good); background: rgba(61,220,132,0.14); border: 1px solid rgba(61,220,132,0.35); }
+      .pill.permanent { color: var(--warn); background: rgba(245,177,76,0.14); border: 1px solid rgba(245,177,76,0.35); }
+      .pill.none { color: var(--text-2); background: var(--elevated); border: 1px solid var(--border); }
+      .writes { list-style: none; display: grid; gap: 4px; margin-top: 8px; }
+      .writes li {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px;
+        color: var(--text-3); background: var(--bg); border-radius: 6px; padding: 5px 8px;
+        overflow-wrap: anywhere;
+      }
+      .callout {
+        border: 1px solid rgba(61,220,132,0.3); background: rgba(61,220,132,0.06);
+        border-radius: 14px; padding: 18px; margin-top: 26px; font-size: 14px; color: var(--text-2);
+      }
+      .callout strong { color: var(--text); }
+      footer { border-top: 1px solid var(--border); padding: 24px 0; color: var(--text-3); font-size: 13px; }
+      footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="bar">
+        <a class="logo" href="index.html"><img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix</a>
+        <div class="langs" id="langs">
+          <button data-lang="en">EN</button>
+          <button data-lang="hu">HU</button>
+          <button data-lang="de">DE</button>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <div class="wrap">
+        <a class="back" href="index.html" id="backLink"></a>
+        <h1 id="pageTitle"></h1>
+        <p class="sub" id="pageSub"></p>
+        <div class="callout" id="callout"></div>
+        <div id="sections"></div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <span>&copy; 2026 Tyverix</span>
+        <a href="mailto:info@tyverix.com">info@tyverix.com</a>
+        <a href="index.html" id="footerHome"></a>
+      </div>
+    </footer>
+
+    <script>
+      /*
+       * The full disclosure page. Everything Tyverix can write is listed here,
+       * grouped by whether it can be taken back — including the operations that
+       * cannot. The same list ships inside the app on the Safety page, so the
+       * published promise and the installed app cannot drift apart.
+       */
+      const DATA = {
+        en: {
+          title: "What Tyverix changes on your PC",
+          sub: "Every change the app can make, what it writes, and whether it can be undone. Nothing here is hidden behind an install.",
+          back: "← Back to site",
+          home: "Home",
+          callout:
+            "<strong>The short version.</strong> Every configuration change Tyverix makes is reversible, and the exact previous value is written to disk before the change so a revert restores what was really there. The only permanent operations are deleting files you asked it to delete, and ending a process you asked it to end. Both say so before you confirm.",
+          sections: [
+            {
+              h: "Reversible — the previous value is recorded first",
+              sub: "Tyverix writes the current value to %LOCALAPPDATA%\\Tyverix before changing it. Reverting restores that value, not a guess at a default.",
+              rows: [
+                {
+                  t: "Disabling a startup app",
+                  v: "reversible",
+                  n: "Uses Windows' own enabled/disabled flag — the same one Task Manager writes. The app's own Run entry or shortcut is left exactly where it was, so nothing can re-add itself and re-enabling restores it byte for byte. Nothing is ever deleted.",
+                  w: [
+                    "HKCU\\...\\Explorer\\StartupApproved\\Run\\<app> = 03 00 00 00 <timestamp>",
+                    "HKCU\\...\\Explorer\\StartupApproved\\StartupFolder\\<shortcut.lnk>",
+                  ],
+                },
+                {
+                  t: "Performance tweaks (Boost page)",
+                  v: "reversible",
+                  n: "Registry values and power-plan settings only. Each tweak lists in the app exactly which values it writes, what Windows' default is, and what reverting will do. If a setting was changed outside Tyverix, the revert restores Windows' documented default instead — and the tweak's badge in the app says so rather than pretending otherwise.",
+                  w: [
+                    "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\HwSchMode (HAGS)",
+                    "HKLM\\SOFTWARE\\Microsoft\\Windows\\Dwm\\OverlayTestMode (MPO)",
+                    "HKCU\\...\\AppCompatFlags\\Layers\\<game.exe> (fullscreen optimizations)",
+                    "HKLM\\...\\Multimedia\\SystemProfile\\{SystemResponsiveness,NetworkThrottlingIndex}",
+                    "HKLM\\...\\Multimedia\\SystemProfile\\Tasks\\Games\\{Priority,Scheduling Category,SFIO Priority}",
+                    "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling\\PowerThrottlingOff",
+                    "HKCU\\System\\GameConfigStore\\GameDVR_Enabled and the Game Bar keys",
+                    "HKCU\\Control Panel\\Mouse\\{MouseSpeed,MouseThreshold1,MouseThreshold2}",
+                    "HKLM\\...\\Tcpip\\Parameters\\Interfaces\\<nic>\\{TcpAckFrequency,TCPNoDelay}",
+                    "powercfg on the active plan only: core parking, USB selective suspend",
+                  ],
+                },
+                {
+                  t: "Game Mode",
+                  v: "reversible",
+                  n: "Power plan, Game DVR, per-app GPU preference and process priorities are all recorded and put back — when you switch Game Mode off, and also when you quit Tyverix from the tray, so a forgotten Game Mode never outlives the app.",
+                  w: [],
+                },
+                {
+                  t: "Switching the power plan",
+                  v: "reversible",
+                  n: "The previously active plan is recorded and restorable from the history list. No power plan is ever deleted or edited; if no performance plan exists, a new one is created from Windows' own template and yours is left untouched.",
+                  w: ["powercfg /setactive <guid>"],
+                },
+              ],
+            },
+            {
+              h: "Permanent — these cannot be undone",
+              sub: "Listed here rather than in small print. Both are confirmed individually before they run, and both tell you they are permanent at that moment.",
+              rows: [
+                {
+                  t: "Disk cleanup",
+                  v: "permanent",
+                  n: "Deleted files are gone. Everything Tyverix offers to clean regenerates on its own — temporary files, shader caches, browser caches, error reports — but it is not recoverable, and emptying the Recycle Bin is final. Each target states its own benefit and downside before you confirm, and files locked by a running app are skipped rather than forced.",
+                  w: [],
+                },
+                {
+                  t: "Ending a process",
+                  v: "permanent",
+                  n: "The process is terminated immediately. Anything it had not saved is lost — exactly as with Task Manager's End task, and with the same caveat.",
+                  w: [],
+                },
+              ],
+            },
+            {
+              h: "Changes nothing",
+              sub: "Read-only or transient. There is nothing to undo because nothing was configured.",
+              rows: [
+                {
+                  t: "Diagnostics",
+                  v: "none",
+                  n: "Reads hardware and Windows configuration only: memory speed versus rated speed, display refresh rate, PCIe link width, GPU throttle flags, page file, free space, driver age. It reports what it measured and, where a fix needs the BIOS or a screwdriver, says plainly that Tyverix cannot do it for you.",
+                  w: [],
+                },
+                {
+                  t: "Freeing memory",
+                  v: "none",
+                  n: "Trims process working sets and purges the standby list — the same mechanism Sysinternals RAMMap uses. Nothing is configured or stored, and Windows refills its cache by itself. The app reports the true measured delta, including when it is small or negative.",
+                  w: [],
+                },
+                {
+                  t: "Monitoring and A/B benchmarking",
+                  v: "none",
+                  n: "Frame times come from Windows' own frame events via Intel's open-source PresentMon. Results are stored locally on your machine and nowhere else.",
+                  w: [],
+                },
+              ],
+            },
+            {
+              h: "What Tyverix refuses to do",
+              sub: "Not features that are missing — lines we decline to cross.",
+              rows: [
+                {
+                  t: "Disable Windows services",
+                  v: "none",
+                  n: "The measurable gain is near zero and the breakage is real and hard to diagnose months later.",
+                  w: [],
+                },
+                {
+                  t: "Touch the boot timer or HPET",
+                  v: "none",
+                  n: "bcdedit timer \"tweaks\" make things worse at least as often as better. Tyverix would rather measure the claim and tell you it does not help.",
+                  w: [],
+                },
+                {
+                  t: "Anything anti-cheat software could object to",
+                  v: "none",
+                  n: "No driver signature changes, no kernel patching, no writes into another process's memory, no injection. Every change Tyverix makes is a registry value or a powercfg call that the Windows UI can also make.",
+                  w: [],
+                },
+                {
+                  t: "Claim an FPS number it did not measure",
+                  v: "none",
+                  n: "No \"up to 200% faster\" banner, no invented before/after. The A/B benchmark is willing to tell you a change made no measurable difference — which is the entire reason the rest of the app can be trusted.",
+                  w: [],
+                },
+              ],
+            },
+          ],
+        },
+        hu: {
+          title: "Mit módosít a Tyverix a gépeden",
+          sub: "Minden változtatás, amit az alkalmazás végezhet, hogy pontosan mit ír be, és hogy visszavonható-e. Semmi nincs telepítés mögé rejtve.",
+          back: "← Vissza az oldalra",
+          home: "Kezdőlap",
+          callout:
+            "<strong>Röviden.</strong> A Tyverix minden beállítás-módosítása visszafordítható, és a pontos előző érték még a módosítás előtt lemezre íródik, így a visszavonás azt állítja vissza, ami tényleg ott volt. Csak két végleges művelet van: a fájlok törlése, amit te kértél, és egy folyamat leállítása, amit te kértél. Mindkettő megerősítés előtt kimondja, hogy végleges.",
+          sections: [
+            {
+              h: "Visszafordítható — az előző érték előbb rögzül",
+              sub: "A Tyverix a módosítás előtt kiírja a jelenlegi értéket a %LOCALAPPDATA%\\Tyverix mappába. A visszavonás ezt az értéket állítja vissza, nem egy tippelt alapértelmezést.",
+              rows: [
+                {
+                  t: "Indítási alkalmazás letiltása",
+                  v: "reversible",
+                  n: "A Windows saját engedélyezve/letiltva jelzőjét használja — pontosan azt, amit a Feladatkezelő is ír. Az alkalmazás Run-bejegyzése vagy parancsikonja változatlanul a helyén marad, így semmi nem tudja visszaírni magát, a visszakapcsolás pedig bájtra pontosan visszaállítja. Soha semmi nem törlődik.",
+                  w: [
+                    "HKCU\\...\\Explorer\\StartupApproved\\Run\\<alkalmazás> = 03 00 00 00 <időbélyeg>",
+                    "HKCU\\...\\Explorer\\StartupApproved\\StartupFolder\\<parancsikon.lnk>",
+                  ],
+                },
+                {
+                  t: "Teljesítmény-tweakek (Gyorsítás oldal)",
+                  v: "reversible",
+                  n: "Kizárólag registry-értékek és energiaséma-beállítások. Minden tweak az alkalmazásban kiírja, pontosan mely értékeket írja, mi a Windows alapértéke, és mit csinál a visszavonás. Ha egy beállítást a Tyverixen kívül változtattak meg, a visszavonás a Windows dokumentált alapértékét állítja be — és a tweak címkéje ezt ki is írja, nem tesz úgy, mintha többet tudna.",
+                  w: [
+                    "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\HwSchMode (HAGS)",
+                    "HKLM\\SOFTWARE\\Microsoft\\Windows\\Dwm\\OverlayTestMode (MPO)",
+                    "HKCU\\...\\AppCompatFlags\\Layers\\<jatek.exe> (teljes képernyős optimalizálás)",
+                    "HKLM\\...\\Multimedia\\SystemProfile\\{SystemResponsiveness,NetworkThrottlingIndex}",
+                    "HKLM\\...\\Multimedia\\SystemProfile\\Tasks\\Games\\{Priority,Scheduling Category,SFIO Priority}",
+                    "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling\\PowerThrottlingOff",
+                    "HKCU\\System\\GameConfigStore\\GameDVR_Enabled és a Game Bar kulcsai",
+                    "HKCU\\Control Panel\\Mouse\\{MouseSpeed,MouseThreshold1,MouseThreshold2}",
+                    "HKLM\\...\\Tcpip\\Parameters\\Interfaces\\<hálózati kártya>\\{TcpAckFrequency,TCPNoDelay}",
+                    "powercfg, kizárólag az aktív sémán: mag-parkolás, USB szelektív felfüggesztés",
+                  ],
+                },
+                {
+                  t: "Játék mód",
+                  v: "reversible",
+                  n: "Az energiaséma, a Game DVR, az alkalmazásonkénti GPU-preferencia és a folyamatprioritások mind rögzülnek és visszaállnak — a Játék mód kikapcsolásakor, és akkor is, amikor a tálcáról kilépsz a Tyverixből, így egy elfelejtett Játék mód soha nem éli túl az alkalmazást.",
+                  w: [],
+                },
+                {
+                  t: "Energiaséma váltása",
+                  v: "reversible",
+                  n: "A korábban aktív séma rögzül, és az előzményekből visszaállítható. Egyetlen séma sem törlődik és nem módosul; ha nincs teljesítmény-séma, a Windows saját sablonjából készül egy új, a tiéd pedig érintetlen marad.",
+                  w: ["powercfg /setactive <guid>"],
+                },
+              ],
+            },
+            {
+              h: "Végleges — ezek nem vonhatók vissza",
+              sub: "Itt soroljuk fel, nem az apróbetűs részben. Mindkettőt külön meg kell erősíteni, és mindkettő ott helyben kiírja, hogy végleges.",
+              rows: [
+                {
+                  t: "Lemeztakarítás",
+                  v: "permanent",
+                  n: "A törölt fájlok véglegesen eltűnnek. Amit a Tyverix felajánl takarításra, az mind magatól újratermelődik — ideiglenes fájlok, shader-gyorsítótárak, böngésző-gyorsítótárak, hibajelentések — de nem állítható vissza, a Lomtár ürítése pedig végleges. Minden tétel megerősítés előtt kiírja a saját előnyét és hátrányát, a futó alkalmazás által zárolt fájlokat pedig kihagyja, nem erőlteti.",
+                  w: [],
+                },
+                {
+                  t: "Folyamat leállítása",
+                  v: "permanent",
+                  n: "A folyamat azonnal leáll. Ami nem volt elmentve, elveszik — pontosan úgy, mint a Feladatkezelő „Feladat befejezése” gombjánál, ugyanazzal a kockázattal.",
+                  w: [],
+                },
+              ],
+            },
+            {
+              h: "Semmit nem módosít",
+              sub: "Csak olvas, vagy átmeneti. Nincs mit visszavonni, mert semmi nem lett beállítva.",
+              rows: [
+                {
+                  t: "Diagnosztika",
+                  v: "none",
+                  n: "Kizárólag hardvert és Windows-beállításokat olvas: memóriasebesség a névleges értékhez képest, képernyő-frissítési ráta, PCIe sávszélesség, GPU-throttling jelzők, lapozófájl, szabad hely, driver kora. Kiírja, mit mért, és ahol a javításhoz BIOS vagy csavarhúzó kell, ott nyíltan megmondja, hogy a Tyverix ezt nem teheti meg helyetted.",
+                  w: [],
+                },
+                {
+                  t: "Memória felszabadítása",
+                  v: "none",
+                  n: "Csökkenti a folyamatok working setjét és üríti a készenléti listát — ugyanazzal a mechanizmussal, amit a Sysinternals RAMMap is használ. Semmit nem állít be és nem tárol el, a Windows pedig magától újratölti a gyorsítótárat. Az alkalmazás a valós mért különbséget írja ki, akkor is, ha az kicsi vagy negatív.",
+                  w: [],
+                },
+                {
+                  t: "Monitorozás és A/B mérés",
+                  v: "none",
+                  n: "A frame-idők a Windows saját frame-eseményeiből jönnek, az Intel nyílt forrású PresentMonján keresztül. Az eredmények kizárólag a te gépeden tárolódnak.",
+                  w: [],
+                },
+              ],
+            },
+            {
+              h: "Amit a Tyverix nem hajlandó megtenni",
+              sub: "Nem hiányzó funkciók — hanem határok, amiket nem lépünk át.",
+              rows: [
+                {
+                  t: "Windows-szolgáltatások letiltása",
+                  v: "none",
+                  n: "A mérhető nyereség gyakorlatilag nulla, a törés viszont valódi, és hónapokkal később nagyon nehéz kideríteni.",
+                  w: [],
+                },
+                {
+                  t: "Boot timer vagy HPET piszkálása",
+                  v: "none",
+                  n: "A bcdedit-es timer-„tweakek” legalább annyiszor rontanak, mint ahányszor javítanak. A Tyverix inkább leméri az állítást, és megmondja, hogy nem segít.",
+                  w: [],
+                },
+                {
+                  t: "Bármi, amibe egy anticheat beleköthet",
+                  v: "none",
+                  n: "Semmilyen driver-aláírás módosítás, kernel-patchelés, más folyamat memóriájába írás vagy injektálás. Minden változtatás egy registry-érték vagy egy powercfg-hívás, amit a Windows saját felülete is meg tud csinálni.",
+                  w: [],
+                },
+                {
+                  t: "FPS-számot állítani, amit nem mért",
+                  v: "none",
+                  n: "Nincs „akár 200%-kal gyorsabb” banner, nincs kitalált előtte/utána. Az A/B mérés hajlandó kimondani, hogy egy változtatásnak nem volt mérhető hatása — pontosan ezért lehet a többiben is megbízni.",
+                  w: [],
+                },
+              ],
+            },
+          ],
+        },
+        de: {
+          title: "Was Tyverix an Ihrem PC ändert",
+          sub: "Jede Änderung, die die App vornehmen kann, was genau sie schreibt und ob sie umkehrbar ist. Nichts davon versteckt sich hinter einer Installation.",
+          back: "← Zurück zur Website",
+          home: "Startseite",
+          callout:
+            "<strong>Die Kurzfassung.</strong> Jede Konfigurationsänderung von Tyverix ist umkehrbar, und der exakte vorherige Wert wird vor der Änderung auf die Festplatte geschrieben — das Zurücksetzen stellt also wieder her, was wirklich da war. Endgültig sind nur zwei Vorgänge: das Löschen von Dateien, das Sie angefordert haben, und das Beenden eines Prozesses, das Sie angefordert haben. Beide sagen es vor der Bestätigung.",
+          sections: [
+            {
+              h: "Umkehrbar — der vorherige Wert wird zuerst gesichert",
+              sub: "Tyverix schreibt den aktuellen Wert vor der Änderung nach %LOCALAPPDATA%\\Tyverix. Das Zurücksetzen stellt genau diesen Wert wieder her, nicht einen geratenen Standard.",
+              rows: [
+                {
+                  t: "Autostart-Eintrag deaktivieren",
+                  v: "reversible",
+                  n: "Verwendet Windows' eigenes Aktiviert/Deaktiviert-Kennzeichen — genau das, was auch der Task-Manager schreibt. Der Run-Eintrag bzw. die Verknüpfung der Anwendung bleibt unverändert an Ort und Stelle, sodass sich nichts selbst wieder eintragen kann und ein erneutes Aktivieren sie Byte für Byte wiederherstellt. Nichts wird jemals gelöscht.",
+                  w: [
+                    "HKCU\\...\\Explorer\\StartupApproved\\Run\\<App> = 03 00 00 00 <Zeitstempel>",
+                    "HKCU\\...\\Explorer\\StartupApproved\\StartupFolder\\<verknuepfung.lnk>",
+                  ],
+                },
+                {
+                  t: "Performance-Tweaks (Boost-Seite)",
+                  v: "reversible",
+                  n: "Ausschließlich Registry-Werte und Energieplan-Einstellungen. Jeder Tweak zeigt in der App genau, welche Werte er schreibt, was Windows' Standard ist und was das Zurücksetzen tut. Wurde eine Einstellung außerhalb von Tyverix geändert, stellt das Zurücksetzen stattdessen Windows' dokumentierten Standard her — und das Abzeichen des Tweaks sagt das auch, statt mehr zu behaupten.",
+                  w: [
+                    "HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\\HwSchMode (HAGS)",
+                    "HKLM\\SOFTWARE\\Microsoft\\Windows\\Dwm\\OverlayTestMode (MPO)",
+                    "HKCU\\...\\AppCompatFlags\\Layers\\<spiel.exe> (Vollbildoptimierungen)",
+                    "HKLM\\...\\Multimedia\\SystemProfile\\{SystemResponsiveness,NetworkThrottlingIndex}",
+                    "HKLM\\...\\Multimedia\\SystemProfile\\Tasks\\Games\\{Priority,Scheduling Category,SFIO Priority}",
+                    "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Power\\PowerThrottling\\PowerThrottlingOff",
+                    "HKCU\\System\\GameConfigStore\\GameDVR_Enabled und die Game-Bar-Schlüssel",
+                    "HKCU\\Control Panel\\Mouse\\{MouseSpeed,MouseThreshold1,MouseThreshold2}",
+                    "HKLM\\...\\Tcpip\\Parameters\\Interfaces\\<Adapter>\\{TcpAckFrequency,TCPNoDelay}",
+                    "powercfg, nur am aktiven Plan: Core-Parking, selektives USB-Energiesparen",
+                  ],
+                },
+                {
+                  t: "Spielmodus",
+                  v: "reversible",
+                  n: "Energieplan, Game DVR, App-bezogene GPU-Präferenz und Prozessprioritäten werden alle aufgezeichnet und zurückgesetzt — beim Ausschalten des Spielmodus und auch beim Beenden von Tyverix über das Infobereich-Symbol, damit ein vergessener Spielmodus die App nie überdauert.",
+                  w: [],
+                },
+                {
+                  t: "Energieplan wechseln",
+                  v: "reversible",
+                  n: "Der zuvor aktive Plan wird aufgezeichnet und lässt sich aus dem Verlauf wiederherstellen. Kein Plan wird gelöscht oder bearbeitet; fehlt ein Leistungsplan, wird aus Windows' eigener Vorlage ein neuer erstellt und Ihrer bleibt unangetastet.",
+                  w: ["powercfg /setactive <guid>"],
+                },
+              ],
+            },
+            {
+              h: "Endgültig — nicht rückgängig zu machen",
+              sub: "Hier aufgeführt statt im Kleingedruckten. Beide werden einzeln bestätigt und weisen in diesem Moment darauf hin, dass sie endgültig sind.",
+              rows: [
+                {
+                  t: "Datenträgerbereinigung",
+                  v: "permanent",
+                  n: "Gelöschte Dateien sind weg. Alles, was Tyverix zum Bereinigen anbietet, entsteht von selbst neu — temporäre Dateien, Shader-Caches, Browser-Caches, Fehlerberichte — wiederherstellbar ist es aber nicht, und das Leeren des Papierkorbs ist endgültig. Jeder Posten nennt vor der Bestätigung seinen Nutzen und seinen Nachteil; von laufenden Programmen gesperrte Dateien werden übersprungen statt erzwungen.",
+                  w: [],
+                },
+                {
+                  t: "Prozess beenden",
+                  v: "permanent",
+                  n: "Der Prozess wird sofort beendet. Nicht Gespeichertes geht verloren — genau wie bei „Task beenden“ im Task-Manager, mit demselben Risiko.",
+                  w: [],
+                },
+              ],
+            },
+            {
+              h: "Ändert nichts",
+              sub: "Nur lesend oder flüchtig. Es gibt nichts rückgängig zu machen, weil nichts konfiguriert wurde.",
+              rows: [
+                {
+                  t: "Diagnose",
+                  v: "none",
+                  n: "Liest ausschließlich Hardware und Windows-Konfiguration: Speichertakt gegenüber Nenntakt, Bildwiederholrate, PCIe-Anbindung, GPU-Throttling-Flags, Auslagerungsdatei, freier Speicherplatz, Treiberalter. Sie berichtet, was gemessen wurde, und sagt dort, wo die Lösung BIOS oder Schraubendreher braucht, offen, dass Tyverix das nicht für Sie tun kann.",
+                  w: [],
+                },
+                {
+                  t: "Arbeitsspeicher freigeben",
+                  v: "none",
+                  n: "Verkleinert die Working Sets der Prozesse und leert die Standby-Liste — dieselbe Mechanik, die auch Sysinternals RAMMap nutzt. Es wird nichts konfiguriert oder gespeichert, und Windows füllt seinen Cache von selbst wieder auf. Die App zeigt die tatsächlich gemessene Differenz, auch wenn sie klein oder negativ ausfällt.",
+                  w: [],
+                },
+                {
+                  t: "Überwachung und A/B-Messung",
+                  v: "none",
+                  n: "Die Frame-Zeiten stammen aus Windows' eigenen Frame-Ereignissen über Intels quelloffenes PresentMon. Ergebnisse werden ausschließlich lokal auf Ihrem Rechner gespeichert.",
+                  w: [],
+                },
+              ],
+            },
+            {
+              h: "Was Tyverix bewusst nicht tut",
+              sub: "Keine fehlenden Funktionen — Grenzen, die wir nicht überschreiten.",
+              rows: [
+                {
+                  t: "Windows-Dienste deaktivieren",
+                  v: "none",
+                  n: "Der messbare Gewinn liegt nahe null, der Schaden ist real und Monate später kaum noch zuzuordnen.",
+                  w: [],
+                },
+                {
+                  t: "Boot-Timer oder HPET anfassen",
+                  v: "none",
+                  n: "bcdedit-Timer-„Tweaks“ verschlechtern mindestens so oft, wie sie verbessern. Tyverix misst die Behauptung lieber nach und sagt Ihnen, dass sie nicht hilft.",
+                  w: [],
+                },
+                {
+                  t: "Alles, woran Anti-Cheat-Software Anstoß nehmen könnte",
+                  v: "none",
+                  n: "Keine Änderung an Treibersignaturen, kein Kernel-Patching, keine Schreibzugriffe in fremde Prozesse, keine Injection. Jede Änderung ist ein Registry-Wert oder ein powercfg-Aufruf, den auch die Windows-Oberfläche vornehmen kann.",
+                  w: [],
+                },
+                {
+                  t: "Eine FPS-Zahl behaupten, die nicht gemessen wurde",
+                  v: "none",
+                  n: "Kein „bis zu 200 % schneller“-Banner, kein erfundenes Vorher/Nachher. Die A/B-Messung ist bereit, Ihnen zu sagen, dass eine Änderung keinen messbaren Unterschied gemacht hat — genau deshalb kann man dem Rest der App vertrauen.",
+                  w: [],
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      const PILL = {
+        en: { reversible: "Reversible", permanent: "Permanent", none: "Changes nothing" },
+        hu: { reversible: "Visszafordítható", permanent: "Végleges", none: "Semmit nem módosít" },
+        de: { reversible: "Umkehrbar", permanent: "Endgültig", none: "Ändert nichts" },
+      };
+
+      /* Text from DATA is authored here, but escaping it keeps the renderer
+         safe if a future edit ever pastes in something with angle brackets. */
+      function esc(s) {
+        return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]);
+      }
+
+      function render(lang) {
+        const d = DATA[lang] || DATA.en;
+        const pill = PILL[lang] || PILL.en;
+        document.documentElement.lang = lang;
+        document.getElementById("pageTitle").textContent = d.title;
+        document.getElementById("pageSub").textContent = d.sub;
+        document.getElementById("backLink").textContent = d.back;
+        document.getElementById("footerHome").textContent = d.home;
+        document.getElementById("callout").innerHTML = d.callout;
+
+        document.getElementById("sections").innerHTML = d.sections
+          .map(
+            (s) => `
+            <h2>${esc(s.h)}</h2>
+            <p class="sec-sub">${esc(s.sub)}</p>
+            ${s.rows
+              .map(
+                (r) => `
+              <div class="row">
+                <div class="row-head">
+                  <span class="row-title">${esc(r.t)}</span>
+                  <span class="pill ${r.v}">${esc(pill[r.v])}</span>
+                </div>
+                <p class="note">${esc(r.n)}</p>
+                ${
+                  r.w && r.w.length
+                    ? `<ul class="writes">${r.w.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>`
+                    : ""
+                }
+              </div>`,
+              )
+              .join("")}`,
+          )
+          .join("");
+
+        document
+          .querySelectorAll("#langs button")
+          .forEach((b) => b.classList.toggle("active", b.dataset.lang === lang));
+        try { localStorage.setItem("bf.site.lang", lang); } catch (e) { /* private mode */ }
+      }
+
+      document
+        .querySelectorAll("#langs button")
+        .forEach((b) => b.addEventListener("click", () => render(b.dataset.lang)));
+
+      let saved = null;
+      try { saved = localStorage.getItem("bf.site.lang"); } catch (e) { /* private mode */ }
+      const sys = (navigator.language || "en").slice(0, 2);
+      render(saved || (["hu", "de"].includes(sys) ? sys : "en"));
+    </script>
+  </body>
+</html>

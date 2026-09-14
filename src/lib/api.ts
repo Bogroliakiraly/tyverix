@@ -5,6 +5,8 @@
 import { invoke } from "@tauri-apps/api/core";
 import type {
   ActionRecord,
+  BenchComparison,
+  BenchRun,
   CleanResult,
   CleanTarget,
   CleanupScheduleStatus,
@@ -12,6 +14,7 @@ import type {
   DiskInfo,
   DriverInfo,
   FileEntry,
+  Finding,
   FpsTarget,
   GameModeStatus,
   GpuInfo,
@@ -25,6 +28,7 @@ import type {
   SoftwareInfo,
   StartupItem,
   SystemSnapshot,
+  TweakInfo,
   UpdateInfo,
   WindowsInfo,
 } from "./types";
@@ -127,3 +131,25 @@ export const activateLicense = (key: string) =>
   invoke<LicenseStatus>("activate_license", { key });
 export const deactivateLicense = () =>
   invoke<LicenseStatus>("deactivate_license");
+
+// --- Hardware & configuration diagnostics (read-only) ------------------------
+export const runDiagnostics = () => invoke<Finding[]>("run_diagnostics");
+
+// --- Reversible performance tweaks -------------------------------------------
+export const listTweaks = () => invoke<TweakInfo[]>("list_tweaks");
+export const setTweak = (id: string, enable: boolean) =>
+  invoke<TweakInfo>("set_tweak", { id, enable });
+/** Puts every applied tweak back to the value Tyverix recorded before it. */
+export const revertAllTweaks = () => invoke<number>("revert_all_tweaks");
+
+// --- A/B benchmark -----------------------------------------------------------
+export const benchCapture = (
+  pid: number,
+  label: string,
+  slot: "before" | "after",
+  seconds: number,
+  note: string,
+) => invoke<BenchRun>("bench_capture", { pid, label, slot, seconds, note });
+export const benchCompare = () => invoke<BenchComparison>("bench_compare");
+export const benchGetRuns = () => invoke<BenchRun[]>("bench_get_runs");
+export const benchClear = () => invoke<void>("bench_clear");

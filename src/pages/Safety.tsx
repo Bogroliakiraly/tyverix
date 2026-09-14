@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { History, RotateCcw, ShieldCheck, Save, Undo2 } from "lucide-react";
+import {
+  Eye,
+  History,
+  RotateCcw,
+  ShieldAlert,
+  ShieldCheck,
+  Save,
+  Undo2,
+} from "lucide-react";
 import {
   backupRegistry,
   createRestorePoint,
@@ -113,6 +121,8 @@ export function Safety() {
 
   return (
     <div className="space-y-5">
+      <ReversibilityReference />
+
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Card>
           <div className="flex items-center gap-3">
@@ -194,5 +204,90 @@ export function Safety() {
         )}
       </Card>
     </div>
+  );
+}
+
+/** How each kind of change is classified. */
+type Reversibility = "reversible" | "permanent" | "none";
+
+/**
+ * The plain-language record of what Tyverix can and cannot take back.
+ *
+ * It lives here, on the page people open when they are nervous, rather than
+ * buried in a help article — and it lists the permanent operations first
+ * among equals instead of hiding them. The same table is published on
+ * tyverix.com/changes.html so the claim can be checked before installing.
+ */
+const REVERSIBILITY: { id: string; verdict: Reversibility }[] = [
+  { id: "startup", verdict: "reversible" },
+  { id: "tweaks", verdict: "reversible" },
+  { id: "gamemode", verdict: "reversible" },
+  { id: "powerplan", verdict: "reversible" },
+  { id: "cleaner", verdict: "permanent" },
+  { id: "killprocess", verdict: "permanent" },
+  { id: "memory", verdict: "none" },
+  { id: "readonly", verdict: "none" },
+];
+
+function ReversibilityReference() {
+  const { t } = useT();
+  const [open, setOpen] = useState(false);
+
+  const icon: Record<Reversibility, typeof Eye> = {
+    reversible: RotateCcw,
+    permanent: ShieldAlert,
+    none: Eye,
+  };
+  const tone: Record<Reversibility, "good" | "warn" | "neutral"> = {
+    reversible: "good",
+    permanent: "warn",
+    none: "neutral",
+  };
+  const color: Record<Reversibility, string> = {
+    reversible: "text-good",
+    permanent: "text-warn",
+    none: "text-text-muted",
+  };
+
+  return (
+    <Card>
+      <SectionTitle
+        title={t("reverse.title")}
+        subtitle={t("reverse.subtitle")}
+        action={
+          <button className="btn-ghost" onClick={() => setOpen((v) => !v)}>
+            {open ? t("reverse.hide") : t("reverse.show")}
+          </button>
+        }
+      />
+      {open && (
+        <div className="space-y-2">
+          {REVERSIBILITY.map((row) => {
+            const Icon = icon[row.verdict];
+            return (
+              <div
+                key={row.id}
+                className="flex gap-3 rounded-xl border border-border-subtle p-3"
+              >
+                <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${color[row.verdict]}`} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-medium">
+                      {t(`reverse.${row.id}.title`)}
+                    </span>
+                    <Badge tone={tone[row.verdict]}>
+                      {t(`reverse.verdict.${row.verdict}`)}
+                    </Badge>
+                  </div>
+                  <p className="mt-1 text-sm text-text-secondary">
+                    {t(`reverse.${row.id}.note`)}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Card>
   );
 }

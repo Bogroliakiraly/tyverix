@@ -35,6 +35,168 @@ const en: Dict = {
   "nav.settings": "Settings",
   "nav.tagline": "Every action is measurable, reversible and safe.",
 
+  "nav.diagnostics": "Diagnostics",
+  "nav.boost": "Boost",
+  "nav.bench": "A/B benchmark",
+
+  "reverse.title": "What Tyverix can and cannot undo",
+  "reverse.subtitle":
+    "The complete list, including the operations that are permanent. Also published on tyverix.com/changes.html so you can read it before installing.",
+  "reverse.show": "Show the list",
+  "reverse.hide": "Hide the list",
+  "reverse.verdict.reversible": "Reversible",
+  "reverse.verdict.permanent": "Permanent",
+  "reverse.verdict.none": "Changes nothing",
+  "reverse.startup.title": "Disabling a startup app",
+  "reverse.startup.note":
+    "Uses Windows' own enabled/disabled flag — the same one Task Manager writes. The app's own entry is left untouched, so re-enabling restores it exactly. Nothing is deleted.",
+  "reverse.tweaks.title": "Performance tweaks (Boost page)",
+  "reverse.tweaks.note":
+    "The exact previous value of every registry value and power setting is written to disk before the change. Reverting restores that value. If a setting was changed outside Tyverix, the revert restores Windows' documented default instead, and the tweak's badge says so.",
+  "reverse.gamemode.title": "Game Mode",
+  "reverse.gamemode.note":
+    "Power plan, Game DVR, per-app GPU preference and process priorities are all recorded and restored — when you switch Game Mode off, and also when you quit Tyverix from the tray.",
+  "reverse.powerplan.title": "Switching the power plan",
+  "reverse.powerplan.note":
+    "The previously active plan is recorded and can be restored from the history below. No plan is ever deleted or modified.",
+  "reverse.cleaner.title": "Disk cleanup",
+  "reverse.cleaner.note":
+    "Deleted files are gone. Everything Tyverix offers to clean is regenerable (temporary files, shader caches, browser caches) — but it is not recoverable, and emptying the Recycle Bin is final. Each target says whether it is permanent before you confirm.",
+  "reverse.killprocess.title": "Ending a process",
+  "reverse.killprocess.note":
+    "The process is terminated immediately. Anything it had not saved is lost, exactly as with Task Manager's End task.",
+  "reverse.memory.title": "Freeing memory",
+  "reverse.memory.note":
+    "Trims working sets and purges the standby list. Nothing is configured or stored, so there is nothing to undo — Windows refills the cache on its own.",
+  "reverse.readonly.title": "Diagnostics, monitoring and benchmarking",
+  "reverse.readonly.note":
+    "Read-only. Diagnostics only reads hardware and configuration; measuring reads Windows' frame events. Benchmark results are stored locally on your machine and nowhere else.",
+
+
+  "diag.title": "Hardware & configuration diagnostics",
+  "diag.subtitle":
+    "The checks that matter more than any registry tweak — and that almost nobody runs. Nothing on this page changes anything.",
+  "diag.scan": "Run checks",
+  "diag.scanning": "Reading hardware and Windows configuration…",
+  "diag.failed": "Diagnostics could not be completed",
+  "diag.empty": "No results",
+  "diag.emptyMsg": "Nothing could be read on this machine. Try running Tyverix as administrator.",
+  "diag.summaryProblems": "issues worth fixing",
+  "diag.summaryAllGood": "issues found",
+  "diag.summaryHint":
+    "Fix these before touching any tweak — they are worth far more frames than a registry value.",
+  "diag.summaryCleanHint":
+    "Your hardware and Windows configuration look right. Any further gains will be small, so measure them on the A/B benchmark page.",
+  "diag.showPassing": "Show {n} passing checks",
+  "diag.hidePassing": "Hide passing checks",
+  "diag.sev.critical": "Critical",
+  "diag.sev.warning": "Worth fixing",
+  "diag.sev.ok": "All good",
+  "diag.sev.info": "For information",
+  "diag.sev.unknown": "Not available",
+  "diag.impact": "What it's worth",
+  "diag.fix": "How to fix it",
+  "diag.measured": "Measured",
+  "diag.biosBadge": "BIOS / hardware — Tyverix can't do this for you",
+  "diag.fixInApp": "Open the matching tweak",
+
+  "boost.title": "Performance tweaks",
+  "boost.subtitle":
+    "Real, documented Windows settings. Every one of them is reversible, and every one states its own honest expected effect.",
+  "boost.reading": "Reading current settings…",
+  "boost.empty": "No tweaks are available on this system",
+  "boost.failedRead": "Tweaks could not be read",
+  "boost.honestyTitle": "There is no magic switch here",
+  "boost.honestyBody":
+    "No registry value reliably buys double-digit FPS on a healthy system — anything claiming otherwise is selling placebo. The big wins are on the Diagnostics page. Use these to shave off the rest, and prove each one with a measurement instead of trusting us.",
+  "boost.honestyCta": "Prove it with the A/B benchmark",
+  "boost.restartPending": "One or more applied tweaks only take effect after a restart.",
+  "boost.cat.gpu": "GPU & display",
+  "boost.cat.cpu": "CPU & power",
+  "boost.cat.system": "Windows overhead",
+  "boost.cat.input": "Input latency",
+  "boost.cat.network": "Network latency",
+  "boost.impactBadge.medium": "Usually measurable",
+  "boost.impactBadge.low": "Small",
+  "boost.impactBadge.situational": "Depends on your machine",
+  "boost.impact.medium":
+    "Usually measurable, most often in frame pacing rather than average FPS.",
+  "boost.impact.low": "Small — likely to disappear into run-to-run noise.",
+  "boost.impact.situational":
+    "Could be a real gain or nothing at all on your hardware. Measure it on the A/B benchmark page.",
+  "boost.reversibleExact": "Reversible — exact previous value saved",
+  "boost.reversibleDefault": "Reversible — restores the Windows default",
+  "boost.restartRequired": "Needs a restart",
+  "boost.adminRequired": "Administrator",
+  "boost.showDetails": "What exactly does this change?",
+  "boost.hideDetails": "Hide details",
+  "boost.revertLabel": "What reverting does",
+  "boost.changesLabel": "Exactly what gets written",
+  "boost.apply": "Apply",
+  "boost.revert": "Revert",
+  "boost.confirmApplyTitle": "Apply “{name}”?",
+  "boost.confirmRevertTitle": "Revert “{name}”?",
+  "boost.revertDownside":
+    "None — the setting goes back to what it was before Tyverix changed it.",
+  "boost.toastApplied": "Tweak applied",
+  "boost.toastReverted": "Tweak reverted",
+  "boost.toastFailed": "The tweak could not be changed",
+  "boost.toastReversible": "The previous value is saved — revert it any time.",
+  "boost.toastRestart": "Restart Windows for this to take effect.",
+  "boost.revertAll": "Revert everything",
+  "boost.revertAllTitle": "Revert every applied tweak?",
+  "boost.revertAllWhat":
+    "Every tweak Tyverix applied goes back to the value it recorded beforehand.",
+  "boost.revertAllWhy":
+    "The one-click way out if something feels worse and you would rather not work out which change caused it.",
+  "boost.revertAllBenefit": "Your machine ends up exactly as Tyverix found it.",
+  "boost.revertAllDownside":
+    "Tweaks that need a restart stay in effect until you restart Windows.",
+  "boost.revertAllDone": "Everything reverted",
+  "boost.revertAllCount": "{n} tweak(s) restored to their previous values.",
+
+  "bench.title": "A/B benchmark",
+  "bench.subtitle":
+    "Measure, change one thing, measure again — and get a straight answer about whether the difference was real.",
+  "bench.stepLabel": "Step {n}",
+  "bench.step1": "Start your game and capture a baseline run.",
+  "bench.step2": "Change exactly one thing — a tweak, a driver setting, an in-game option.",
+  "bench.step3": "Capture the second run. The statistics decide, not the averages.",
+  "bench.game": "Game",
+  "bench.duration": "Run length",
+  "bench.durationOption": "{n} seconds",
+  "bench.note": "Note",
+  "bench.notePlaceholder": "e.g. HAGS on",
+  "bench.noGames": "No running game detected",
+  "bench.noGamesMsg":
+    "Start a game, then refresh. Measuring reads Windows' own frame events, so the game has to be running.",
+  "bench.captureBefore": "Capture baseline",
+  "bench.captureAfter": "Capture second run",
+  "bench.capturing": "Capturing the {slot} run — play normally, don't alt-tab…",
+  "bench.progress": "{elapsed}s of {total}s · {fps} FPS right now · {frames} frames captured",
+  "bench.captured": "Run captured",
+  "bench.capturedMsg": "Saved. It survives a restart, so reboot-only tweaks can be tested too.",
+  "bench.failed": "The run could not be captured",
+  "bench.clear": "Clear both runs",
+  "bench.before": "Baseline",
+  "bench.after": "Second run",
+  "bench.avgFps": "Average FPS",
+  "bench.low1": "1% low",
+  "bench.low01": "0.1% low",
+  "bench.pacing": "Frame pacing",
+  "bench.runFooter":
+    "{frames} frames over {seconds}s · {stutters} stutters ({perMin}/min)",
+  "bench.deltaAvg": "Average FPS change",
+  "bench.deltaLow1": "1% low change",
+  "bench.ci": "95% confidence interval",
+  "bench.verdict.improved": "Real improvement",
+  "bench.verdict.regressed": "Real regression",
+  "bench.verdict.no_change": "No measurable change",
+  "bench.verdict.inconclusive": "Not enough data",
+  "bench.methodology":
+    "Frame times come from Intel PresentMon (Windows' own frame events). Each run is split into one-second blocks and the block means are compared with Welch's t-test, because consecutive frame times are too correlated for a per-frame test to mean anything. If the 95% interval includes zero, the runs are not distinguishable — no matter how different the averages look.",
+
+
   "common.cancel": "Cancel",
   "common.proceed": "Proceed",
   "common.refresh": "Refresh",
@@ -549,6 +711,173 @@ const hu: Dict = {
   "nav.settings": "Beállítások",
   "nav.tagline": "Minden művelet mérhető, visszafordítható és biztonságos.",
 
+  "nav.diagnostics": "Diagnosztika",
+  "nav.boost": "Gyorsítás",
+  "nav.bench": "A/B mérés",
+
+  "reverse.title": "Mit tud és mit nem tud visszavonni a Tyverix",
+  "reverse.subtitle":
+    "A teljes lista, a végleges műveletekkel együtt. A tyverix.com/changes.html oldalon is fent van, hogy telepítés előtt elolvashasd.",
+  "reverse.show": "Lista megjelenítése",
+  "reverse.hide": "Lista elrejtése",
+  "reverse.verdict.reversible": "Visszafordítható",
+  "reverse.verdict.permanent": "Végleges",
+  "reverse.verdict.none": "Semmit nem módosít",
+  "reverse.startup.title": "Indítási alkalmazás letiltása",
+  "reverse.startup.note":
+    "A Windows saját engedélyezve/letiltva jelzőjét használja — pontosan azt, amit a Feladatkezelő is ír. Az alkalmazás bejegyzése érintetlen marad, így a visszakapcsolás pontosan visszaállítja. Semmi nem törlődik.",
+  "reverse.tweaks.title": "Teljesítmény-tweakek (Gyorsítás oldal)",
+  "reverse.tweaks.note":
+    "Minden registry-érték és energiabeállítás pontos előző értéke lemezre íródik a módosítás előtt. A visszavonás ezt az értéket állítja vissza. Ha egy beállítást a Tyverixen kívül változtattak meg, a visszavonás a Windows dokumentált alapértékét állítja be — a tweak címkéje ezt jelzi is.",
+  "reverse.gamemode.title": "Játék mód",
+  "reverse.gamemode.note":
+    "Az energiaséma, a Game DVR, az alkalmazásonkénti GPU-preferencia és a folyamatprioritások mind feljegyzésre és visszaállításra kerülnek — a Játék mód kikapcsolásakor és akkor is, amikor a tálcáról kilépsz a Tyverixből.",
+  "reverse.powerplan.title": "Energiaséma váltása",
+  "reverse.powerplan.note":
+    "A korábban aktív séma feljegyzésre kerül, és az alábbi előzményekből visszaállítható. Egyetlen séma sem törlődik és nem módosul.",
+  "reverse.cleaner.title": "Lemeztakarítás",
+  "reverse.cleaner.note":
+    "A törölt fájlok véglegesen eltűnnek. Amit a Tyverix felajánl takarításra, az mind újratermelődik (ideiglenes fájlok, shader-gyorsítótárak, böngésző-gyorsítótárak) — de nem állítható vissza, a Lomtár ürítése pedig végleges. Minden tétel megerősítés előtt kiírja, hogy végleges-e.",
+  "reverse.killprocess.title": "Folyamat leállítása",
+  "reverse.killprocess.note":
+    "A folyamat azonnal leáll. Ami nem volt elmentve, elveszik — pontosan úgy, mint a Feladatkezelő „Feladat befejezése” gombjánál.",
+  "reverse.memory.title": "Memória felszabadítása",
+  "reverse.memory.note":
+    "Csökkenti a working seteket és üríti a készenléti listát. Semmit nem állít be és nem tárol el, így nincs is mit visszavonni — a Windows magától újratölti a gyorsítótárat.",
+  "reverse.readonly.title": "Diagnosztika, monitorozás és mérés",
+  "reverse.readonly.note":
+    "Csak olvas. A diagnosztika kizárólag hardvert és beállításokat olvas be; a mérés a Windows frame-eseményeit. A mérési eredmények kizárólag a te gépeden tárolódnak.",
+
+
+  "diag.title": "Hardver- és beállítás-diagnosztika",
+  "diag.subtitle":
+    "Azok az ellenőrzések, amelyek többet érnek bármelyik registry-tweaknél — és amiket szinte senki nem futtat le. Ez az oldal semmit nem módosít.",
+  "diag.scan": "Ellenőrzés futtatása",
+  "diag.scanning": "Hardver és Windows-beállítások beolvasása…",
+  "diag.failed": "A diagnosztika nem futott le",
+  "diag.empty": "Nincs eredmény",
+  "diag.emptyMsg":
+    "Semmit nem sikerült beolvasni ezen a gépen. Próbáld rendszergazdaként futtatni a Tyverixet.",
+  "diag.summaryProblems": "javítható probléma",
+  "diag.summaryAllGood": "probléma",
+  "diag.summaryHint":
+    "Ezeket javítsd, mielőtt bármilyen tweakhez nyúlnál — sokkal több FPS-t érnek, mint egy registry-érték.",
+  "diag.summaryCleanHint":
+    "A hardvered és a Windows-beállításaid rendben vannak. Innentől már csak kis nyereségek jöhetnek, úgyhogy azokat mérd le az A/B mérés oldalon.",
+  "diag.showPassing": "{n} rendben lévő ellenőrzés mutatása",
+  "diag.hidePassing": "Rendben lévők elrejtése",
+  "diag.sev.critical": "Kritikus",
+  "diag.sev.warning": "Érdemes javítani",
+  "diag.sev.ok": "Rendben",
+  "diag.sev.info": "Tájékoztatás",
+  "diag.sev.unknown": "Nem elérhető",
+  "diag.impact": "Mennyit ér",
+  "diag.fix": "Hogyan javítsd",
+  "diag.measured": "Mért érték",
+  "diag.biosBadge": "BIOS / hardver — ezt a Tyverix nem teheti meg helyetted",
+  "diag.fixInApp": "Kapcsolódó tweak megnyitása",
+
+  "boost.title": "Teljesítmény-tweakek",
+  "boost.subtitle":
+    "Valódi, dokumentált Windows-beállítások. Mindegyik visszafordítható, és mindegyik őszintén megmondja, mennyit várhatsz tőle.",
+  "boost.reading": "Jelenlegi beállítások beolvasása…",
+  "boost.empty": "Ezen a rendszeren nincs elérhető tweak",
+  "boost.failedRead": "A tweakeket nem sikerült beolvasni",
+  "boost.honestyTitle": "Itt nincs varázsgomb",
+  "boost.honestyBody":
+    "Egy registry-érték sem hoz megbízhatóan két számjegyű FPS-nyereséget egy egészséges gépen — aki mást állít, placebót árul. A nagy nyereségek a Diagnosztika oldalon vannak. Ezekkel a maradékot faraghatod le, és mindegyiket méréssel bizonyítsd, ne nekünk higgy.",
+  "boost.honestyCta": "Bizonyítsd be az A/B méréssel",
+  "boost.restartPending":
+    "Egy vagy több bekapcsolt tweak csak újraindítás után lép életbe.",
+  "boost.cat.gpu": "GPU és kijelző",
+  "boost.cat.cpu": "CPU és energiagazdálkodás",
+  "boost.cat.system": "Windows-terhelés",
+  "boost.cat.input": "Bemeneti késleltetés",
+  "boost.cat.network": "Hálózati késleltetés",
+  "boost.impactBadge.medium": "Általában mérhető",
+  "boost.impactBadge.low": "Kicsi",
+  "boost.impactBadge.situational": "Géptől függ",
+  "boost.impact.medium":
+    "Általában mérhető, jellemzően a frame-egyenletességben, nem az átlag FPS-ben.",
+  "boost.impact.low": "Kicsi — valószínűleg elvész a mérési szórásban.",
+  "boost.impact.situational":
+    "A te hardvereden lehet valódi nyereség vagy semmi. Mérd le az A/B mérés oldalon.",
+  "boost.reversibleExact": "Visszafordítható — a pontos előző érték elmentve",
+  "boost.reversibleDefault": "Visszafordítható — a Windows alapértékét állítja vissza",
+  "boost.restartRequired": "Újraindítás kell",
+  "boost.adminRequired": "Rendszergazda",
+  "boost.showDetails": "Mit módosít pontosan?",
+  "boost.hideDetails": "Részletek elrejtése",
+  "boost.revertLabel": "Mit csinál a visszavonás",
+  "boost.changesLabel": "Pontosan ez íródik be",
+  "boost.apply": "Bekapcsolás",
+  "boost.revert": "Visszavonás",
+  "boost.confirmApplyTitle": "Bekapcsolod: „{name}”?",
+  "boost.confirmRevertTitle": "Visszavonod: „{name}”?",
+  "boost.revertDownside":
+    "Semmi — a beállítás visszaáll arra, ami a Tyverix módosítása előtt volt.",
+  "boost.toastApplied": "Tweak bekapcsolva",
+  "boost.toastReverted": "Tweak visszavonva",
+  "boost.toastFailed": "A tweaket nem sikerült módosítani",
+  "boost.toastReversible": "Az előző érték el van mentve — bármikor visszavonhatod.",
+  "boost.toastRestart": "Indítsd újra a Windowst, hogy életbe lépjen.",
+  "boost.revertAll": "Minden visszavonása",
+  "boost.revertAllTitle": "Visszavonod az összes bekapcsolt tweaket?",
+  "boost.revertAllWhat":
+    "Minden tweak visszaáll arra az értékre, amit a Tyverix előtte feljegyzett.",
+  "boost.revertAllWhy":
+    "Az egykattintásos kiút, ha valami rosszabb lett, és nem akarod kitalálni, melyik módosítás okozta.",
+  "boost.revertAllBenefit": "A géped pontosan úgy marad, ahogy a Tyverix találta.",
+  "boost.revertAllDownside":
+    "Az újraindítást igénylő tweakek a Windows újraindításáig még érvényben maradnak.",
+  "boost.revertAllDone": "Minden visszavonva",
+  "boost.revertAllCount": "{n} tweak állt vissza az előző értékére.",
+
+  "bench.title": "A/B mérés",
+  "bench.subtitle":
+    "Mérj, változtass meg egyetlen dolgot, mérj újra — és kapj egyenes választ arra, hogy a különbség valódi volt-e.",
+  "bench.stepLabel": "{n}. lépés",
+  "bench.step1": "Indítsd el a játékot, és rögzíts egy alapmérést.",
+  "bench.step2":
+    "Változtass meg pontosan egy dolgot — egy tweaket, egy driverbeállítást, egy játékbeli opciót.",
+  "bench.step3": "Rögzítsd a második mérést. A statisztika dönt, nem az átlagok.",
+  "bench.game": "Játék",
+  "bench.duration": "Mérés hossza",
+  "bench.durationOption": "{n} másodperc",
+  "bench.note": "Megjegyzés",
+  "bench.notePlaceholder": "pl. HAGS bekapcsolva",
+  "bench.noGames": "Nem fut felismert játék",
+  "bench.noGamesMsg":
+    "Indíts el egy játékot, majd frissíts. A mérés a Windows saját frame-eseményeit olvassa, ezért a játéknak futnia kell.",
+  "bench.captureBefore": "Alapmérés rögzítése",
+  "bench.captureAfter": "Második mérés rögzítése",
+  "bench.capturing": "{slot} rögzítése — játssz normálisan, ne alt-tabolj…",
+  "bench.progress":
+    "{elapsed}s / {total}s · most {fps} FPS · {frames} frame rögzítve",
+  "bench.captured": "Mérés rögzítve",
+  "bench.capturedMsg":
+    "Elmentve. Újraindítás után is megmarad, így az újraindítást igénylő tweakek is tesztelhetők.",
+  "bench.failed": "A mérést nem sikerült rögzíteni",
+  "bench.clear": "Mindkét mérés törlése",
+  "bench.before": "Alapmérés",
+  "bench.after": "Második mérés",
+  "bench.avgFps": "Átlag FPS",
+  "bench.low1": "1% low",
+  "bench.low01": "0,1% low",
+  "bench.pacing": "Frame-egyenletesség",
+  "bench.runFooter":
+    "{frames} frame {seconds}s alatt · {stutters} akadás ({perMin}/perc)",
+  "bench.deltaAvg": "Átlag FPS változás",
+  "bench.deltaLow1": "1% low változás",
+  "bench.ci": "95%-os konfidencia-intervallum",
+  "bench.verdict.improved": "Valódi javulás",
+  "bench.verdict.regressed": "Valódi romlás",
+  "bench.verdict.no_change": "Nincs mérhető változás",
+  "bench.verdict.inconclusive": "Nincs elég adat",
+  "bench.methodology":
+    "A frame-idők az Intel PresentMonból jönnek (a Windows saját frame-eseményei). Mindkét mérést egymásodperces blokkokra bontjuk, és a blokkátlagokat hasonlítjuk össze Welch-féle t-próbával, mert az egymást követő frame-idők túlságosan összefüggnek ahhoz, hogy a frame-enkénti teszt bármit is jelentsen. Ha a 95%-os intervallum tartalmazza a nullát, a két mérés nem különböztethető meg — bármennyire eltérőnek tűnnek is az átlagok.",
+
+
   "common.cancel": "Mégse",
   "common.proceed": "Folytatás",
   "common.refresh": "Frissítés",
@@ -1062,6 +1391,176 @@ const de: Dict = {
   "nav.safety": "Sicherheit",
   "nav.settings": "Einstellungen",
   "nav.tagline": "Jede Aktion ist messbar, umkehrbar und sicher.",
+
+  "nav.diagnostics": "Diagnose",
+  "nav.boost": "Boost",
+  "nav.bench": "A/B-Messung",
+
+  "reverse.title": "Was Tyverix rückgängig machen kann — und was nicht",
+  "reverse.subtitle":
+    "Die vollständige Liste, einschließlich der endgültigen Vorgänge. Auch auf tyverix.com/changes.html veröffentlicht, damit Sie sie vor der Installation lesen können.",
+  "reverse.show": "Liste anzeigen",
+  "reverse.hide": "Liste ausblenden",
+  "reverse.verdict.reversible": "Umkehrbar",
+  "reverse.verdict.permanent": "Endgültig",
+  "reverse.verdict.none": "Ändert nichts",
+  "reverse.startup.title": "Autostart-Eintrag deaktivieren",
+  "reverse.startup.note":
+    "Verwendet Windows' eigenes Aktiviert/Deaktiviert-Kennzeichen — genau das, was auch der Task-Manager schreibt. Der Eintrag der Anwendung bleibt unangetastet, ein erneutes Aktivieren stellt ihn exakt wieder her. Nichts wird gelöscht.",
+  "reverse.tweaks.title": "Performance-Tweaks (Boost-Seite)",
+  "reverse.tweaks.note":
+    "Der exakte vorherige Wert jedes Registry-Werts und jeder Energieeinstellung wird vor der Änderung auf die Festplatte geschrieben. Das Zurücksetzen stellt genau diesen Wert wieder her. Wurde eine Einstellung außerhalb von Tyverix geändert, wird stattdessen Windows' dokumentierter Standard gesetzt — das Abzeichen des Tweaks weist darauf hin.",
+  "reverse.gamemode.title": "Spielmodus",
+  "reverse.gamemode.note":
+    "Energieplan, Game DVR, App-bezogene GPU-Präferenz und Prozessprioritäten werden alle aufgezeichnet und wiederhergestellt — beim Ausschalten des Spielmodus und auch beim Beenden von Tyverix über das Infobereich-Symbol.",
+  "reverse.powerplan.title": "Energieplan wechseln",
+  "reverse.powerplan.note":
+    "Der zuvor aktive Plan wird aufgezeichnet und lässt sich aus dem Verlauf unten wiederherstellen. Kein Plan wird jemals gelöscht oder verändert.",
+  "reverse.cleaner.title": "Datenträgerbereinigung",
+  "reverse.cleaner.note":
+    "Gelöschte Dateien sind weg. Alles, was Tyverix zum Bereinigen anbietet, entsteht neu (temporäre Dateien, Shader-Caches, Browser-Caches) — wiederherstellbar ist es aber nicht, und das Leeren des Papierkorbs ist endgültig. Jeder Posten sagt vor der Bestätigung, ob er endgültig ist.",
+  "reverse.killprocess.title": "Prozess beenden",
+  "reverse.killprocess.note":
+    "Der Prozess wird sofort beendet. Nicht Gespeichertes geht verloren — genau wie bei „Task beenden“ im Task-Manager.",
+  "reverse.memory.title": "Arbeitsspeicher freigeben",
+  "reverse.memory.note":
+    "Verkleinert Working Sets und leert die Standby-Liste. Es wird nichts konfiguriert oder gespeichert, also gibt es auch nichts rückgängig zu machen — Windows füllt den Cache von selbst wieder auf.",
+  "reverse.readonly.title": "Diagnose, Überwachung und Messung",
+  "reverse.readonly.note":
+    "Nur lesend. Die Diagnose liest ausschließlich Hardware und Konfiguration; die Messung liest Windows' Frame-Ereignisse. Messergebnisse werden ausschließlich lokal auf Ihrem Rechner gespeichert.",
+
+
+  "diag.title": "Hardware- und Konfigurationsdiagnose",
+  "diag.subtitle":
+    "Die Prüfungen, die mehr bringen als jeder Registry-Tweak — und die fast niemand durchführt. Diese Seite ändert nichts.",
+  "diag.scan": "Prüfungen ausführen",
+  "diag.scanning": "Hardware und Windows-Konfiguration werden gelesen…",
+  "diag.failed": "Die Diagnose konnte nicht abgeschlossen werden",
+  "diag.empty": "Keine Ergebnisse",
+  "diag.emptyMsg":
+    "Auf diesem Rechner konnte nichts gelesen werden. Führen Sie Tyverix als Administrator aus.",
+  "diag.summaryProblems": "behebbare Probleme",
+  "diag.summaryAllGood": "Probleme gefunden",
+  "diag.summaryHint":
+    "Beheben Sie diese, bevor Sie einen Tweak anfassen — sie sind weitaus mehr Bilder pro Sekunde wert als ein Registry-Wert.",
+  "diag.summaryCleanHint":
+    "Hardware und Windows-Konfiguration sehen richtig aus. Weitere Gewinne fallen klein aus — messen Sie sie auf der A/B-Messseite.",
+  "diag.showPassing": "{n} bestandene Prüfungen anzeigen",
+  "diag.hidePassing": "Bestandene ausblenden",
+  "diag.sev.critical": "Kritisch",
+  "diag.sev.warning": "Sollte behoben werden",
+  "diag.sev.ok": "In Ordnung",
+  "diag.sev.info": "Zur Information",
+  "diag.sev.unknown": "Nicht verfügbar",
+  "diag.impact": "Was es bringt",
+  "diag.fix": "So beheben Sie es",
+  "diag.measured": "Gemessen",
+  "diag.biosBadge": "BIOS / Hardware — das kann Tyverix nicht für Sie tun",
+  "diag.fixInApp": "Passenden Tweak öffnen",
+
+  "boost.title": "Performance-Tweaks",
+  "boost.subtitle":
+    "Echte, dokumentierte Windows-Einstellungen. Jede ist umkehrbar, und jede nennt ehrlich ihre zu erwartende Wirkung.",
+  "boost.reading": "Aktuelle Einstellungen werden gelesen…",
+  "boost.empty": "Auf diesem System sind keine Tweaks verfügbar",
+  "boost.failedRead": "Die Tweaks konnten nicht gelesen werden",
+  "boost.honestyTitle": "Hier gibt es keinen Zauberschalter",
+  "boost.honestyBody":
+    "Kein Registry-Wert bringt auf einem gesunden System zuverlässig zweistellige FPS-Gewinne — wer das behauptet, verkauft Placebo. Die großen Gewinne stehen auf der Diagnoseseite. Mit diesen Tweaks holen Sie den Rest heraus — und belegen jeden einzelnen mit einer Messung, statt uns zu glauben.",
+  "boost.honestyCta": "Mit der A/B-Messung belegen",
+  "boost.restartPending":
+    "Ein oder mehrere aktivierte Tweaks wirken erst nach einem Neustart.",
+  "boost.cat.gpu": "GPU & Anzeige",
+  "boost.cat.cpu": "CPU & Energie",
+  "boost.cat.system": "Windows-Overhead",
+  "boost.cat.input": "Eingabelatenz",
+  "boost.cat.network": "Netzwerklatenz",
+  "boost.impactBadge.medium": "Meist messbar",
+  "boost.impactBadge.low": "Gering",
+  "boost.impactBadge.situational": "Hängt vom Rechner ab",
+  "boost.impact.medium":
+    "Meist messbar, eher beim Frame-Pacing als bei den durchschnittlichen FPS.",
+  "boost.impact.low": "Gering — geht wahrscheinlich im Messrauschen unter.",
+  "boost.impact.situational":
+    "Auf Ihrer Hardware entweder ein echter Gewinn oder gar nichts. Messen Sie es auf der A/B-Messseite.",
+  "boost.reversibleExact": "Umkehrbar — exakter vorheriger Wert gesichert",
+  "boost.reversibleDefault": "Umkehrbar — stellt den Windows-Standard wieder her",
+  "boost.restartRequired": "Neustart nötig",
+  "boost.adminRequired": "Administrator",
+  "boost.showDetails": "Was genau wird geändert?",
+  "boost.hideDetails": "Details ausblenden",
+  "boost.revertLabel": "Was das Zurücksetzen tut",
+  "boost.changesLabel": "Genau das wird geschrieben",
+  "boost.apply": "Aktivieren",
+  "boost.revert": "Zurücksetzen",
+  "boost.confirmApplyTitle": "„{name}“ aktivieren?",
+  "boost.confirmRevertTitle": "„{name}“ zurücksetzen?",
+  "boost.revertDownside":
+    "Keine — die Einstellung geht auf den Wert vor der Änderung durch Tyverix zurück.",
+  "boost.toastApplied": "Tweak aktiviert",
+  "boost.toastReverted": "Tweak zurückgesetzt",
+  "boost.toastFailed": "Der Tweak konnte nicht geändert werden",
+  "boost.toastReversible":
+    "Der vorherige Wert ist gesichert — jederzeit umkehrbar.",
+  "boost.toastRestart": "Starten Sie Windows neu, damit es wirksam wird.",
+  "boost.revertAll": "Alles zurücksetzen",
+  "boost.revertAllTitle": "Alle aktivierten Tweaks zurücksetzen?",
+  "boost.revertAllWhat":
+    "Jeder von Tyverix gesetzte Tweak geht auf den zuvor aufgezeichneten Wert zurück.",
+  "boost.revertAllWhy":
+    "Der Ausweg mit einem Klick, wenn sich etwas schlechter anfühlt und Sie nicht herausfinden wollen, welche Änderung schuld war.",
+  "boost.revertAllBenefit":
+    "Ihr Rechner bleibt genau so zurück, wie Tyverix ihn vorgefunden hat.",
+  "boost.revertAllDownside":
+    "Tweaks, die einen Neustart brauchen, bleiben bis zum Neustart wirksam.",
+  "boost.revertAllDone": "Alles zurückgesetzt",
+  "boost.revertAllCount": "{n} Tweak(s) auf ihre vorherigen Werte zurückgesetzt.",
+
+  "bench.title": "A/B-Messung",
+  "bench.subtitle":
+    "Messen, genau eine Sache ändern, erneut messen — und eine klare Antwort bekommen, ob der Unterschied echt war.",
+  "bench.stepLabel": "Schritt {n}",
+  "bench.step1": "Starten Sie Ihr Spiel und nehmen Sie eine Basismessung auf.",
+  "bench.step2":
+    "Ändern Sie genau eine Sache — einen Tweak, eine Treibereinstellung, eine Spieloption.",
+  "bench.step3":
+    "Nehmen Sie die zweite Messung auf. Die Statistik entscheidet, nicht die Mittelwerte.",
+  "bench.game": "Spiel",
+  "bench.duration": "Messdauer",
+  "bench.durationOption": "{n} Sekunden",
+  "bench.note": "Notiz",
+  "bench.notePlaceholder": "z. B. HAGS an",
+  "bench.noGames": "Kein laufendes Spiel erkannt",
+  "bench.noGamesMsg":
+    "Starten Sie ein Spiel und aktualisieren Sie dann. Die Messung liest Windows' eigene Frame-Ereignisse, das Spiel muss also laufen.",
+  "bench.captureBefore": "Basismessung aufnehmen",
+  "bench.captureAfter": "Zweite Messung aufnehmen",
+  "bench.capturing": "{slot} wird aufgenommen — normal weiterspielen, nicht alt-tabben…",
+  "bench.progress":
+    "{elapsed}s von {total}s · gerade {fps} FPS · {frames} Frames aufgenommen",
+  "bench.captured": "Messung aufgenommen",
+  "bench.capturedMsg":
+    "Gespeichert. Sie übersteht einen Neustart, sodass auch Tweaks mit Neustart testbar sind.",
+  "bench.failed": "Die Messung konnte nicht aufgenommen werden",
+  "bench.clear": "Beide Messungen löschen",
+  "bench.before": "Basismessung",
+  "bench.after": "Zweite Messung",
+  "bench.avgFps": "Durchschnittliche FPS",
+  "bench.low1": "1% low",
+  "bench.low01": "0,1% low",
+  "bench.pacing": "Frame-Pacing",
+  "bench.runFooter":
+    "{frames} Frames in {seconds}s · {stutters} Ruckler ({perMin}/min)",
+  "bench.deltaAvg": "Änderung der Durchschnitts-FPS",
+  "bench.deltaLow1": "Änderung der 1% lows",
+  "bench.ci": "95-%-Konfidenzintervall",
+  "bench.verdict.improved": "Echte Verbesserung",
+  "bench.verdict.regressed": "Echte Verschlechterung",
+  "bench.verdict.no_change": "Keine messbare Änderung",
+  "bench.verdict.inconclusive": "Zu wenig Daten",
+  "bench.methodology":
+    "Die Frame-Zeiten stammen aus Intel PresentMon (Windows' eigene Frame-Ereignisse). Jede Messung wird in Ein-Sekunden-Blöcke zerlegt, und die Blockmittelwerte werden mit Welchs t-Test verglichen — aufeinanderfolgende Frame-Zeiten sind zu stark korreliert, als dass ein Test pro Frame etwas aussagen würde. Schließt das 95-%-Intervall die Null ein, sind die Messungen nicht unterscheidbar — egal wie verschieden die Mittelwerte aussehen.",
+
 
   "common.cancel": "Abbrechen",
   "common.proceed": "Fortfahren",

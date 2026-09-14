@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
+  FlaskConical,
   Gamepad2,
   Gauge as GaugeIcon,
   ListChecks,
@@ -8,9 +9,11 @@ import {
   Rocket,
   Settings as SettingsIcon,
   ShieldCheck,
+  Stethoscope,
   Trash2,
   Wifi,
   Wrench,
+  Zap,
 } from "lucide-react";
 import { Sidebar, type NavItem } from "./components/Sidebar";
 import { TitleBar } from "./components/TitleBar";
@@ -18,6 +21,9 @@ import { ConfirmDialog } from "./components/ConfirmDialog";
 import { Toaster } from "./components/Toaster";
 import { UpdateBanner } from "./components/UpdateBanner";
 import { Dashboard } from "./pages/Dashboard";
+import { Diagnostics } from "./pages/Diagnostics";
+import { Boost } from "./pages/Boost";
+import { Benchmark } from "./pages/Benchmark";
 import { GameMode } from "./pages/GameMode";
 import { Cleaner } from "./pages/Cleaner";
 import { Startup } from "./pages/Startup";
@@ -64,6 +70,9 @@ export default function App() {
 
   const nav: NavItem[] = [
     { id: "dashboard", label: t("nav.dashboard"), icon: GaugeIcon },
+    { id: "diagnostics", label: t("nav.diagnostics"), icon: Stethoscope },
+    { id: "boost", label: t("nav.boost"), icon: Zap },
+    { id: "bench", label: t("nav.bench"), icon: FlaskConical },
     { id: "game", label: t("nav.game"), icon: Gamepad2 },
     { id: "cleaner", label: t("nav.cleaner"), icon: Trash2 },
     { id: "memory", label: t("nav.memory"), icon: MemoryStick },
@@ -96,6 +105,9 @@ export default function App() {
             transition={{ duration: 0.18 }}
           >
             {page === "dashboard" && <Dashboard />}
+            {page === "diagnostics" && <Diagnostics />}
+            {page === "boost" && <Boost />}
+            {page === "bench" && <Benchmark />}
             {page === "game" && <GameMode />}
             {page === "cleaner" && <Cleaner />}
             {page === "startup" && <Startup />}

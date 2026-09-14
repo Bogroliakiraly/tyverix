@@ -2,7 +2,7 @@
 
 use tauri::Manager;
 
-use crate::commands::{power, startup};
+use crate::commands::{power, startup, tweaks};
 use crate::error::{AppError, AppResult};
 use crate::state::{ActionRecord, AppState};
 use crate::util::{app_data_dir, blocking, run_command, run_powershell};
@@ -117,6 +117,20 @@ pub async fn undo_action(app: tauri::AppHandle, id: String) -> AppResult<()> {
                         game.previous_plan = None;
                     }
                 }
+            }
+            "tweak" => {
+                // Bulk reverts have nothing left to undo — the tweaks are
+                // already back at their recorded previous values.
+                if rec.payload["bulk"].as_bool().unwrap_or(false) {
+                    return Err(AppError::other(
+                        "this entry reverted every tweak at once; re-apply individual tweaks from the Boost page instead",
+                    ));
+                }
+                let tweak_id = rec.payload["id"]
+                    .as_str()
+                    .ok_or_else(|| AppError::other("missing payload"))?;
+                let restore_enable = rec.payload["restore_enable"].as_bool().unwrap_or(false);
+                tweaks::apply_raw(tweak_id, restore_enable, &app)?;
             }
             other => return Err(AppError::other(format!("cannot undo action: {other}"))),
         }

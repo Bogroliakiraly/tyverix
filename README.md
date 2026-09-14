@@ -24,21 +24,37 @@ Website: <https://tyverix.com> · Contact: <info@tyverix.com>
 
 | Feature                  | Implementation                                                        | Reversible |
 | ------------------------ | -------------------------------------------------------------------- | ---------- |
-| Live CPU/RAM/Net monitor | `sysinfo` — real OS counters                                         | n/a        |
-| GPU name + driver        | WMI `Win32_VideoController`. Live GPU load is **not faked**.         | n/a        |
-| Process monitor / kill   | `sysinfo` + native terminate                                         | n/a        |
-| Startup manager          | Registry `Run` keys + Startup folder; disabled entries are **backed up** byte-for-byte | ✅ |
-| Cleaner                  | Only temp / shader / browser caches / Recycle Bin; in-use files skipped | restore point offered |
-| Disk usage + health      | `sysinfo` + `Get-PhysicalDisk` reliability counters                  | n/a        |
-| Large file finder        | Bounded recursive walk — never deletes for you                      | n/a        |
+| Live CPU/RAM/Net monitor | `sysinfo` — real OS counters                                         | read-only  |
+| GPU name + driver        | WMI `Win32_VideoController`. Live GPU load is **not faked**.         | read-only  |
+| **Diagnostics**          | RAM rated vs configured speed (XMP/EXPO), channel population, display refresh rate vs panel maximum (`EnumDisplaySettings`), PCIe link width via PnP device properties, Resizable BAR + throttle flags via `nvidia-smi`, page file, free space, driver age | read-only |
+| **A/B benchmark**        | PresentMon frame times, per-second block means, Welch's t-test with a 95% confidence interval. Reports **"no measurable change"** when the interval spans zero | read-only |
+| **Performance tweaks**   | 15 documented registry / `powercfg` settings (HAGS, MPO, fullscreen optimizations, MMCSS, power throttling, Game DVR, mouse acceleration, Nagle, …). Exact previous value written to `tweaks.json` **before** the change | ✅ |
+| Process monitor / kill   | `sysinfo` + native terminate                                         | ❌ permanent |
+| Startup manager          | Windows' own `StartupApproved` flags — the same mechanism Task Manager uses; the app's `Run` entry is never removed | ✅ |
+| Cleaner                  | Only temp / shader / browser caches / Recycle Bin; in-use files skipped | ❌ permanent (restore point offered) |
+| Disk usage + health      | `sysinfo` + `Get-PhysicalDisk` reliability counters                  | read-only  |
+| Large file finder        | Bounded recursive walk — never deletes for you                      | read-only  |
 | Game Mode                | Switches to High/Ultimate Performance power plan; saves & restores previous | ✅ |
-| Drivers / Software / Services / Windows info | WMI + registry, read-only                       | n/a        |
-| Windows Update check      | Windows Update agent COM API                                        | n/a        |
-| Safety                   | System Restore points, registry export, full undo history           | ✅          |
+| Drivers / Software / Services / Windows info | WMI + registry, read-only                       | read-only  |
+| Windows Update check      | Windows Update agent COM API                                        | read-only  |
+| Safety                   | System Restore points, registry export, full undo history, revert-all-tweaks | ✅ |
+
+The complete reversibility reference lives in two places that must agree: the
+app's **Safety** page, and <https://tyverix.com/changes.html>, so a user can
+read it before installing.
 
 Things Tyverix **deliberately refuses to do**: disable system services for
-marginal gains, delete the Prefetch folder, claim fixed FPS numbers, or make
-irreversible changes without a clear warning.
+marginal gains, delete the Prefetch folder, touch the boot timer or HPET, claim
+fixed FPS numbers, or make irreversible changes without a clear warning.
+
+### Why there is no "one-click boost"
+
+The tweaks page tops out at an honest `medium` expected impact, and says so.
+No registry value reliably buys double-digit frame rate on a healthy machine —
+the changes that do are hardware and firmware ones (memory speed, refresh rate,
+PCIe link, cooling), which `commands::diagnostics` can only *report*. Claiming
+otherwise is what every other optimizer does, and it is the one thing this
+product cannot afford to do.
 
 ## Prerequisites
 

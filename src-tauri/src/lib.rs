@@ -38,26 +38,43 @@ fn is_process_elevated() -> bool {
 /// Relaunches this executable elevated via the UAC "runas" verb. Returns true if
 /// the elevated process was started (so the caller should exit), false if the
 /// user declined the prompt or it failed (caller keeps running unelevated).
+///
+/// The command line is forwarded verbatim. Dropping it used to break silent
+/// autostart: Windows launches Tyverix with `--minimized`, the unelevated
+/// process handed off to an elevated one *without* the flag, and the elevated
+/// instance opened a full window over the user's desktop at every sign-in.
 #[cfg(windows)]
-fn relaunch_as_admin() -> bool {
+fn relaunch_as_admin(minimized: bool) -> bool {
     use std::os::windows::ffi::OsStrExt;
     use windows::core::PCWSTR;
     use windows::Win32::UI::Shell::ShellExecuteW;
-    use windows::Win32::UI::WindowsAndMessaging::SW_NORMAL;
+    use windows::Win32::UI::WindowsAndMessaging::{SW_HIDE, SW_NORMAL};
 
     let Ok(exe) = std::env::current_exe() else {
         return false;
     };
     let exe_w: Vec<u16> = exe.as_os_str().encode_wide().chain(std::iter::once(0)).collect();
     let verb_w: Vec<u16> = "runas".encode_utf16().chain(std::iter::once(0)).collect();
+
+    // Quote every argument so paths with spaces survive the round trip.
+    let args: Vec<String> = std::env::args()
+        .skip(1)
+        .map(|a| format!("\"{}\"", a.replace('"', "\\\"")))
+        .collect();
+    let params_w: Vec<u16> = args
+        .join(" ")
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect();
+
     let result = unsafe {
         ShellExecuteW(
             None,
             PCWSTR(verb_w.as_ptr()),
             PCWSTR(exe_w.as_ptr()),
+            PCWSTR(params_w.as_ptr()),
             PCWSTR::null(),
-            PCWSTR::null(),
-            SW_NORMAL,
+            if minimized { SW_HIDE } else { SW_NORMAL },
         )
     };
     // ShellExecuteW returns a value > 32 on success.
@@ -79,11 +96,13 @@ pub fn run() {
     // run unelevated (the UI clearly shows "Not running as administrator").
     // TYVERIX_NO_ELEVATE=1 skips the prompt entirely — used for automated
     // testing, where an elevated process could not be driven or debugged.
+    let minimized = std::env::args().any(|a| a == "--minimized");
+
     #[cfg(windows)]
     {
         if std::env::var("TYVERIX_NO_ELEVATE").is_err()
             && !is_process_elevated()
-            && relaunch_as_admin()
+            && relaunch_as_admin(minimized)
         {
             return;
         }
@@ -101,11 +120,19 @@ pub fn run() {
             // in the tray instead of opening a window over the user's desktop.
             Some(vec!["--minimized"]),
         ))
-        .setup(|app| {
+        .setup(move |app| {
             setup_tray(app.handle())?;
-            if std::env::args().any(|a| a == "--minimized") {
+            // Re-express any legacy "removed from Run" disables as Windows'
+            // own disabled flag, so the apps that keep re-adding themselves stop
+            // triggering Windows 11's startup-app notification at every sign-in.
+            commands::startup::migrate_legacy_disables();
+            // The window is configured `"visible": false` so an autostarted
+            // instance never flashes on screen before it can be hidden; a
+            // normal launch reveals it as soon as it exists.
+            if !minimized {
                 if let Some(w) = app.get_webview_window("main") {
-                    let _ = w.hide();
+                    let _ = w.show();
+                    let _ = w.set_focus();
                 }
             }
             Ok(())
@@ -130,6 +157,17 @@ pub fn run() {
             commands::fps::list_fps_targets,
             commands::fps::start_fps_measure,
             commands::fps::stop_fps_measure,
+            // A/B benchmarking with a real significance test
+            commands::bench::bench_capture,
+            commands::bench::bench_compare,
+            commands::bench::bench_get_runs,
+            commands::bench::bench_clear,
+            // Hardware & configuration diagnostics (read-only)
+            commands::diagnostics::run_diagnostics,
+            // Reversible performance tweaks
+            commands::tweaks::list_tweaks,
+            commands::tweaks::set_tweak,
+            commands::tweaks::revert_all_tweaks,
             // Power & Game Mode
             commands::power::list_power_plans,
             commands::power::set_power_plan,

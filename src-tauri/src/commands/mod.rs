@@ -1,7 +1,9 @@
 //! Command modules grouped by feature area. Each `#[tauri::command]` is
 //! re-exported through these sub-modules and registered in `lib.rs`.
 
+pub mod bench;
 pub mod cleaner;
+pub mod diagnostics;
 pub mod disk;
 pub mod fps;
 pub mod license;
@@ -14,3 +16,4 @@ pub mod schedule;
 pub mod startup;
 pub mod stats;
 pub mod system_info;
+pub mod tweaks;

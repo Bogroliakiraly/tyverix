@@ -181,7 +181,8 @@ export interface ServiceInfo {
 export type ActionKind =
   | "startup_toggle"
   | "power_plan"
-  | "game_mode";
+  | "game_mode"
+  | "tweak";
 
 export interface ActionRecord {
   id: string;
@@ -264,4 +265,102 @@ export interface LicenseStatus {
   days_remaining: number | null;
   trial_days_remaining: number | null;
   reason: string | null;
+}
+
+// --- Diagnostics -------------------------------------------------------------
+
+export type FindingSeverity =
+  | "critical"
+  | "warning"
+  | "ok"
+  | "info"
+  | "unknown";
+
+/**
+ * One read-only observation about this machine's gaming performance. Nothing
+ * here changes anything — `fix` tells the user what to do, and `requires_bios`
+ * marks the ones Tyverix deliberately cannot do for them.
+ */
+export interface Finding {
+  id: string;
+  title: string;
+  detail: string;
+  severity: FindingSeverity;
+  impact: string;
+  fix: string;
+  category: string;
+  measured: string | null;
+  fix_tweak_id: string | null;
+  requires_bios: boolean;
+}
+
+// --- Tweaks ------------------------------------------------------------------
+
+export type TweakImpact = "medium" | "low" | "situational";
+
+export interface TweakInfo {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  benefit: string;
+  downside: string;
+  impact: TweakImpact;
+  applied: boolean;
+  available: boolean;
+  unavailable_reason: string | null;
+  requires_restart: boolean;
+  requires_admin: boolean;
+  /** Always true for tweaks — kept explicit so the UI badge is data-driven. */
+  reversible: boolean;
+  revert_note: string;
+  /** Exactly what gets written, for the "show me" disclosure. */
+  changes: string[];
+  /** True once Tyverix holds the real previous value for this tweak. */
+  has_backup: boolean;
+}
+
+// --- A/B benchmark -----------------------------------------------------------
+
+export interface BenchRun {
+  slot: "before" | "after";
+  label: string;
+  captured_at: string;
+  seconds: number;
+  frames: number;
+  avg_fps: number;
+  p1_low_fps: number;
+  p01_low_fps: number;
+  avg_frame_ms: number;
+  frame_ms_stddev: number;
+  stutters: number;
+  stutters_per_min: number;
+  /** Per-second mean FPS — the run's shape over time. */
+  blocks_fps: number[];
+  note: string;
+}
+
+export type BenchVerdict = "improved" | "regressed" | "no_change" | "inconclusive";
+
+export interface BenchComparison {
+  before: BenchRun;
+  after: BenchRun;
+  avg_fps_delta: number;
+  avg_fps_delta_pct: number;
+  p1_low_delta_pct: number;
+  ci_low_pct: number;
+  ci_high_pct: number;
+  p_value: number;
+  verdict: BenchVerdict;
+  verdict_text: string;
+  underpowered: boolean;
+}
+
+/** Progress event emitted every ~500 ms while a benchmark run is capturing. */
+export interface BenchProgress {
+  slot: "before" | "after";
+  elapsed_secs: number;
+  total_secs: number;
+  frames: number;
+  live_fps: number;
 }

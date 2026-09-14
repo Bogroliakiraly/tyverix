@@ -83,6 +83,15 @@
           latest: "Latest",
           back: "← Back to site",
           entries: [
+            { v: "0.1.14", date: "2026-09-14", items: [
+              "Diagnostics: a new page that checks what actually costs you frames — memory running below its rated speed because XMP/EXPO was never enabled, a 165 Hz monitor left at 60 Hz, a GPU on a narrowed PCIe link, a card that is thermally throttling, a disabled page file, a game on a mechanical drive. It reports what it measured, and says plainly when a fix needs the BIOS rather than pretending it can do it for you",
+              "A/B benchmark: measure, change one thing, measure again — and get a real statistical verdict, including \"no measurable change\" when the difference is indistinguishable from run-to-run noise. Runs survive a restart, so tweaks that need a reboot can be tested too",
+              "Performance tweaks: 15 documented Windows settings — HAGS, MPO, fullscreen optimizations, multimedia scheduling, CPU power throttling, Game DVR, mouse acceleration, Nagle and more. Every one shows its honest expected impact, exactly which values it writes, and what reverting will do; your exact previous value is saved before anything changes",
+              "Revert everything: one button on the Boost page puts every applied tweak back to the value Tyverix recorded beforehand",
+              "A full reversibility reference is now published — in the app on the Safety page, and on the website at tyverix.com/changes.html — including the two operations that are permanent",
+              "Fixed: disabling a startup app no longer removes its registry entry. Tyverix now uses Windows' own disabled flag, the same one Task Manager writes. Launchers like Steam, Discord and Riot Client used to notice the missing entry and silently re-add themselves, which made Windows 11 announce a new startup app and open Task Manager at the next sign-in. Anything disabled by an older version is migrated automatically",
+              "Fixed: with autostart enabled, Tyverix opened a full window at every sign-in instead of starting quietly in the tray — the elevation step was dropping the --minimized flag",
+            ]},
             { v: "0.1.13", date: "2026-07-04", items: [
               "Real FPS measurement: see live FPS, frame time and 1% lows for your running game — measured from Windows' own frame events via Intel's open-source PresentMon, never estimated. Measure before and after Game Mode to see its true effect",
               "Tray icon: closing the window now keeps Tyverix running in the tray (scheduled cleanups keep working); Quit from the tray menu exits fully — and now also restores every Game Mode change on exit",
@@ -155,6 +164,15 @@
           latest: "Legfrissebb",
           back: "← Vissza a főoldalra",
           entries: [
+            { v: "0.1.14", date: "2026.09.14", items: [
+              "Diagnosztika: új oldal, ami azt nézi meg, mi kerül tényleg FPS-be — a névleges sebessége alatt futó memória, mert az XMP/EXPO soha nem lett bekapcsolva; a 60 Hz-en hagyott 165 Hz-es monitor; a leszűkült PCIe-sávon lógó GPU; a hőmérséklet miatt visszavevő kártya; a kikapcsolt lapozófájl; a merevlemezre telepített játék. Kiírja, mit mért, és nyíltan megmondja, ha a javításhoz BIOS kell — nem tesz úgy, mintha ő meg tudná csinálni helyetted",
+              "A/B mérés: mérj, változtass meg egy dolgot, mérj újra — és kapj valódi statisztikai ítéletet, beleértve a \"nincs mérhető változás\" választ is, ha a különbség nem különböztethető meg a mérési szórástól. A mérések túlélik az újraindítást, így az újraindítást igénylő tweakek is tesztelhetők",
+              "Teljesítmény-tweakek: 15 dokumentált Windows-beállítás — HAGS, MPO, teljes képernyős optimalizálás, multimédiás ütemezés, CPU power throttling, Game DVR, egérgyorsítás, Nagle és más. Mindegyik kiírja az őszinte várható hatását, hogy pontosan mely értékeket írja, és mit csinál a visszavonás; a pontos előző értéked pedig még a módosítás előtt elmentődik",
+              "Minden visszavonása: egyetlen gomb a Gyorsítás oldalon visszaállítja az összes bekapcsolt tweaket arra az értékre, amit a Tyverix előtte feljegyzett",
+              "Megjelent a teljes visszafordíthatósági referencia — az alkalmazásban a Biztonság oldalon, a weboldalon pedig a tyverix.com/changes.html címen — beleértve azt a két műveletet is, ami végleges",
+              "Javítva: egy indítási alkalmazás letiltása többé nem törli a registry-bejegyzését. A Tyverix mostantól a Windows saját letiltás-jelzőjét használja, ugyanazt, amit a Feladatkezelő is ír. A launcherek — Steam, Discord, Riot Client — korábban észrevették a hiányzó bejegyzést és csendben visszaírták magukat, amitől a Windows 11 új indítási alkalmazást jelzett, és a következő bejelentkezéskor megnyitotta a Feladatkezelőt. A korábbi verzióval letiltott tételek automatikusan átállnak",
+              "Javítva: bekapcsolt automatikus indításnál a Tyverix minden bejelentkezéskor teljes ablakkal nyílt meg ahelyett, hogy csendben a tálcán indult volna — a jogosultság-emelés elhagyta a --minimized kapcsolót",
+            ]},
             { v: "0.1.13", date: "2026.07.04", items: [
               "Valódi FPS-mérés: élő FPS, frame-idő és 1% low a futó játékodhoz — a Windows saját frame-eseményeiből mérve az Intel nyílt forráskódú PresentMon eszközével, soha nem becsülve. Mérj a Játék mód előtt és után, és látod a valós hatását",
               "Tálcaikon: az ablak bezárása után a Tyverix a tálcán fut tovább (az ütemezett tisztítás is működik); a tálcamenü Quit gombja lép ki teljesen — kilépéskor mostantól a Játék mód minden változtatása is visszaáll",
@@ -227,6 +245,15 @@
           latest: "Neueste",
           back: "← Zurück zur Seite",
           entries: [
+            { v: "0.1.14", date: "14.09.2026", items: [
+              "Diagnose: eine neue Seite, die prüft, was Sie wirklich Bilder pro Sekunde kostet — Speicher unter seinem Nenntakt, weil XMP/EXPO nie aktiviert wurde; ein 165-Hz-Monitor, der auf 60 Hz steht; eine GPU an einer verengten PCIe-Anbindung; eine Karte, die thermisch drosselt; eine deaktivierte Auslagerungsdatei; ein Spiel auf einer Festplatte. Sie berichtet, was gemessen wurde, und sagt offen, wenn die Lösung ins BIOS gehört, statt so zu tun, als könnte sie das für Sie erledigen",
+              "A/B-Messung: messen, genau eine Sache ändern, erneut messen — mit echtem statistischem Urteil, einschließlich \"keine messbare Änderung\", wenn der Unterschied nicht vom Messrauschen zu trennen ist. Messungen überstehen einen Neustart, sodass auch Tweaks mit Neustart testbar sind",
+              "Performance-Tweaks: 15 dokumentierte Windows-Einstellungen — HAGS, MPO, Vollbildoptimierungen, Multimedia-Scheduling, CPU-Power-Throttling, Game DVR, Mausbeschleunigung, Nagle und mehr. Jede zeigt ihre ehrlich benannte Wirkung, welche Werte genau geschrieben werden und was das Zurücksetzen tut; Ihr exakter vorheriger Wert wird vor jeder Änderung gesichert",
+              "Alles zurücksetzen: eine Schaltfläche auf der Boost-Seite setzt jeden aktivierten Tweak auf den zuvor aufgezeichneten Wert zurück",
+              "Die vollständige Umkehrbarkeits-Referenz ist jetzt veröffentlicht — in der App auf der Sicherheitsseite und auf der Website unter tyverix.com/changes.html — einschließlich der zwei Vorgänge, die endgültig sind",
+              "Behoben: Das Deaktivieren einer Autostart-Anwendung entfernt ihren Registry-Eintrag nicht mehr. Tyverix verwendet jetzt Windows eigenes Deaktiviert-Kennzeichen, dasselbe, das auch der Task-Manager schreibt. Launcher wie Steam, Discord und Riot Client bemerkten bislang den fehlenden Eintrag und trugen sich still wieder ein, woraufhin Windows 11 eine neue Autostart-App meldete und bei der nächsten Anmeldung den Task-Manager öffnete. Mit einer älteren Version Deaktiviertes wird automatisch migriert",
+              "Behoben: Bei aktiviertem Autostart öffnete Tyverix bei jeder Anmeldung ein volles Fenster, statt still im Infobereich zu starten — der Rechteerhöhungs-Schritt verlor den Schalter --minimized",
+            ]},
             { v: "0.1.13", date: "04.07.2026", items: [
               "Echte FPS-Messung: Live-FPS, Frame-Zeit und 1% Lows für dein laufendes Spiel — gemessen aus den Frame-Ereignissen von Windows selbst mit Intels quelloffenem PresentMon, nie geschätzt. Miss vor und nach dem Spielmodus, um seine wahre Wirkung zu sehen",
               "Tray-Symbol: Nach dem Schließen des Fensters läuft Tyverix im Infobereich weiter (geplante Bereinigungen funktionieren weiterhin); Quit im Tray-Menü beendet vollständig — und stellt beim Beenden jetzt auch alle Spielmodus-Änderungen wieder her",
