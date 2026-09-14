@@ -58,7 +58,8 @@
     "longDescription": "Tyverix optimizes Windows for gaming using only measurable, reversible and safe changes. No fake benchmarks, no placebo tweaks.",
     "windows": {
       "nsis": {
-        "installMode": "currentUser"
+        "installMode": "currentUser",
+        "installerHooks": "installer-hooks.nsh"
       }
     }
   }
