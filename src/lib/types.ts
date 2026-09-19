@@ -94,7 +94,10 @@ export type StartupLocation =
   | "registry_hkcu_run"
   | "registry_hklm_run"
   | "startup_folder_user"
-  | "startup_folder_common";
+  | "startup_folder_common"
+  | "registry_hklm_run32"
+  | "scheduled_task"
+  | "store_app";
 
 export interface StartupItem {
   id: string;
@@ -139,45 +142,6 @@ export interface GameModeStatus {
   detected_games: string[];
 }
 
-export interface WindowsInfo {
-  edition: string;
-  version: string; // e.g. "23H2"
-  build: string;
-  display_version: string;
-  installed_ram: number;
-  computer_name: string;
-  uptime_secs: number;
-}
-
-export interface DriverInfo {
-  device_name: string;
-  driver_version: string;
-  driver_date: string | null;
-  provider: string;
-  device_class: string;
-}
-
-export interface UpdateInfo {
-  title: string;
-  kb: string | null;
-  severity: string | null;
-}
-
-export interface SoftwareInfo {
-  name: string;
-  version: string | null;
-  publisher: string | null;
-  install_date: string | null;
-  estimated_size: number | null; // bytes
-}
-
-export interface ServiceInfo {
-  name: string;
-  display_name: string;
-  status: string; // "Running" | "Stopped" | ...
-  start_type: string;
-}
-
 export type ActionKind =
   | "startup_toggle"
   | "power_plan"
@@ -191,12 +155,6 @@ export interface ActionRecord {
   timestamp: string; // ISO 8601
   reversible: boolean;
   undone: boolean;
-}
-
-export interface FileEntry {
-  path: string;
-  size: number;
-  modified: string | null;
 }
 
 export interface MemoryFreeResult {

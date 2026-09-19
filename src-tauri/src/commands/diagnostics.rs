@@ -845,7 +845,7 @@ Get-CimInstance Win32_VideoController | ForEach-Object {
                 Finding::new("gpu_driver", "The graphics driver is over a year old", "gpu", "warning")
                     .detail(format!("{} is running a driver dated {date}.", g.name))
                     .impact("Game-specific. Driver updates regularly ship double-digit gains for new titles, and occasionally fix stutter bugs outright.")
-                    .fix("Install the current driver from your GPU vendor. The Tools page links straight to the download.")
+                    .fix("Install the current driver from your GPU vendor (NVIDIA App, AMD Software or Intel Arc Control).")
                     .measured(measured)
             } else {
                 Finding::new("gpu_driver", "The graphics driver is recent", "gpu", "ok")

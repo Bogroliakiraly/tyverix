@@ -12,7 +12,6 @@ import {
   Stethoscope,
   Trash2,
   Wifi,
-  Wrench,
   Zap,
 } from "lucide-react";
 import { Sidebar, type NavItem } from "./components/Sidebar";
@@ -30,7 +29,6 @@ import { Startup } from "./pages/Startup";
 import { Processes } from "./pages/Processes";
 import { Memory } from "./pages/Memory";
 import { Network } from "./pages/Network";
-import { Tools } from "./pages/Tools";
 import { Safety } from "./pages/Safety";
 import { Settings } from "./pages/Settings";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -79,7 +77,6 @@ export default function App() {
     { id: "network", label: t("nav.network"), icon: Wifi },
     { id: "startup", label: t("nav.startup"), icon: Rocket },
     { id: "processes", label: t("nav.processes"), icon: ListChecks },
-    { id: "tools", label: t("nav.tools"), icon: Wrench },
     { id: "safety", label: t("nav.safety"), icon: ShieldCheck },
     { id: "settings", label: t("nav.settings"), icon: SettingsIcon },
   ];
@@ -114,7 +111,6 @@ export default function App() {
             {page === "processes" && <Processes />}
             {page === "memory" && <Memory />}
             {page === "network" && <Network />}
-            {page === "tools" && <Tools />}
             {page === "safety" && <Safety />}
             {page === "settings" && <Settings elevated={elevated} />}
           </motion.div>

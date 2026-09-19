@@ -30,7 +30,6 @@ const en: Dict = {
   "nav.processes": "Processes",
   "nav.memory": "Memory",
   "nav.network": "Network",
-  "nav.tools": "Tools",
   "nav.safety": "Safety",
   "nav.settings": "Settings",
   "nav.tagline": "Every action is measurable, reversible and safe.",
@@ -403,7 +402,7 @@ const en: Dict = {
 
   "startup.title": "Startup applications",
   "startup.subtitle":
-    "Disabling is fully reversible — Tyverix preserves the original entry so it can be restored exactly.",
+    "Everything that starts with Windows: registry entries, the Startup folder, sign-in scheduled tasks and Microsoft Store apps. Disabling uses the same switch as Task Manager, so it is fully reversible.",
   "startup.reading": "Reading startup entries…",
   "startup.empty": "No startup programs found",
   "startup.emptyMsg": "Nothing is configured to launch automatically for your account.",
@@ -412,6 +411,9 @@ const en: Dict = {
   "startup.loc.hklm": "All users (registry)",
   "startup.loc.folderUser": "Startup folder (user)",
   "startup.loc.folderCommon": "Startup folder (all users)",
+  "startup.loc.hklm32": "All users, 32-bit (registry)",
+  "startup.loc.task": "Scheduled task (at sign-in)",
+  "startup.loc.store": "Microsoft Store app",
   "startup.confirmTitle": "Disable “{name}” at startup",
   "startup.confirmWhat": "Stops {name} from launching automatically when Windows starts.",
   "startup.confirmWhy": "Fewer startup programs means faster boot and more RAM/CPU free for games.",
@@ -639,63 +641,6 @@ const en: Dict = {
   "net.emptyMsg": "Pick a host and press Measure.",
   "net.toastFailed": "Measurement failed",
 
-  "tools.tabs.windows": "Windows",
-  "tools.tabs.diskHealth": "Disk health",
-  "tools.tabs.drivers": "Drivers",
-  "tools.tabs.updates": "Updates",
-  "tools.tabs.software": "Software",
-  "tools.tabs.services": "Services",
-  "tools.tabs.largeFiles": "Large files",
-  "tools.windows.title": "Windows information",
-  "tools.windows.unavailable": "Unavailable",
-  "tools.windows.reading": "Reading Windows information…",
-  "tools.windows.edition": "Edition",
-  "tools.windows.version": "Version",
-  "tools.windows.build": "Build",
-  "tools.windows.computerName": "Computer name",
-  "tools.windows.installedRam": "Installed RAM",
-  "tools.windows.uptime": "Uptime",
-  "tools.disk.title": "SSD / HDD health",
-  "tools.disk.subtitle": "Reported by the Windows storage stack.",
-  "tools.disk.reading": "Querying physical disks…",
-  "tools.disk.errorTitle": "Could not read disk health",
-  "tools.drivers.title": "Device drivers",
-  "tools.drivers.subtitle": "Versions and dates as reported by Windows.",
-  "tools.drivers.reading": "Enumerating drivers…",
-  "tools.drivers.colDevice": "Device",
-  "tools.drivers.colProvider": "Provider",
-  "tools.drivers.colVersion": "Version",
-  "tools.drivers.colDate": "Date",
-  "tools.drivers.hint": "Tyverix links you to the manufacturer's official driver page so you can compare versions and read the real changelog — it never guesses or fakes an \"outdated\" status.",
-  "tools.drivers.windowsUpdate": "Windows Update (drivers)",
-  "tools.drivers.update": "Download",
-  "tools.drivers.notes": "What changed",
-  "tools.updates.title": "Windows Update",
-  "tools.updates.subtitle": "Pending updates reported by the Windows Update agent. This can take a moment.",
-  "tools.updates.reading": "Checking for updates…",
-  "tools.updates.errorTitle": "Update check unavailable",
-  "tools.updates.upToDateTitle": "You're up to date",
-  "tools.updates.upToDateMsg": "No pending updates were found.",
-  "tools.software.title": "Installed software",
-  "tools.software.reading": "Reading installed programs…",
-  "tools.software.colName": "Name",
-  "tools.software.colVersion": "Version",
-  "tools.software.colPublisher": "Publisher",
-  "tools.software.colSize": "Size",
-  "tools.services.title": "Services",
-  "tools.services.subtitle": "Read-only view. Tyverix does not disable system services — that risks breaking Windows for little gain.",
-  "tools.services.reading": "Reading services…",
-  "tools.services.colService": "Service",
-  "tools.services.colStatus": "Status",
-  "tools.services.colStartType": "Start type",
-  "tools.largeFiles.title": "Large file finder",
-  "tools.largeFiles.subtitle": "Locate space hogs. Tyverix never deletes them for you.",
-  "tools.largeFiles.rootPlaceholder": "Folder to scan",
-  "tools.largeFiles.scan": "Scan",
-  "tools.largeFiles.colFile": "File",
-  "tools.largeFiles.colSize": "Size",
-  "tools.largeFiles.toastFailed": "Scan failed",
-  "tools.nothing": "Nothing to show",
 };
 
 const hu: Dict = {
@@ -706,7 +651,6 @@ const hu: Dict = {
   "nav.processes": "Folyamatok",
   "nav.memory": "Memória",
   "nav.network": "Hálózat",
-  "nav.tools": "Eszközök",
   "nav.safety": "Biztonság",
   "nav.settings": "Beállítások",
   "nav.tagline": "Minden művelet mérhető, visszafordítható és biztonságos.",
@@ -832,6 +776,159 @@ const hu: Dict = {
     "Az újraindítást igénylő tweakek a Windows újraindításáig még érvényben maradnak.",
   "boost.revertAllDone": "Minden visszavonva",
   "boost.revertAllCount": "{n} tweak állt vissza az előző értékére.",
+
+  "tweak.hags.name": "Hardveresen gyorsított GPU-ütemezés (HAGS)",
+  "tweak.hags.description":
+    "A videokártya maga kezeli a saját videomemóriáját és a parancsok ütemezését a Windows kernelillesztője helyett.",
+  "tweak.hags.benefit":
+    "Bizonyos GPU–driver párosokon csökkenti a képkocka-késleltetést és javítja az 1% low-t. Máshol semmit nem változtat, vagy kicsit ront.",
+  "tweak.hags.downside":
+    "Ez gépenként tényleg fej vagy írás — kapcsold be, futtass A/B mérést, és azt a beállítást tartsd meg, amelyik jobbnak mérődött. Újraindítás után lép életbe.",
+  "tweak.hags.revert":
+    "Visszaírja a HwSchMode előző értékét (2 = be, 1 = ki); újraindítás után lép életbe.",
+
+  "tweak.mpo_off.name": "Multi-Plane Overlay (MPO) kikapcsolása",
+  "tweak.mpo_off.description":
+    "Az asztali kompozitor nem adja át a képkockákat hardveres overlay-rétegként a kijelzővezérlőnek.",
+  "tweak.mpo_off.benefit":
+    "Ez a dokumentált megoldás a több monitoros és változó frissítési rátás (G-Sync/FreeSync) gépeken jelentkező akadozásra, villódzásra és fekete felvillanásokra — a hibát az NVIDIA és a Microsoft is elismerte. Ahol érintett vagy, ott a képkockák egyenletessége sokat javul.",
+  "tweak.mpo_off.downside":
+    "Ablakban lejátszott videónál picit nagyobb GPU-fogyasztás, mert a munkát a kompozitor végzi a kijelzővezérlő helyett. Ha nem voltál érintett a hibában, semmilyen hatása nincs.",
+  "tweak.mpo_off.revert":
+    "Törli az OverlayTestMode értéket (gyári Windowson ez nem létezik), vagy visszaállítja azt, ami előtte ott volt.",
+
+  "tweak.fso_off.name": "Teljes képernyős optimalizálás kikapcsolása a felismert játékoknál",
+  "tweak.fso_off.description":
+    "Megjelöli a felismert játékok exe-fájljait, hogy a Windows valódi kizárólagos teljes képernyőn futtassa őket a kompozitoron átmenő keret nélküli mód helyett.",
+  "tweak.fso_off.benefit":
+    "Kivesz egy kompozitor-lépést a játék és a monitor közül. DX11-es játékoknál ez valódi javulás a bemeneti késleltetésben és a képkockák egyenletességében; a versenyszintű lövöldözős játékok a klasszikus példa.",
+  "tweak.fso_off.downside":
+    "Az alt-tab lassabb lesz, és a kompozícióra épülő overlay-ek (egyes Discord/Steam overlay-ek, a Windows saját Game Bar-rögzítése) eltűnhetnek. DX12-es és Vulkan-os játékokra nagyjából egyik irányban sincs hatással.",
+  "tweak.fso_off.revert":
+    "Visszaállítja minden játék előző AppCompatFlags\\Layers bejegyzését, vagy teljesen törli, ha előtte nem volt ilyen.",
+  "tweak.fso_off.unavailable":
+    "Nem fut felismert játék — indítsd el azt a játékot, amelyre alkalmazni szeretnéd, majd frissíts.",
+
+  "tweak.transparency_off.name": "Ablak-átlátszósági effektusok kikapcsolása",
+  "tweak.transparency_off.description":
+    "Kikapcsolja az akril/elmosott hátteret, amit a Windows a menük, a tálca és a Start menü mögé rajzol.",
+  "tweak.transparency_off.benefit":
+    "Felszabadít egy folyamatos GPU-terhelést, ami akkor is fut, amikor a játék van előtérben. Integrált videokártyán és belépő szintű GPU-n érezhető.",
+  "tweak.transparency_off.downside":
+    "A Windows laposabbnak tűnik. Középkategóriás vagy erősebb dedikált videokártyán nincs hatása.",
+  "tweak.transparency_off.revert":
+    "Visszaírja az EnableTransparency előző értékét (alapból 1).",
+
+  "tweak.visual_effects_perf.name": "Vizuális effektusok: legjobb teljesítmény",
+  "tweak.visual_effects_perf.description":
+    "Ugyanazt a beállítást alkalmazza, mint a Rendszer tulajdonságai → Speciális → Teljesítmény → A legjobb teljesítmény érdekében.",
+  "tweak.visual_effects_perf.benefit":
+    "Kikapcsolja az ablakanimációkat és árnyékokat, amelyek alt-tabkor és amíg az asztal látszik, GPU-időt visznek el.",
+  "tweak.visual_effects_perf.downside":
+    "Csak látványbeli veszteség. Amíg a játék a teljes képernyőt uralja, semmit nem csinál.",
+  "tweak.visual_effects_perf.revert":
+    "Visszaírja a VisualFXSetting előző értékét (0 = a Windows dönt).",
+
+  "tweak.mmcss_games.name": "A multimédiás ütemező Játékok profiljának emelése",
+  "tweak.mmcss_games.description":
+    "Megemeli azt a szál- és I/O-prioritást, amit a Windows multimédiás osztályütemezője (MMCSS) a játékként regisztráló folyamatoknak ad.",
+  "tweak.mmcss_games.benefit":
+    "Az MMCSS-t használó játékok (a legtöbb DirectX-es ilyen) a háttérfeladatok elé kerülnek az ütemezésben. Az 1% low-ban látszik meg, nem az átlag FPS-ben.",
+  "tweak.mmcss_games.downside":
+    "Ha ugyanerről a gépről közben kódolsz vagy streamelsz, az kicsit kevesebb processzoridőt kaphat játék alatt.",
+  "tweak.mmcss_games.revert":
+    "Visszaállítja a Priority, a Scheduling Category és az SFIO Priority előző értékét (Windows-alapértékek: 2, Medium, Normal).",
+
+  "tweak.system_responsiveness.name": "A háttérfeladatoknak fenntartott CPU-rész csökkentése",
+  "tweak.system_responsiveness.description":
+    "A SystemResponsiveness értékét 20-ról 10-re csökkenti, így felére esik a processzoridő, amit a Windows multimédiás munka közben a háttérfeladatoknak tart fenn.",
+  "tweak.system_responsiveness.benefit":
+    "Terhelt gépen több processzoridő jut az előtérben futó játéknak.",
+  "tweak.system_responsiveness.downside":
+    "Szándékosan kicsi hatás, könnyen elvész a mérési szórásban. A sok útmutató által javasolt 0 érték kiéheztetheti a hang-szálakat, ezért a Tyverix 10-nél megáll.",
+  "tweak.system_responsiveness.revert":
+    "Visszaírja a SystemResponsiveness előző értékét (alapból 20).",
+
+  "tweak.power_throttling_off.name": "CPU power throttling kikapcsolása",
+  "tweak.power_throttling_off.description":
+    "Kikapcsolja a Windows energiatakarékos visszafogását, amely a háttérszálakat csökkentett órajelen, hatékonysági magokra teszi.",
+  "tweak.power_throttling_off.benefit":
+    "Laptopokon és hibrid Intel processzorokon megakadályozza, hogy a játék munkaszálai visszafogott állapotba kerüljenek. Hordozható gépeken valódi javulás.",
+  "tweak.power_throttling_off.downside":
+    "Nagyobb üresjárati fogyasztás és rövidebb akkumulátor-üzemidő. Asztali gépen, ha már eleve High/Ultimate energiasémát használsz, alig vagy egyáltalán nem hat.",
+  "tweak.power_throttling_off.revert":
+    "Visszaírja a PowerThrottlingOff előző értékét, vagy törli, ha előtte nem létezett.",
+
+  "tweak.core_parking_off.name": "CPU-magok parkolásának kikapcsolása",
+  "tweak.core_parking_off.description":
+    "Az aktív energiaséma minimálisan aktív magjainak arányát 100%-ra állítja, így a Windows minden magot ébren tart.",
+  "tweak.core_parking_off.benefit":
+    "Megszünteti az ébredési késést, amikor a játék hirtelen minden magra szétteríti a munkát.",
+  "tweak.core_parking_off.downside":
+    "Többnyire felesleges: a High és Ultimate Performance sémák, amelyekre a Játék mód vált, eleve kikapcsolják a parkolást. Csak akkor éri meg, ha a Kiegyensúlyozott sémán maradsz.",
+  "tweak.core_parking_off.revert":
+    "Visszaírja az aktív energiaséma előző minimális magarányát (Windows-alapérték: High Performance-on 100, Kiegyensúlyozotton kevesebb).",
+
+  "tweak.game_dvr_off.name": "Game DVR háttérrögzítés kikapcsolása",
+  "tweak.game_dvr_off.description":
+    "Kikapcsolja azokat a háttérrögzítő horgokat, amelyeket az Xbox Game Bar minden játékfolyamatba beépít.",
+  "tweak.game_dvr_off.benefit":
+    "Dokumentált, mérhető CPU- és GPU-többletterhelés DirectX-es játékokban — egyike azon kevés Windows-alapbeállításnak, ami tényleg FPS-be kerül.",
+  "tweak.game_dvr_off.downside":
+    "Elveszíted a Win+Alt+R háttérklip-rögzítést. A képernyőképek és maga az overlay továbbra is működnek.",
+  "tweak.game_dvr_off.revert":
+    "Visszaállítja a GameDVR_Enabled, az AppCaptureEnabled és az AllowGameDVR házirend előző értékét.",
+
+  "tweak.gamebar_off.name": "Xbox Game Bar megnyílásának letiltása",
+  "tweak.gamebar_off.description":
+    "Megakadályozza, hogy a Game Bar overlay Win+G-re megnyíljon, illetve hogy játék indításakor felugorjon.",
+  "tweak.gamebar_off.benefit":
+    "Eltávolít egy overlay-folyamatot és annak bemeneti horgát az előtérben futó játék mellől.",
+  "tweak.gamebar_off.downside":
+    "A Win+G nem nyitja meg többé az overlayt. A Windows saját Játék mód ütemezője külön funkció, és szándékosan bekapcsolva marad — az segít.",
+  "tweak.gamebar_off.revert":
+    "Visszaállítja a ShowStartupPanel és a UseNexusForGameBarEnabled előző értékét (alapból 1).",
+
+  "tweak.mouse_accel_off.name": "Egérgyorsítás kikapcsolása",
+  "tweak.mouse_accel_off.description":
+    "Kikapcsolja a „mutató pontosságának javítása” opciót, így a kurzor minden érzékelt egérmozdulatra ugyanannyit mozdul.",
+  "tweak.mouse_accel_off.benefit":
+    "Nem FPS-, hanem célzási következetességi változás: ugyanaz a fizikai mozdulat mindig ugyanakkora fordulást ad a játékban — ezért kezdi ezzel minden versenyszintű útmutató.",
+  "tweak.mouse_accel_off.downside":
+    "Az asztali egérmozgás másnak érződik, amíg hozzá nem szoksz. A nyers bemenetet (raw input) használó játékok eleve megkerülik ezt a beállítást.",
+  "tweak.mouse_accel_off.revert":
+    "Visszaállítja a MouseSpeed és mindkét MouseThreshold előző értékét (alapból 1, 6, 10).",
+
+  "tweak.usb_suspend_off.name": "USB szelektív felfüggesztés kikapcsolása",
+  "tweak.usb_suspend_off.description":
+    "Az aktív energiasémán megakadályozza, hogy a Windows áramtalanítsa a tétlen USB-portokat.",
+  "tweak.usb_suspend_off.benefit":
+    "Megelőzi az alkalmi kimaradó lekérdezést vagy rövid bemeneti akadást, amikor egy egér, billentyűzet vagy headset felébred egy felfüggesztett porton.",
+  "tweak.usb_suspend_off.downside":
+    "Minimálisan nagyobb üresjárati fogyasztás. Ha a portjaid sosem kerültek felfüggesztésre, nincs hatása.",
+  "tweak.usb_suspend_off.revert":
+    "Visszaállítja az aktív energiaséma USB szelektív felfüggesztés beállítását az előző értékre (alapból bekapcsolva).",
+
+  "tweak.nagle_off.name": "Nagle-algoritmus kikapcsolása",
+  "tweak.nagle_off.description":
+    "Megakadályozza, hogy a Windows a kis TCP-csomagokat küldés előtt összevárja és egyben küldje, minden olyan hálózati kártyán, amelynek jelenleg van IP-címe.",
+  "tweak.nagle_off.benefit":
+    "Akár néhány tíz ezredmásodpercnyi küldési késést is megspórol az online játékok apró, gyakori csomagjainál. Ez késleltetés, nem képkockaszám.",
+  "tweak.nagle_off.downside":
+    "Kicsit több csomagfejléc a hálózaton. Az UDP-t használó játékokra (a legtöbb modern lövöldözős játék ilyen) nincs hatása — a TCP-alapú forgalomnak segít.",
+  "tweak.nagle_off.revert":
+    "Eltávolítja a TcpAckFrequency és TCPNoDelay értékeket minden hálózati kártyáról, vagy visszaállítja az előzőeket, ahol már léteztek.",
+  "tweak.nagle_off.unavailable": "Nem található IP-címmel rendelkező hálózati kártya.",
+
+  "tweak.network_throttling_off.name": "A hálózati korlátozás megszüntetése",
+  "tweak.network_throttling_off.description":
+    "Kikapcsolja azt a milliszekundumonként 10 csomagos korlátot, amit a Windows multimédiás munka közben a nem multimédiás hálózati forgalomra alkalmaz.",
+  "tweak.network_throttling_off.benefit":
+    "A Microsoft dokumentálja; akkor segít, ha a játék letöltésekkel vagy streameléssel osztozik a kapcsolaton.",
+  "tweak.network_throttling_off.downside":
+    "Szélsőséges hálózati terhelésnél a hang- és videólejátszás kicsit többet akadozhat.",
+  "tweak.network_throttling_off.revert":
+    "Visszaírja a NetworkThrottlingIndex előző értékét (alapból 10).",
 
   "bench.title": "A/B mérés",
   "bench.subtitle":
@@ -1084,7 +1181,7 @@ const hu: Dict = {
 
   "startup.title": "Indítópult alkalmazások",
   "startup.subtitle":
-    "A letiltás teljesen visszafordítható — a Tyverix megőrzi az eredeti bejegyzést, hogy pontosan visszaállítható legyen.",
+    "Minden, ami a Windowszal elindul: registry-bejegyzések, az Indítópult mappa, bejelentkezéskor induló ütemezett feladatok és Microsoft Store-alkalmazások. A letiltás ugyanazt a kapcsolót használja, mint a Feladatkezelő, így teljesen visszafordítható.",
   "startup.reading": "Indítópult-bejegyzések beolvasása…",
   "startup.empty": "Nem találtunk indítópult-programot",
   "startup.emptyMsg": "Semmi nincs beállítva, hogy automatikusan elinduljon a fiókodnál.",
@@ -1093,6 +1190,9 @@ const hu: Dict = {
   "startup.loc.hklm": "Minden felhasználó (registry)",
   "startup.loc.folderUser": "Indítópult mappa (felhasználó)",
   "startup.loc.folderCommon": "Indítópult mappa (minden felhasználó)",
+  "startup.loc.hklm32": "Minden felhasználó, 32 bites (registry)",
+  "startup.loc.task": "Ütemezett feladat (bejelentkezéskor)",
+  "startup.loc.store": "Microsoft Store-alkalmazás",
   "startup.confirmTitle": "„{name}” letiltása induláskor",
   "startup.confirmWhat": "Megakadályozza, hogy a {name} automatikusan elinduljon a Windows indulásakor.",
   "startup.confirmWhy": "Kevesebb induló program gyorsabb rendszerindítást és több szabad RAM-ot/CPU-t jelent a játékokhoz.",
@@ -1320,63 +1420,6 @@ const hu: Dict = {
   "net.emptyMsg": "Válassz egy szervert, és nyomd meg a Mérés gombot.",
   "net.toastFailed": "A mérés nem sikerült",
 
-  "tools.tabs.windows": "Windows",
-  "tools.tabs.diskHealth": "Lemezállapot",
-  "tools.tabs.drivers": "Illesztőprogramok",
-  "tools.tabs.updates": "Frissítések",
-  "tools.tabs.software": "Szoftverek",
-  "tools.tabs.services": "Szolgáltatások",
-  "tools.tabs.largeFiles": "Nagy fájlok",
-  "tools.windows.title": "Windows-információ",
-  "tools.windows.unavailable": "Nem elérhető",
-  "tools.windows.reading": "Windows-információ beolvasása…",
-  "tools.windows.edition": "Kiadás",
-  "tools.windows.version": "Verzió",
-  "tools.windows.build": "Build",
-  "tools.windows.computerName": "Számítógépnév",
-  "tools.windows.installedRam": "Telepített RAM",
-  "tools.windows.uptime": "Üzemidő",
-  "tools.disk.title": "SSD / HDD állapot",
-  "tools.disk.subtitle": "A Windows tárolóverem jelenti.",
-  "tools.disk.reading": "Fizikai lemezek lekérdezése…",
-  "tools.disk.errorTitle": "A lemezállapot nem olvasható",
-  "tools.drivers.title": "Eszközillesztők",
-  "tools.drivers.subtitle": "Verziók és dátumok a Windows alapján.",
-  "tools.drivers.reading": "Illesztőprogramok felsorolása…",
-  "tools.drivers.colDevice": "Eszköz",
-  "tools.drivers.colProvider": "Gyártó",
-  "tools.drivers.colVersion": "Verzió",
-  "tools.drivers.colDate": "Dátum",
-  "tools.drivers.hint": "A Tyverix a gyártó hivatalos illesztőprogram-oldalára visz, hogy összevethesd a verziókat és elolvashasd a valódi changelogot — soha nem talál ki vagy hamisít „elavult” állapotot.",
-  "tools.drivers.windowsUpdate": "Windows Update (illesztők)",
-  "tools.drivers.update": "Letöltés",
-  "tools.drivers.notes": "Mi változott",
-  "tools.updates.title": "Windows Update",
-  "tools.updates.subtitle": "A Windows Update ügynök által jelentett függő frissítések. Ez eltarthat egy ideig.",
-  "tools.updates.reading": "Frissítések keresése…",
-  "tools.updates.errorTitle": "A frissítés-ellenőrzés nem elérhető",
-  "tools.updates.upToDateTitle": "Naprakész vagy",
-  "tools.updates.upToDateMsg": "Nem találtunk függő frissítést.",
-  "tools.software.title": "Telepített szoftverek",
-  "tools.software.reading": "Telepített programok beolvasása…",
-  "tools.software.colName": "Név",
-  "tools.software.colVersion": "Verzió",
-  "tools.software.colPublisher": "Kiadó",
-  "tools.software.colSize": "Méret",
-  "tools.services.title": "Szolgáltatások",
-  "tools.services.subtitle": "Csak megtekinthető nézet. A Tyverix nem tilt le rendszerszolgáltatást — az kockázatos lenne csekély nyereségért.",
-  "tools.services.reading": "Szolgáltatások beolvasása…",
-  "tools.services.colService": "Szolgáltatás",
-  "tools.services.colStatus": "Állapot",
-  "tools.services.colStartType": "Indítási típus",
-  "tools.largeFiles.title": "Nagy fájl kereső",
-  "tools.largeFiles.subtitle": "Megtalálja a helyfaló fájlokat. A Tyverix soha nem törli őket helyetted.",
-  "tools.largeFiles.rootPlaceholder": "Vizsgálandó mappa",
-  "tools.largeFiles.scan": "Keresés",
-  "tools.largeFiles.colFile": "Fájl",
-  "tools.largeFiles.colSize": "Méret",
-  "tools.largeFiles.toastFailed": "A keresés nem sikerült",
-  "tools.nothing": "Nincs megjeleníthető adat",
 };
 
 const de: Dict = {
@@ -1387,7 +1430,6 @@ const de: Dict = {
   "nav.processes": "Prozesse",
   "nav.memory": "Arbeitsspeicher",
   "nav.network": "Netzwerk",
-  "nav.tools": "Werkzeuge",
   "nav.safety": "Sicherheit",
   "nav.settings": "Einstellungen",
   "nav.tagline": "Jede Aktion ist messbar, umkehrbar und sicher.",
@@ -1768,7 +1810,7 @@ const de: Dict = {
 
   "startup.title": "Autostart-Anwendungen",
   "startup.subtitle":
-    "Das Deaktivieren ist vollständig umkehrbar — Tyverix bewahrt den Originaleintrag, damit er exakt wiederhergestellt werden kann.",
+    "Alles, was mit Windows startet: Registry-Einträge, der Autostart-Ordner, geplante Aufgaben bei der Anmeldung und Microsoft-Store-Apps. Das Deaktivieren nutzt denselben Schalter wie der Task-Manager und ist daher vollständig umkehrbar.",
   "startup.reading": "Autostart-Einträge werden gelesen…",
   "startup.empty": "Keine Autostart-Programme gefunden",
   "startup.emptyMsg": "Für dein Konto ist kein automatischer Start konfiguriert.",
@@ -1777,6 +1819,9 @@ const de: Dict = {
   "startup.loc.hklm": "Alle Benutzer (Registry)",
   "startup.loc.folderUser": "Autostart-Ordner (Benutzer)",
   "startup.loc.folderCommon": "Autostart-Ordner (alle Benutzer)",
+  "startup.loc.hklm32": "Alle Benutzer, 32-Bit (Registry)",
+  "startup.loc.task": "Geplante Aufgabe (bei Anmeldung)",
+  "startup.loc.store": "Microsoft-Store-App",
   "startup.confirmTitle": "„{name}“ beim Start deaktivieren",
   "startup.confirmWhat": "Verhindert, dass {name} beim Windows-Start automatisch startet.",
   "startup.confirmWhy": "Weniger Autostart-Programme bedeuten einen schnelleren Start und mehr freien RAM/CPU für Spiele.",
@@ -2004,63 +2049,6 @@ const de: Dict = {
   "net.emptyMsg": "Host wählen und auf Messen klicken.",
   "net.toastFailed": "Messung fehlgeschlagen",
 
-  "tools.tabs.windows": "Windows",
-  "tools.tabs.diskHealth": "Datenträgerzustand",
-  "tools.tabs.drivers": "Treiber",
-  "tools.tabs.updates": "Updates",
-  "tools.tabs.software": "Software",
-  "tools.tabs.services": "Dienste",
-  "tools.tabs.largeFiles": "Große Dateien",
-  "tools.windows.title": "Windows-Informationen",
-  "tools.windows.unavailable": "Nicht verfügbar",
-  "tools.windows.reading": "Windows-Informationen werden gelesen…",
-  "tools.windows.edition": "Edition",
-  "tools.windows.version": "Version",
-  "tools.windows.build": "Build",
-  "tools.windows.computerName": "Computername",
-  "tools.windows.installedRam": "Installierter RAM",
-  "tools.windows.uptime": "Laufzeit",
-  "tools.disk.title": "SSD-/HDD-Zustand",
-  "tools.disk.subtitle": "Gemeldet vom Windows-Speicherstack.",
-  "tools.disk.reading": "Physische Datenträger werden abgefragt…",
-  "tools.disk.errorTitle": "Datenträgerzustand konnte nicht gelesen werden",
-  "tools.drivers.title": "Gerätetreiber",
-  "tools.drivers.subtitle": "Versionen und Daten laut Windows.",
-  "tools.drivers.reading": "Treiber werden aufgelistet…",
-  "tools.drivers.colDevice": "Gerät",
-  "tools.drivers.colProvider": "Anbieter",
-  "tools.drivers.colVersion": "Version",
-  "tools.drivers.colDate": "Datum",
-  "tools.drivers.hint": "Tyverix verlinkt dich zur offiziellen Treiberseite des Herstellers, damit du Versionen vergleichen und den echten Changelog lesen kannst — es rät nie und täuscht keinen „veralteten\" Status vor.",
-  "tools.drivers.windowsUpdate": "Windows Update (Treiber)",
-  "tools.drivers.update": "Herunterladen",
-  "tools.drivers.notes": "Was sich geändert hat",
-  "tools.updates.title": "Windows Update",
-  "tools.updates.subtitle": "Vom Windows Update-Agent gemeldete ausstehende Updates. Dies kann einen Moment dauern.",
-  "tools.updates.reading": "Nach Updates wird gesucht…",
-  "tools.updates.errorTitle": "Update-Prüfung nicht verfügbar",
-  "tools.updates.upToDateTitle": "Du bist auf dem neuesten Stand",
-  "tools.updates.upToDateMsg": "Keine ausstehenden Updates gefunden.",
-  "tools.software.title": "Installierte Software",
-  "tools.software.reading": "Installierte Programme werden gelesen…",
-  "tools.software.colName": "Name",
-  "tools.software.colVersion": "Version",
-  "tools.software.colPublisher": "Herausgeber",
-  "tools.software.colSize": "Größe",
-  "tools.services.title": "Dienste",
-  "tools.services.subtitle": "Nur lesbare Ansicht. Tyverix deaktiviert keine Systemdienste — das riskiert, Windows für wenig Nutzen zu beschädigen.",
-  "tools.services.reading": "Dienste werden gelesen…",
-  "tools.services.colService": "Dienst",
-  "tools.services.colStatus": "Status",
-  "tools.services.colStartType": "Starttyp",
-  "tools.largeFiles.title": "Große-Dateien-Finder",
-  "tools.largeFiles.subtitle": "Findet Speicherfresser. Tyverix löscht sie niemals für dich.",
-  "tools.largeFiles.rootPlaceholder": "Zu durchsuchender Ordner",
-  "tools.largeFiles.scan": "Scannen",
-  "tools.largeFiles.colFile": "Datei",
-  "tools.largeFiles.colSize": "Größe",
-  "tools.largeFiles.toastFailed": "Scan fehlgeschlagen",
-  "tools.nothing": "Nichts anzuzeigen",
 };
 
 const DICTS: Record<Lang, Dict> = { en, hu, de };

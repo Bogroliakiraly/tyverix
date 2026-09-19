@@ -12,8 +12,6 @@ import type {
   CleanupScheduleStatus,
   DailyStat,
   DiskInfo,
-  DriverInfo,
-  FileEntry,
   Finding,
   FpsTarget,
   GameModeStatus,
@@ -24,13 +22,9 @@ import type {
   PhysicalDiskHealth,
   PowerPlan,
   ProcessInfo,
-  ServiceInfo,
-  SoftwareInfo,
   StartupItem,
   SystemSnapshot,
   TweakInfo,
-  UpdateInfo,
-  WindowsInfo,
 } from "./types";
 
 // --- Live monitoring -------------------------------------------------------
@@ -59,8 +53,6 @@ export const cleanTargets = (ids: string[]) =>
 // --- Disk ------------------------------------------------------------------
 export const listDisks = () => invoke<DiskInfo[]>("list_disks");
 export const diskHealth = () => invoke<PhysicalDiskHealth[]>("disk_health");
-export const findLargeFiles = (root: string, minBytes: number) =>
-  invoke<FileEntry[]>("find_large_files", { root, minBytes });
 
 // --- Power & Game Mode -----------------------------------------------------
 export const listPowerPlans = () => invoke<PowerPlan[]>("list_power_plans");
@@ -86,14 +78,6 @@ export const listActionLog = () => invoke<ActionRecord[]>("list_action_log");
 export const undoAction = (id: string) => invoke<void>("undo_action", { id });
 
 // --- System information ----------------------------------------------------
-export const getWindowsInfo = () => invoke<WindowsInfo>("get_windows_info");
-export const listDrivers = () => invoke<DriverInfo[]>("list_drivers");
-export const checkWindowsUpdates = () =>
-  invoke<UpdateInfo[]>("check_windows_updates");
-export const listInstalledSoftware = () =>
-  invoke<SoftwareInfo[]>("list_installed_software");
-export const listServices = () => invoke<ServiceInfo[]>("list_services");
-
 export const isElevated = () => invoke<boolean>("is_elevated");
 export const getDeviceId = () => invoke<string>("get_device_id");
 

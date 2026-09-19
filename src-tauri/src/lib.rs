@@ -152,7 +152,6 @@ pub fn run() {
             // Disk
             commands::disk::list_disks,
             commands::disk::disk_health,
-            commands::disk::find_large_files,
             // Real FPS measurement (PresentMon)
             commands::fps::list_fps_targets,
             commands::fps::start_fps_measure,
@@ -193,11 +192,6 @@ pub fn run() {
             commands::license::deactivate_license,
             // System information
             commands::system_info::get_gpu_info,
-            commands::system_info::get_windows_info,
-            commands::system_info::list_drivers,
-            commands::system_info::check_windows_updates,
-            commands::system_info::list_installed_software,
-            commands::system_info::list_services,
             commands::system_info::is_elevated,
             commands::system_info::get_device_id,
             commands::stats::get_daily_stats,

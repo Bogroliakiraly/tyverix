@@ -4,7 +4,7 @@
 // in the same commit that re-copies the freshly built installer — it is the one
 // place the version appears on the site, so the badge can never drift away from
 // the file the download button actually hands over.
-const APP_VERSION = "0.1.14";
+const APP_VERSION = "0.1.15";
 
 // Points at the latest GitHub Release page (the installer's filename changes
 // per version, so this links to the release rather than guessing the name).
@@ -71,7 +71,7 @@ const I18N = {
       ["⚡", "Memory optimizer", "Frees physical RAM before a game and shows the real, measured result."],
       ["📶", "Network latency monitor", "Measures real connection latency and jitter to a host — a stability check before multiplayer sessions."],
       ["🕒", "Scheduled cleanup", "A real Windows scheduled task runs the safe cleaner daily, with a visible log of what it freed."],
-      ["🚀", "Startup manager", "Disable startup apps reversibly — the original entry is preserved."],
+      ["🚀", "Startup manager", "Everything that starts with Windows — registry, Startup folder, sign-in scheduled tasks and Store apps — switched off with the same toggle Task Manager uses. Nothing is deleted."],
       ["🛡️", "Safety net", "Restore points, registry backups and a full undo history."],
     ],
     honesty: [
@@ -141,7 +141,7 @@ const I18N = {
       ["⚡", "Memória-optimalizáló", "Játék előtt felszabadítja a fizikai RAM-ot, és a valós, mért eredményt mutatja."],
       ["📶", "Hálózati késleltetés-mérő", "Valódi kapcsolat-késleltetést és jittert mér egy megadott szerverhez — stabilitás-ellenőrzés multiplayer meccsek előtt."],
       ["🕒", "Ütemezett tisztítás", "Valódi Windows ütemezett feladat naponta lefuttatja a biztonságos tisztítót, látható naplóval arról, mennyit szabadított fel."],
-      ["🚀", "Indítópult-kezelő", "Visszafordíthatóan tiltsd le az indítóappokat — az eredeti bejegyzés megmarad."],
+      ["🚀", "Indítópult-kezelő", "Minden, ami a Windowszal elindul — registry, Indítópult mappa, bejelentkezéskor induló ütemezett feladatok és Store-appok —, ugyanazzal a kapcsolóval tiltva, mint a Feladatkezelőben. Semmi nem törlődik."],
       ["🛡️", "Biztonsági háló", "Visszaállítási pontok, registry-mentés és teljes visszavonási előzmény."],
     ],
     honesty: [
@@ -211,7 +211,7 @@ const I18N = {
       ["⚡", "Speicher-Optimierer", "Gibt vor dem Spiel physischen RAM frei und zeigt das echte, gemessene Ergebnis."],
       ["📶", "Netzwerklatenz-Monitor", "Misst echte Verbindungslatenz und Jitter zu einem Host — eine Stabilitätsprüfung vor Multiplayer-Sitzungen."],
       ["🕒", "Geplante Bereinigung", "Eine echte Windows-Aufgabenplanung führt täglich den sicheren Bereiniger aus, mit sichtbarem Protokoll, was freigegeben wurde."],
-      ["🚀", "Autostart-Manager", "Autostart-Apps umkehrbar deaktivieren — der Originaleintrag bleibt erhalten."],
+      ["🚀", "Autostart-Manager", "Alles, was mit Windows startet — Registry, Autostart-Ordner, geplante Aufgaben bei der Anmeldung und Store-Apps —, abgeschaltet mit demselben Schalter wie im Task-Manager. Nichts wird gelöscht."],
       ["🛡️", "Sicherheitsnetz", "Wiederherstellungspunkte, Registry-Backups und volle Rückgängig-Historie."],
     ],
     honesty: [

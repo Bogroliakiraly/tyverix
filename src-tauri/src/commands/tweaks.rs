@@ -958,13 +958,13 @@ fn describe(spec: &Spec, exes: &[String], interfaces: &[String]) -> Vec<String> 
                 }
             )),
             Step::Power(p) => out.push(format!(
-                "powercfg active plan: subgroup {} / setting {} = {}",
+                "powercfg /setacvalueindex SCHEME_CURRENT {} {} {}",
                 p.sub, p.setting, p.on
             )),
             Step::FsoForGames => {
                 if exes.is_empty() {
                     out.push(format!(
-                        "HKCU\\{LAYERS_PATH}\\<game exe> += {FSO_FLAG} (no game running right now)"
+                        "HKCU\\{LAYERS_PATH}\\<game.exe> += {FSO_FLAG}"
                     ));
                 } else {
                     for exe in exes {
@@ -974,7 +974,7 @@ fn describe(spec: &Spec, exes: &[String], interfaces: &[String]) -> Vec<String> 
             }
             Step::NagleOff => {
                 out.push(format!(
-                    "HKLM\\{TCPIP_INTERFACES}\\<interface>\\{{TcpAckFrequency,TCPNoDelay}} = 1 ({} interface(s))",
+                    "HKLM\\{TCPIP_INTERFACES}\\<interface>\\{{TcpAckFrequency,TCPNoDelay}} = 1  (× {})",
                     interfaces.len()
                 ));
             }

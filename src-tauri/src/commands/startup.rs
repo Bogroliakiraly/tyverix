@@ -18,19 +18,41 @@
 //! Entries disabled by older Tyverix versions (`HKCU\Software\Tyverix\
 //! DisabledStartup`, and the "Tyverix (disabled)" shortcut folder) are still
 //! listed and are migrated back into place the moment they are re-enabled.
+//!
+//! The list covers every place Windows starts something from at sign-in that
+//! Task Manager's *Startup apps* page shows — not just the two `Run` keys:
+//!
+//! | Source                                  | id  | Disabled by                      |
+//! | --------------------------------------- | --- | -------------------------------- |
+//! | HKCU `Run`                              | hr  | `StartupApproved\Run` (HKCU)     |
+//! | HKLM `Run`                              | mr  | `StartupApproved\Run` (HKLM)     |
+//! | HKLM `WOW6432Node\...\Run` (32-bit apps)| mr32| `StartupApproved\Run32` (HKLM)   |
+//! | Startup folder, user / all users        | uf/cf | `StartupApproved\StartupFolder`|
+//! | Scheduled tasks with a logon/boot trigger | st | the task's own Enabled flag     |
+//! | Microsoft Store startup tasks           | ux  | the package's `State` value      |
+//!
+//! Every one of those switches is the mechanism Windows itself uses, so each
+//! toggle is exactly as reversible as flipping it in Task Manager.
 
 use std::collections::HashSet;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tauri::Manager;
 use winreg::enums::*;
 use winreg::{RegKey, RegValue, HKEY};
 
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
-use crate::util::blocking;
+use crate::util::{blocking, parse_ps_array, run_command, run_powershell};
 
 const RUN_PATH: &str = r"Software\Microsoft\Windows\CurrentVersion\Run";
+/// Where 32-bit programs on 64-bit Windows register machine-wide autostarts.
+const RUN32_PATH: &str = r"Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Run";
+/// Task Manager's enabled/disabled flags for `RUN32_PATH` entries.
+const APPROVED_RUN32: &str =
+    r"Software\Microsoft\Windows\CurrentVersion\Explorer\StartupApproved\Run32";
+/// Per-user state of Microsoft Store apps' declared startup tasks.
+const STORE_TASKS: &str = r"Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData";
 /// Windows' own enabled/disabled flags for `Run` values — HKCU for the current
 /// user's entries, HKLM for the machine-wide ones. Task Manager writes here.
 const APPROVED_RUN: &str =
@@ -122,76 +144,266 @@ fn now_filetime() -> u64 {
 
 #[tauri::command]
 pub async fn list_startup_items() -> AppResult<Vec<StartupItem>> {
-    blocking(move || {
-        let mut items: Vec<StartupItem> = Vec::new();
-        let mut seen: HashSet<String> = HashSet::new();
+    blocking(collect_startup_items).await
+}
 
-        // Registry `Run` entries — present whether enabled or disabled; the
-        // StartupApproved flag decides which.
-        for (root_key, code, location, source) in [
-            (HKEY_CURRENT_USER, "hr", "registry_hkcu_run", "Current user"),
-            (HKEY_LOCAL_MACHINE, "mr", "registry_hklm_run", "All users"),
-        ] {
-            for (name, cmd) in run_values(RegKey::predef(root_key), RUN_PATH) {
-                let id = format!("{code}::{name}");
-                if !seen.insert(id.clone()) {
-                    continue;
-                }
-                items.push(StartupItem {
-                    id,
-                    enabled: approval_enabled(RegKey::predef(root_key), APPROVED_RUN, &name),
-                    name,
-                    command: cmd,
-                    location: location.into(),
-                    source: source.into(),
-                });
+fn collect_startup_items() -> AppResult<Vec<StartupItem>> {
+    let mut items: Vec<StartupItem> = Vec::new();
+    let mut seen: HashSet<String> = HashSet::new();
+
+    // Registry `Run` entries — present whether enabled or disabled; the
+    // StartupApproved flag decides which.
+    for (root_key, code, location, source) in [
+        (HKEY_CURRENT_USER, "hr", "registry_hkcu_run", "Current user"),
+        (HKEY_LOCAL_MACHINE, "mr", "registry_hklm_run", "All users"),
+    ] {
+        for (name, cmd) in run_values(RegKey::predef(root_key), RUN_PATH) {
+            let id = format!("{code}::{name}");
+            if !seen.insert(id.clone()) {
+                continue;
             }
+            items.push(StartupItem {
+                id,
+                enabled: approval_enabled(RegKey::predef(root_key), APPROVED_RUN, &name),
+                name,
+                command: cmd,
+                location: location.into(),
+                source: source.into(),
+            });
         }
+    }
 
-        // Legacy: entries an older version moved out of `Run` entirely. They
-        // stay invisible to Task Manager until re-enabled here.
-        for (root_key, backup, code, location, source) in [
-            (HKEY_CURRENT_USER, BACKUP_HKCU, "hr", "registry_hkcu_run", "Current user"),
-            (HKEY_LOCAL_MACHINE, BACKUP_HKLM, "mr", "registry_hklm_run", "All users"),
-        ] {
-            for (name, cmd) in run_values(RegKey::predef(root_key), backup) {
-                let id = format!("{code}::{name}");
-                if !seen.insert(id.clone()) {
-                    continue;
-                }
-                items.push(StartupItem {
-                    id,
-                    name,
-                    command: cmd,
-                    location: location.into(),
-                    enabled: false,
-                    source: source.into(),
-                });
-            }
-        }
-
-        // Startup-folder shortcuts.
-        collect_folder(
-            &mut items,
-            &mut seen,
-            startup_folder_user(),
+    // Legacy: entries an older version moved out of `Run` entirely. They
+    // stay invisible to Task Manager until re-enabled here.
+    for (root_key, backup, code, location, source) in [
+        (
             HKEY_CURRENT_USER,
-            "uf",
-            "Startup folder (user)",
-        );
-        collect_folder(
-            &mut items,
-            &mut seen,
-            startup_folder_common(),
+            BACKUP_HKCU,
+            "hr",
+            "registry_hkcu_run",
+            "Current user",
+        ),
+        (
             HKEY_LOCAL_MACHINE,
-            "cf",
-            "Startup folder (all users)",
-        );
+            BACKUP_HKLM,
+            "mr",
+            "registry_hklm_run",
+            "All users",
+        ),
+    ] {
+        for (name, cmd) in run_values(RegKey::predef(root_key), backup) {
+            let id = format!("{code}::{name}");
+            if !seen.insert(id.clone()) {
+                continue;
+            }
+            items.push(StartupItem {
+                id,
+                name,
+                command: cmd,
+                location: location.into(),
+                enabled: false,
+                source: source.into(),
+            });
+        }
+    }
 
-        items.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
-        Ok(items)
-    })
-    .await
+    // Startup-folder shortcuts.
+    collect_folder(
+        &mut items,
+        &mut seen,
+        startup_folder_user(),
+        HKEY_CURRENT_USER,
+        "uf",
+        "Startup folder (user)",
+    );
+    collect_folder(
+        &mut items,
+        &mut seen,
+        startup_folder_common(),
+        HKEY_LOCAL_MACHINE,
+        "cf",
+        "Startup folder (all users)",
+    );
+
+    // 32-bit programs' machine-wide entries live under WOW6432Node.
+    for (name, cmd) in run_values(RegKey::predef(HKEY_LOCAL_MACHINE), RUN32_PATH) {
+        let id = format!("mr32::{name}");
+        if !seen.insert(id.clone()) {
+            continue;
+        }
+        items.push(StartupItem {
+            id,
+            enabled: approval_enabled(RegKey::predef(HKEY_LOCAL_MACHINE), APPROVED_RUN32, &name),
+            name,
+            command: cmd,
+            location: "registry_hklm_run32".into(),
+            source: "All users (32-bit)".into(),
+        });
+    }
+
+    // Scheduled tasks and Store apps are best-effort: a locked-down machine
+    // may refuse the query, and that must not hide the registry entries.
+    items.extend(scheduled_task_items());
+    items.extend(store_task_items());
+
+    items.sort_by(|a, b| a.name.to_lowercase().cmp(&b.name.to_lowercase()));
+    Ok(items)
+}
+
+// --- Scheduled tasks ---------------------------------------------------------
+
+#[derive(Deserialize)]
+struct RawTask {
+    #[serde(rename = "Path")]
+    path: String,
+    #[serde(rename = "Name")]
+    name: String,
+    #[serde(rename = "State")]
+    state: String,
+    #[serde(rename = "Exec")]
+    exec: Option<String>,
+    #[serde(rename = "Args")]
+    args: Option<String>,
+}
+
+/// Tasks that run at sign-in or at boot — the ones that behave like startup
+/// apps (AMD Adrenalin, Razer, many updaters register themselves this way
+/// precisely because it does not show up in the `Run` key). Windows' own tasks
+/// under `\Microsoft\` are left out, exactly as Task Manager leaves them out.
+fn scheduled_task_items() -> Vec<StartupItem> {
+    let script = r#"
+Get-ScheduledTask -ErrorAction SilentlyContinue | Where-Object {
+  $_.TaskPath -notlike '\Microsoft\*' -and
+  ($_.Triggers | Where-Object { $_.CimClass.CimClassName -in 'MSFT_TaskLogonTrigger','MSFT_TaskBootTrigger' })
+} | ForEach-Object {
+  $a = $_.Actions | Select-Object -First 1
+  [pscustomobject]@{
+    Path  = [string]$_.TaskPath
+    Name  = [string]$_.TaskName
+    State = [string]$_.State
+    Exec  = [string]$a.Execute
+    Args  = [string]$a.Arguments
+  }
+} | ConvertTo-Json -Depth 3
+"#;
+    let Ok(raw) = run_powershell(script) else {
+        return Vec::new();
+    };
+    let tasks: Vec<RawTask> = parse_ps_array(&raw).unwrap_or_default();
+    tasks
+        .into_iter()
+        .map(|t| {
+            let command = match (t.exec.as_deref(), t.args.as_deref()) {
+                (Some(e), Some(a)) if !a.trim().is_empty() => format!("{e} {a}"),
+                (Some(e), _) if !e.is_empty() => e.to_string(),
+                _ => format!("Task Scheduler: {}{}", t.path, t.name),
+            };
+            StartupItem {
+                id: format!("st::{}{}", t.path, t.name),
+                name: t.name,
+                command,
+                location: "scheduled_task".into(),
+                enabled: !t.state.eq_ignore_ascii_case("Disabled"),
+                source: "Task Scheduler".into(),
+            }
+        })
+        .collect()
+}
+
+/// Enables or disables a task through schtasks — the same switch as the Task
+/// Scheduler UI. Arguments are passed as a list, so task names with spaces or
+/// quotes cannot break out into a shell.
+fn toggle_task(full_name: &str, enable: bool) -> AppResult<()> {
+    run_command(
+        "schtasks",
+        &[
+            "/Change",
+            "/TN",
+            full_name,
+            if enable { "/ENABLE" } else { "/DISABLE" },
+        ],
+    )
+    .map(|_| ())
+}
+
+// --- Microsoft Store startup tasks --------------------------------------------
+
+/// `State` values Windows stores for a packaged app's startup task.
+const STORE_DISABLED_BY_USER: u32 = 1;
+const STORE_ENABLED: u32 = 2;
+const STORE_DISABLED_BY_POLICY: u32 = 3;
+const STORE_ENABLED_BY_POLICY: u32 = 4;
+
+/// Store apps declare startup tasks in their manifest instead of writing a
+/// `Run` value; Windows keeps the on/off state per user in the registry. This
+/// is where Windows Terminal, Xbox, Phone Link and friends live.
+fn store_task_items() -> Vec<StartupItem> {
+    let Ok(root) = RegKey::predef(HKEY_CURRENT_USER).open_subkey(STORE_TASKS) else {
+        return Vec::new();
+    };
+    let mut out = Vec::new();
+    for package in root.enum_keys().filter_map(|k| k.ok()) {
+        let Ok(pkg_key) = root.open_subkey(&package) else {
+            continue;
+        };
+        for task in pkg_key.enum_keys().filter_map(|k| k.ok()) {
+            let Ok(task_key) = pkg_key.open_subkey(&task) else {
+                continue;
+            };
+            let Ok(state) = task_key.get_value::<u32, _>("State") else {
+                continue;
+            };
+            out.push(StartupItem {
+                id: format!("ux::{package}\\{task}"),
+                name: store_display_name(&package),
+                command: format!("{package} → {task}"),
+                location: "store_app".into(),
+                enabled: state == STORE_ENABLED || state == STORE_ENABLED_BY_POLICY,
+                source: "Microsoft Store app".into(),
+            });
+        }
+    }
+    out
+}
+
+/// "Microsoft.WindowsTerminal_8wekyb3d8bbwe" → "WindowsTerminal". Package
+/// family names carry a publisher prefix and a hash suffix that mean nothing
+/// to a person; the part in between is the app's own name.
+fn store_display_name(package: &str) -> String {
+    let without_hash = package.split('_').next().unwrap_or(package);
+    without_hash
+        .rsplit('.')
+        .next()
+        .filter(|s| !s.is_empty())
+        .unwrap_or(without_hash)
+        .to_string()
+}
+
+fn toggle_store_task(key_path: &str, enable: bool) -> AppResult<()> {
+    let map_err = |e: std::io::Error| AppError::Registry(e.to_string());
+    let key = RegKey::predef(HKEY_CURRENT_USER)
+        .open_subkey_with_flags(
+            format!("{STORE_TASKS}\\{key_path}"),
+            KEY_READ | KEY_SET_VALUE,
+        )
+        .map_err(|_| AppError::other("startup task no longer exists"))?;
+    let current: u32 = key.get_value("State").map_err(map_err)?;
+    // A policy-controlled task would be flipped straight back by Windows, so
+    // say so rather than pretend the toggle worked.
+    if current == STORE_DISABLED_BY_POLICY || current == STORE_ENABLED_BY_POLICY {
+        return Err(AppError::other(
+            "this startup task is controlled by an organisation policy and cannot be changed here",
+        ));
+    }
+    key.set_value(
+        "State",
+        &if enable {
+            STORE_ENABLED
+        } else {
+            STORE_DISABLED_BY_USER
+        },
+    )
+    .map_err(map_err)
 }
 
 #[tauri::command]
@@ -239,7 +451,8 @@ pub fn migrate_legacy_disables() {
         (HKEY_CURRENT_USER, BACKUP_HKCU),
         (HKEY_LOCAL_MACHINE, BACKUP_HKLM),
     ] {
-        let Ok(backup) = RegKey::predef(root_key).open_subkey_with_flags(backup_path, KEY_ALL_ACCESS)
+        let Ok(backup) =
+            RegKey::predef(root_key).open_subkey_with_flags(backup_path, KEY_ALL_ACCESS)
         else {
             continue;
         };
@@ -277,7 +490,11 @@ pub fn migrate_legacy_disables() {
             if path.extension().and_then(|e| e.to_str()) != Some("lnk") {
                 continue;
             }
-            let Some(file) = path.file_name().and_then(|s| s.to_str()).map(str::to_string) else {
+            let Some(file) = path
+                .file_name()
+                .and_then(|s| s.to_str())
+                .map(str::to_string)
+            else {
                 continue;
             };
             let target = dir.join(&file);
@@ -302,8 +519,25 @@ pub fn apply_raw(id: &str, enabled: bool) -> AppResult<()> {
         "mr" => toggle_registry(HKEY_LOCAL_MACHINE, BACKUP_HKLM, name, enabled),
         "uf" => toggle_folder(startup_folder_user(), HKEY_CURRENT_USER, name, enabled),
         "cf" => toggle_folder(startup_folder_common(), HKEY_LOCAL_MACHINE, name, enabled),
+        "mr32" => toggle_run32(name, enabled),
+        "st" => toggle_task(name, enabled),
+        "ux" => toggle_store_task(name, enabled),
         _ => Err(AppError::other("unknown startup location")),
     }
+}
+
+/// 32-bit machine-wide entries. No legacy backup to consider: older versions
+/// never listed these, so they cannot have moved one aside.
+fn toggle_run32(name: &str, enable: bool) -> AppResult<()> {
+    let hklm = || RegKey::predef(HKEY_LOCAL_MACHINE);
+    if hklm()
+        .open_subkey(RUN32_PATH)
+        .and_then(|k| k.get_value::<String, _>(name))
+        .is_err()
+    {
+        return Err(AppError::other("startup entry no longer exists"));
+    }
+    set_approval(hklm(), APPROVED_RUN32, name, enable)
 }
 
 fn toggle_registry(root_key: HKEY, backup_path: &str, name: &str, enable: bool) -> AppResult<()> {
@@ -348,7 +582,14 @@ fn collect_folder(
     let Some(dir) = dir else { return };
     push_shortcuts(items, seen, &dir, Some(approved_root), code, source);
     // Legacy: shortcuts an older version moved aside are always disabled.
-    push_shortcuts(items, seen, &dir.join(LEGACY_DISABLED_DIR), None, code, source);
+    push_shortcuts(
+        items,
+        seen,
+        &dir.join(LEGACY_DISABLED_DIR),
+        None,
+        code,
+        source,
+    );
 }
 
 fn push_shortcuts(
@@ -418,19 +659,61 @@ fn toggle_folder(
         return Err(AppError::other("startup shortcut no longer exists"));
     }
 
-    set_approval(RegKey::predef(approved_root), APPROVED_FOLDER, &file, enable)
+    set_approval(
+        RegKey::predef(approved_root),
+        APPROVED_FOLDER,
+        &file,
+        enable,
+    )
 }
 
 fn startup_folder_user() -> Option<std::path::PathBuf> {
-    std::env::var("APPDATA").ok().map(|p| {
-        std::path::PathBuf::from(p)
-            .join(r"Microsoft\Windows\Start Menu\Programs\Startup")
-    })
+    std::env::var("APPDATA")
+        .ok()
+        .map(|p| std::path::PathBuf::from(p).join(r"Microsoft\Windows\Start Menu\Programs\Startup"))
 }
 
 fn startup_folder_common() -> Option<std::path::PathBuf> {
-    std::env::var("PROGRAMDATA").ok().map(|p| {
-        std::path::PathBuf::from(p)
-            .join(r"Microsoft\Windows\Start Menu\Programs\Startup")
-    })
+    std::env::var("PROGRAMDATA")
+        .ok()
+        .map(|p| std::path::PathBuf::from(p).join(r"Microsoft\Windows\Start Menu\Programs\Startup"))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn store_display_names_drop_publisher_and_hash() {
+        assert_eq!(
+            store_display_name("Microsoft.WindowsTerminal_8wekyb3d8bbwe"),
+            "WindowsTerminal"
+        );
+        assert_eq!(
+            store_display_name("34791E63.CanonInkjetSmartConnect_6e5tt8cgb93ep"),
+            "CanonInkjetSmartConnect"
+        );
+        assert_eq!(store_display_name("Claude_pzs8sxrjxfjjc"), "Claude");
+        assert_eq!(
+            store_display_name("MicrosoftWindows.CrossDevice_cw5n1h2txyewy"),
+            "CrossDevice"
+        );
+    }
+
+    /// Prints what this machine actually starts at sign-in, so the list can be
+    /// compared against Task Manager by eye. Reads the real registry and task
+    /// scheduler, hence `#[ignore]`: run with `cargo test -- --ignored --nocapture`.
+    #[test]
+    #[ignore]
+    fn print_this_machines_startup_items() {
+        for item in collect_startup_items().expect("listing startup items") {
+            println!(
+                "{:<8} {:<22} {:<5} {}",
+                item.location.split('_').last().unwrap_or(""),
+                item.name,
+                if item.enabled { "on" } else { "off" },
+                item.id
+            );
+        }
+    }
 }

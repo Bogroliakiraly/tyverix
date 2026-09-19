@@ -19,6 +19,9 @@ export function Startup() {
     registry_hklm_run: t("startup.loc.hklm"),
     startup_folder_user: t("startup.loc.folderUser"),
     startup_folder_common: t("startup.loc.folderCommon"),
+    registry_hklm_run32: t("startup.loc.hklm32"),
+    scheduled_task: t("startup.loc.task"),
+    store_app: t("startup.loc.store"),
   };
 
   async function load() {

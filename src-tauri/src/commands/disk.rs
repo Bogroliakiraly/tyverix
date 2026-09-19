@@ -1,7 +1,5 @@
 //! Storage information: logical volumes (via sysinfo), physical-disk health
-//! (via the Windows storage stack) and a large-file finder.
-
-use std::path::Path;
+//! (via the Windows storage stack).
 
 use serde::{Deserialize, Serialize};
 use sysinfo::Disks;
@@ -108,52 +106,3 @@ $out | ConvertTo-Json -Depth 3
     .await
 }
 
-#[derive(Serialize)]
-pub struct FileEntry {
-    pub path: String,
-    pub size: u64,
-    pub modified: Option<String>,
-}
-
-#[tauri::command]
-pub async fn find_large_files(root: String, min_bytes: u64) -> AppResult<Vec<FileEntry>> {
-    blocking(move || {
-        let mut found = Vec::new();
-        walk(Path::new(&root), min_bytes, &mut found, 0);
-        found.sort_by(|a, b| b.size.cmp(&a.size));
-        found.truncate(200);
-        Ok(found)
-    })
-    .await
-}
-
-fn walk(dir: &Path, min: u64, out: &mut Vec<FileEntry>, depth: usize) {
-    // Bound recursion so a scan of a huge tree stays responsive.
-    if depth > 12 || out.len() > 5000 {
-        return;
-    }
-    let Ok(entries) = std::fs::read_dir(dir) else {
-        return;
-    };
-    for entry in entries.flatten() {
-        let path = entry.path();
-        let Ok(meta) = entry.metadata() else { continue };
-        if meta.is_dir() {
-            walk(&path, min, out, depth + 1);
-        } else if meta.is_file() && meta.len() >= min {
-            out.push(FileEntry {
-                path: path.to_string_lossy().to_string(),
-                size: meta.len(),
-                modified: meta
-                    .modified()
-                    .ok()
-                    .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-                    .map(|d| {
-                        chrono::DateTime::<chrono::Utc>::from_timestamp(d.as_secs() as i64, 0)
-                            .map(|dt| dt.to_rfc3339())
-                            .unwrap_or_default()
-                    }),
-            });
-        }
-    }
-}

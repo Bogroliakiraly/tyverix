@@ -26,6 +26,27 @@ const CATEGORY_ICON: Record<string, typeof Cpu> = {
   network: Wifi,
 };
 
+type TweakField = "name" | "description" | "benefit" | "downside" | "revert" | "unavailable";
+
+/**
+ * Tweak text comes from the backend in English, because that is where each
+ * tweak is defined next to the registry values it writes. The UI overrides it
+ * per language wherever a translation exists (`tweak.<id>.<field>`) and falls
+ * back to the backend's English otherwise, so a new tweak can never show up
+ * blank just because nobody has translated it yet.
+ */
+function useTweakText() {
+  const { t } = useT();
+  return (tw: TweakInfo, field: TweakField): string => {
+    const key = `tweak.${tw.id}.${field}`;
+    const translated = t(key);
+    if (translated !== key) return translated;
+    if (field === "revert") return tw.revert_note;
+    if (field === "unavailable") return tw.unavailable_reason ?? "";
+    return tw[field];
+  };
+}
+
 /**
  * Every tweak here is reversible, and the page says so on each row rather than
  * once in the small print — including the distinction that matters: whether
@@ -34,6 +55,7 @@ const CATEGORY_ICON: Record<string, typeof Cpu> = {
  */
 export function Boost() {
   const { t } = useT();
+  const text = useTweakText();
   const go = useNav((s) => s.go);
   const ask = useConfirm((s) => s.ask);
   const [tweaks, setTweaks] = useState<TweakInfo[]>([]);
@@ -75,12 +97,12 @@ export function Boost() {
     const enabling = !tw.applied;
     const { ok } = await ask({
       title: enabling
-        ? t("boost.confirmApplyTitle", { name: tw.name })
-        : t("boost.confirmRevertTitle", { name: tw.name }),
-      what: enabling ? tw.description : tw.revert_note,
-      why: tw.benefit,
+        ? t("boost.confirmApplyTitle", { name: text(tw, "name") })
+        : t("boost.confirmRevertTitle", { name: text(tw, "name") }),
+      what: enabling ? text(tw, "description") : text(tw, "revert"),
+      why: text(tw, "benefit"),
       benefit: t(`boost.impact.${tw.impact}`),
-      downside: enabling ? tw.downside : t("boost.revertDownside"),
+      downside: enabling ? text(tw, "downside") : t("boost.revertDownside"),
       confirmLabel: enabling ? t("boost.apply") : t("boost.revert"),
       offerRestorePoint: enabling && tw.requires_admin,
     });
@@ -221,6 +243,7 @@ function TweakRow({
   onToggle: () => void;
 }) {
   const { t } = useT();
+  const text = useTweakText();
   const [open, setOpen] = useState(false);
 
   const impactTone =
@@ -238,7 +261,7 @@ function TweakRow({
         </div>
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="font-medium">{tweak.name}</span>
+            <span className="font-medium">{text(tweak, "name")}</span>
             <Badge tone={impactTone}>{t(`boost.impactBadge.${tweak.impact}`)}</Badge>
             {/* The reversibility promise, stated per row rather than in the
                 small print — and specific about which kind it is. */}
@@ -255,11 +278,11 @@ function TweakRow({
             )}
           </div>
 
-          <p className="text-sm text-text-secondary">{tweak.description}</p>
+          <p className="text-sm text-text-secondary">{text(tweak, "description")}</p>
 
           {!tweak.available && tweak.unavailable_reason && (
             <p className="rounded-lg bg-bg-hover px-3 py-2 text-xs text-text-muted">
-              {tweak.unavailable_reason}
+              {text(tweak, "unavailable")}
             </p>
           )}
 
@@ -275,9 +298,9 @@ function TweakRow({
 
           {open && (
             <div className="space-y-3 rounded-lg bg-bg-elevated p-3 text-sm">
-              <Detail label={t("confirm.why")} value={tweak.benefit} />
-              <Detail label={t("confirm.downside")} value={tweak.downside} />
-              <Detail label={t("boost.revertLabel")} value={tweak.revert_note} />
+              <Detail label={t("confirm.why")} value={text(tweak, "benefit")} />
+              <Detail label={t("confirm.downside")} value={text(tweak, "downside")} />
+              <Detail label={t("boost.revertLabel")} value={text(tweak, "revert")} />
               <div>
                 <p className="mb-1 text-xs font-medium uppercase tracking-wide text-text-muted">
                   {t("boost.changesLabel")}

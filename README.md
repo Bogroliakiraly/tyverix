@@ -30,13 +30,10 @@ Website: <https://tyverix.com> · Contact: <info@tyverix.com>
 | **A/B benchmark**        | PresentMon frame times, per-second block means, Welch's t-test with a 95% confidence interval. Reports **"no measurable change"** when the interval spans zero | read-only |
 | **Performance tweaks**   | 15 documented registry / `powercfg` settings (HAGS, MPO, fullscreen optimizations, MMCSS, power throttling, Game DVR, mouse acceleration, Nagle, …). Exact previous value written to `tweaks.json` **before** the change | ✅ |
 | Process monitor / kill   | `sysinfo` + native terminate                                         | ❌ permanent |
-| Startup manager          | Windows' own `StartupApproved` flags — the same mechanism Task Manager uses; the app's `Run` entry is never removed | ✅ |
+| Startup manager          | Everything Task Manager's *Startup apps* lists: `Run` (HKCU, HKLM and 32-bit `WOW6432Node`), both Startup folders, sign-in/boot scheduled tasks, and Microsoft Store startup tasks. Each is toggled with Windows' own switch (`StartupApproved` flags, the task's Enabled flag, the package's `State`); nothing is ever deleted | ✅ |
 | Cleaner                  | Only temp / shader / browser caches / Recycle Bin; in-use files skipped | ❌ permanent (restore point offered) |
 | Disk usage + health      | `sysinfo` + `Get-PhysicalDisk` reliability counters                  | read-only  |
-| Large file finder        | Bounded recursive walk — never deletes for you                      | read-only  |
 | Game Mode                | Switches to High/Ultimate Performance power plan; saves & restores previous | ✅ |
-| Drivers / Software / Services / Windows info | WMI + registry, read-only                       | read-only  |
-| Windows Update check      | Windows Update agent COM API                                        | read-only  |
 | Safety                   | System Restore points, registry export, full undo history, revert-all-tweaks | ✅ |
 
 The complete reversibility reference lives in two places that must agree: the
