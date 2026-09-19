@@ -6,9 +6,9 @@
     <title>Tyverix — Honest Windows Gaming Optimizer (No Fake Benchmarks)</title>
     <meta
       name="description"
-      content="Tyverix optimizes Windows for gaming using only measurable, reversible and safe changes: real Game Mode, safe disk cleanup, memory optimizer, network latency check. No fake benchmarks, no placebo boosts. Free to download."
+      content="Tyverix optimizes Windows for gaming using only measurable, reversible and safe changes: hardware diagnostics, an A/B benchmark with a real significance test, reversible tweaks, Game Mode and a safe cleaner. No fake benchmarks, no placebo boosts. Free to download."
     />
-    <meta name="keywords" content="Windows gaming optimizer, game mode, PC cleaner, RAM optimizer, boost FPS honestly, Windows performance tool, disk cleanup, startup manager, network latency test" />
+    <meta name="keywords" content="Windows gaming optimizer, game mode, A/B benchmark, PresentMon, PC cleaner, RAM optimizer, boost FPS honestly, Windows performance tool, startup manager, hardware diagnostics" />
     <meta name="author" content="Tyverix" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://tyverix.com/" />
@@ -18,7 +18,7 @@
     <meta property="og:url" content="https://tyverix.com/" />
     <meta property="og:site_name" content="Tyverix" />
     <meta property="og:title" content="Tyverix — Honest Windows Gaming Optimizer" />
-    <meta property="og:description" content="Real Game Mode, safe disk cleanup, memory optimizer and network latency check — measurable, reversible and safe. No fake benchmarks, ever." />
+    <meta property="og:description" content="Hardware diagnostics, an A/B benchmark that can say “no measurable change”, and reversible tweaks. Measurable, reversible and safe. No fake benchmarks, ever." />
     <meta property="og:image" content="https://tyverix.com/screenshots/dashboard.png" />
     <meta property="og:image:width" content="1920" />
     <meta property="og:image:height" content="1032" />
@@ -26,289 +26,21 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Tyverix — Honest Windows Gaming Optimizer" />
-    <meta name="twitter:description" content="Real Game Mode, safe disk cleanup, memory optimizer and network latency check — measurable, reversible and safe. No fake benchmarks, ever." />
+    <meta name="twitter:description" content="Hardware diagnostics, an A/B benchmark that can say “no measurable change”, and reversible tweaks. Measurable, reversible and safe. No fake benchmarks, ever." />
     <meta name="twitter:image" content="https://tyverix.com/screenshots/dashboard.png" />
 
-    <meta name="theme-color" content="#0a0b0f" />
+    <meta name="theme-color" content="#0b0e14" />
     <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap"
       rel="stylesheet"
     />
-    <style>
-      :root {
-        --bg: #0a0b0f;
-        --surface: #121419;
-        --elevated: #181b22;
-        --border: #242833;
-        --accent: #5b8cff;
-        --accent-hover: #6f9bff;
-        --good: #3ddc84;
-        --warn: #f5b14c;
-        --text: #eef1f7;
-        --text-2: #9aa3b2;
-        --text-3: #5f6776;
-      }
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; }
-      body {
-        font-family: "Inter", system-ui, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-        overflow-x: hidden;
-      }
-      a { color: inherit; text-decoration: none; }
-      .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-
-      #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-
-      /* Moving background — slow-drifting blurred color blobs */
-      .bg-blob {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(90px);
-        pointer-events: none;
-        z-index: 0;
-        will-change: transform;
-      }
-      .bg-blob.one {
-        width: 560px; height: 560px; top: -220px; left: -140px;
-        background: rgba(91, 140, 255, 0.32);
-        animation: driftA 22s ease-in-out infinite;
-      }
-      .bg-blob.two {
-        width: 480px; height: 480px; top: 160px; right: -180px;
-        background: rgba(167, 139, 250, 0.26);
-        animation: driftB 26s ease-in-out infinite;
-      }
-      .bg-blob.three {
-        width: 420px; height: 420px; bottom: -200px; left: 30%;
-        background: rgba(61, 220, 132, 0.16);
-        animation: driftC 30s ease-in-out infinite;
-      }
-      @keyframes driftA { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(70px, 90px); } }
-      @keyframes driftB { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-80px, -60px); } }
-      @keyframes driftC { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(50px, -70px); } }
-      @media (prefers-reduced-motion: reduce) {
-        .bg-blob { animation: none !important; }
-      }
-
-      /* Nav */
-      nav {
-        position: sticky;
-        top: 0;
-        z-index: 50;
-        backdrop-filter: blur(12px);
-        background: rgba(10, 11, 15, 0.72);
-        border-bottom: 1px solid var(--border);
-      }
-      nav .wrap {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 64px;
-      }
-      .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-      .logo .mark {
-        width: 32px; height: 32px; object-fit: contain;
-        display: block;
-      }
-      .nav-right { display: flex; align-items: center; gap: 18px; }
-      .nav-links { display: flex; gap: 22px; font-size: 14px; color: var(--text-2); }
-      .nav-links a:hover { color: var(--text); }
-      .langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
-      .langs button {
-        background: none; border: none; color: var(--text-2); cursor: pointer;
-        font-size: 13px; padding: 4px 9px; border-radius: 7px; font-family: inherit;
-      }
-      .langs button.active { background: var(--elevated); color: var(--text); }
-
-      .btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        border-radius: 11px; padding: 11px 18px; font-weight: 600; font-size: 14px;
-        cursor: pointer; border: none; font-family: inherit; transition: all 0.15s;
-      }
-      .btn-primary { background: var(--accent); color: #fff; }
-      .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-      .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-      .btn-outline:hover { background: var(--surface); }
-
-      /* Hero */
-      header { position: relative; z-index: 1; text-align: center; padding: 110px 0 80px; }
-      .pill {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: 999px; padding: 6px 14px; font-size: 13px; color: var(--text-2);
-        margin-bottom: 28px;
-      }
-      .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
-      h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; }
-      h1 .grad {
-        background: linear-gradient(120deg, var(--accent), #a78bfa);
-        -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-      }
-      .sub { font-size: clamp(16px, 2.4vw, 20px); color: var(--text-2); max-width: 640px; margin: 24px auto 36px; }
-      .cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-      .hint { margin-top: 18px; font-size: 13px; color: var(--text-3); }
-
-      /* Sections */
-      section { position: relative; z-index: 1; padding: 70px 0; }
-      .eyebrow { color: var(--accent); font-weight: 600; font-size: 14px; text-align: center; }
-      h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 700; text-align: center; margin: 10px 0 14px; letter-spacing: -0.01em; }
-      .section-sub { text-align: center; color: var(--text-2); max-width: 600px; margin: 0 auto 48px; }
-
-      .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-      @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } .nav-links { display: none; } }
-      .card {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: 16px; padding: 26px;
-        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      }
-      .card:hover {
-        transform: translateY(-4px);
-        border-color: rgba(91, 140, 255, 0.4);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
-      }
-      .card .ico { font-size: 26px; margin-bottom: 14px; }
-      .card h3 { font-size: 17px; margin-bottom: 8px; }
-      .card p { font-size: 14px; color: var(--text-2); }
-
-      /* Scroll-reveal */
-      .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-      .reveal.in-view { opacity: 1; transform: translateY(0); }
-      @media (prefers-reduced-motion: reduce) {
-        .reveal { opacity: 1; transform: none; transition: none; }
-      }
-
-      /* Hero product mockup */
-      .hero-mockup { position: relative; max-width: 660px; margin: 56px auto 0; }
-      .mockup-glow {
-        position: absolute; inset: -50px; z-index: -1;
-        background: radial-gradient(circle, rgba(91, 140, 255, 0.28), transparent 70%);
-        filter: blur(10px);
-      }
-      .mockup-frame {
-        background: var(--elevated); border: 1px solid var(--border); border-radius: 16px;
-        overflow: hidden; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55);
-        animation: floatFrame 6s ease-in-out infinite;
-        text-align: left;
-      }
-      @keyframes floatFrame { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-      @media (prefers-reduced-motion: reduce) {
-        .mockup-frame { animation: none; }
-      }
-      .mockup-bar {
-        display: flex; align-items: center; gap: 7px; padding: 10px 14px;
-        background: var(--surface); border-bottom: 1px solid var(--border);
-      }
-      .mockup-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
-      .mockup-bar .dot.r { background: #ff5f57; }
-      .mockup-bar .dot.y { background: #febc2e; }
-      .mockup-bar .dot.g { background: #28c840; }
-      .mockup-title { margin-left: 8px; font-size: 12px; color: var(--text-2); font-weight: 600; }
-      .mockup-demo-badge {
-        margin-left: auto; font-size: 10px; color: var(--text-3);
-        border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px;
-      }
-      .mockup-body { padding: 26px; display: grid; gap: 20px; }
-      .mockup-gauges { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px; }
-      .mockup-gauge { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 92px; }
-      .mockup-gauge svg { width: 92px; height: 92px; transform: rotate(-90deg); }
-      .mockup-gauge circle { fill: none; stroke-width: 8; }
-      .mockup-gauge .track { stroke: var(--border); }
-      .mockup-gauge .fill { stroke-linecap: round; stroke-dasharray: 251; }
-      .mockup-gauge .fill.cpu { stroke: var(--accent); animation: pulseCpu 4s ease-in-out infinite; }
-      .mockup-gauge .fill.mem { stroke: var(--warn); animation: pulseMem 5s ease-in-out infinite; }
-      .mockup-gauge .fill.gpu { stroke: var(--good); animation: pulseGpu 4.6s ease-in-out infinite; }
-      @keyframes pulseCpu { 0%, 100% { stroke-dashoffset: 188; } 50% { stroke-dashoffset: 150; } }
-      @keyframes pulseMem { 0%, 100% { stroke-dashoffset: 130; } 50% { stroke-dashoffset: 95; } }
-      @keyframes pulseGpu { 0%, 100% { stroke-dashoffset: 205; } 50% { stroke-dashoffset: 165; } }
-      @media (prefers-reduced-motion: reduce) {
-        .mockup-gauge .fill { animation: none; stroke-dashoffset: 160; }
-      }
-      .mockup-gauge-value {
-        position: absolute; top: 34px; left: 0; right: 0; text-align: center;
-        font-weight: 700; font-size: 15px;
-      }
-      .mockup-gauge-label {
-        font-size: 10px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px;
-      }
-      .mockup-chart {
-        background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
-      }
-      .mockup-chart .row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-size: 11px; color: var(--text-2); }
-      .mockup-chart svg { width: 100%; height: 52px; display: block; }
-      .mockup-chart polyline { fill: none; stroke: var(--accent); stroke-width: 2; }
-      .mockup-chart polygon { fill: rgba(91, 140, 255, 0.16); stroke: none; }
-
-      /* Real screenshot gallery */
-      .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-      .shot-card {
-        background: var(--elevated); border: 1px solid var(--border); border-radius: 14px;
-        overflow: hidden; transition: transform 0.25s ease, box-shadow 0.25s ease;
-      }
-      .shot-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4); }
-      .shot-card .mockup-bar { padding: 8px 12px; }
-      .shot-card img { width: 100%; display: block; cursor: zoom-in; }
-      .shot-card.is-missing { display: none; }
-
-      /* Lightbox for full-size screenshots */
-      .lightbox {
-        position: fixed; inset: 0; z-index: 100; display: none;
-        align-items: center; justify-content: center;
-        background: rgba(5, 6, 9, 0.88); padding: 40px; cursor: zoom-out;
-        backdrop-filter: blur(4px);
-      }
-      .lightbox.open { display: flex; }
-      .lightbox img {
-        max-width: 95vw; max-height: 90vh; border-radius: 12px;
-        box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6); border: 1px solid var(--border);
-      }
-      .lightbox-close {
-        position: absolute; top: 22px; right: 28px; color: var(--text-2);
-        font-size: 28px; line-height: 1; cursor: pointer; background: none; border: none;
-      }
-      .lightbox-close:hover { color: var(--text); }
-
-      /* Honesty band */
-      .band { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-      .band .list { max-width: 720px; margin: 0 auto; display: grid; gap: 14px; }
-      .band .row { display: flex; gap: 12px; align-items: flex-start; font-size: 15px; }
-      .band .x { color: var(--warn); font-weight: 700; }
-
-      /* Pricing */
-      .prices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 760px; margin: 0 auto; }
-      @media (max-width: 720px) { .prices { grid-template-columns: 1fr; } }
-      .price {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: 18px; padding: 30px;
-        transition: transform 0.25s ease;
-      }
-      .price:hover { transform: translateY(-4px); }
-      .price.pro { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(91,140,255,0.4), 0 20px 60px rgba(91,140,255,0.12); }
-      .price h3 { font-size: 18px; }
-      .price .amount { font-size: 40px; font-weight: 800; margin: 14px 0 4px; }
-      .price .amount span { font-size: 15px; color: var(--text-3); font-weight: 500; }
-      .price ul { list-style: none; margin: 22px 0; display: grid; gap: 11px; }
-      .price li { font-size: 14px; color: var(--text-2); display: flex; gap: 10px; }
-      .price li .c { color: var(--good); }
-      .price .btn { width: 100%; justify-content: center; }
-
-      /* Download */
-      .download { text-align: center; }
-      .download .box {
-        background: var(--surface); border: 1px solid var(--border); border-radius: 18px;
-        padding: 44px; max-width: 560px; margin: 0 auto;
-      }
-
-      footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--text-3); font-size: 13px; }
-      footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-    </style>
+    <link rel="stylesheet" href="site.css" />
+    <script>document.documentElement.classList.add("js");</script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -322,7 +54,7 @@
         "@type": "Organization",
         "name": "Tyverix",
         "url": "https://tyverix.com/",
-        "email": "info@tyverix.com"
+        "email": "support@tyverix.com"
       },
       "offers": {
         "@type": "Offer",
@@ -334,87 +66,128 @@
     </script>
   </head>
   <body>
-    <canvas id="bg-canvas" aria-hidden="true"></canvas>
-    <div class="bg-blob one"></div>
-    <div class="bg-blob two"></div>
-    <div class="bg-blob three"></div>
+    <!-- TICKER: facts about the app, not market data -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
 
-    <nav>
-      <div class="wrap">
-        <a class="logo" href="#">
-          <img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix
-        </a>
-        <div class="nav-right">
-          <div class="nav-links">
-            <a href="#features" data-i18n="nav.features"></a>
-            <a href="#honesty" data-i18n="nav.honesty"></a>
-            <a href="#pricing" data-i18n="nav.pricing"></a>
-            <a href="#download" data-i18n="nav.download"></a>
-            <a href="changes.html" data-i18n="nav.changes"></a>
-            <a href="changelog.html" data-i18n="nav.changelog"></a>
-            <a href="account.html" data-i18n="nav.account"></a>
-          </div>
-          <div class="langs" id="langs">
-            <button data-lang="en">EN</button>
-            <button data-lang="hu">HU</button>
-            <button data-lang="de">DE</button>
-          </div>
-        </div>
+    <!-- NAV -->
+    <nav class="site-nav" id="mainNav">
+      <a href="#top" class="nav-logo"><img src="logo.png" alt="" /> Tyverix</a>
+      <div class="nav-links">
+        <a href="#features" data-i18n="nav.features"></a>
+        <a href="#benchmark" data-i18n="nav.benchmark"></a>
+        <a href="#honesty" data-i18n="nav.honesty"></a>
+        <a href="#pricing" data-i18n="nav.pricing"></a>
+        <a href="#faq" data-i18n="nav.faq"></a>
+        <a href="changes.html" data-i18n="nav.changes"></a>
+        <a href="changelog.html" data-i18n="nav.changelog"></a>
       </div>
+      <div class="nav-cta">
+        <div class="langs" data-langs>
+          <button data-lang="en">EN</button>
+          <button data-lang="hu">HU</button>
+          <button data-lang="de">DE</button>
+        </div>
+        <a href="account.html" class="btn-ghost" data-i18n="nav.account"></a>
+        <a href="#download" class="btn-primary" data-i18n="nav.download"></a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </nav>
 
-    <header>
-      <div class="wrap">
-        <div class="pill"><span class="dot"></span><span data-i18n="hero.pill"></span></div>
-        <h1><span data-i18n="hero.title1"></span> <span class="grad" data-i18n="hero.title2"></span></h1>
-        <p class="sub" data-i18n="hero.sub"></p>
-        <div class="cta">
-          <a class="btn btn-primary" href="#download"><span data-i18n="hero.ctaDownload"></span></a>
-          <a class="btn btn-outline" href="#pricing"><span data-i18n="hero.ctaPro"></span></a>
-        </div>
-        <p class="hint" data-i18n="hero.hint"></p>
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#features" data-i18n="nav.features"></a>
+      <a href="#benchmark" data-i18n="nav.benchmark"></a>
+      <a href="#honesty" data-i18n="nav.honesty"></a>
+      <a href="#pricing" data-i18n="nav.pricing"></a>
+      <a href="#faq" data-i18n="nav.faq"></a>
+      <a href="changes.html" data-i18n="nav.changes"></a>
+      <a href="changelog.html" data-i18n="nav.changelog"></a>
+      <div class="langs" data-langs>
+        <button data-lang="en">EN</button>
+        <button data-lang="hu">HU</button>
+        <button data-lang="de">DE</button>
+      </div>
+      <div class="m-btns">
+        <a href="account.html" class="btn-ghost" data-i18n="nav.account"></a>
+        <a href="#download" class="btn-primary" data-i18n="nav.download"></a>
+      </div>
+    </div>
 
-        <div class="hero-mockup" aria-hidden="true">
-          <div class="mockup-glow"></div>
-          <div class="mockup-frame">
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Tyverix</span>
-              <span class="mockup-demo-badge" id="demo-ticker">Demo</span>
-            </div>
-            <div class="mockup-body">
-              <div class="mockup-gauges">
-                <div class="mockup-gauge">
-                  <svg viewBox="0 0 100 100">
-                    <circle class="track" cx="50" cy="50" r="40" />
-                    <circle class="fill cpu" cx="50" cy="50" r="40" />
-                  </svg>
-                  <span class="mockup-gauge-value">32%</span>
-                  <span class="mockup-gauge-label">CPU</span>
-                </div>
-                <div class="mockup-gauge">
-                  <svg viewBox="0 0 100 100">
-                    <circle class="track" cx="50" cy="50" r="40" />
-                    <circle class="fill mem" cx="50" cy="50" r="40" />
-                  </svg>
-                  <span class="mockup-gauge-value">54%</span>
-                  <span class="mockup-gauge-label">RAM</span>
-                </div>
-                <div class="mockup-gauge">
-                  <svg viewBox="0 0 100 100">
-                    <circle class="track" cx="50" cy="50" r="40" />
-                    <circle class="fill gpu" cx="50" cy="50" r="40" />
-                  </svg>
-                  <span class="mockup-gauge-value">18%</span>
-                  <span class="mockup-gauge-label">GPU</span>
-                </div>
+    <!-- HERO -->
+    <header class="hero grid-texture" id="top">
+      <div class="hero-content silk-reveal-left">
+        <div class="hero-badge"><span class="badge-dot"></span><span data-i18n="hero.pill"></span></div>
+        <h1><span data-i18n="hero.title1"></span> <span class="accent" data-i18n="hero.title2"></span></h1>
+        <p class="hero-sub" data-i18n="hero.sub"></p>
+        <div class="hero-btns">
+          <a href="#download" class="btn-hero">
+            <span data-i18n="hero.ctaDownload"></span>
+            <svg viewBox="0 0 16 16"><line x1="3" y1="8" x2="13" y2="8" /><polyline points="9,4 13,8 9,12" /></svg>
+          </a>
+          <a href="#features" class="btn-outline" data-i18n="hero.ctaTour"></a>
+        </div>
+        <div class="hero-trust">
+          <div class="hero-chips" aria-hidden="true"><span>EN</span><span>HU</span><span>DE</span></div>
+          <p class="hero-trust-text"><strong data-version></strong> · <span data-i18n="hero.hint"></span></p>
+        </div>
+      </div>
+
+      <div class="hero-visual silk-reveal-right" aria-hidden="true">
+        <div class="dash-card">
+          <div class="win-bar">
+            <div class="win-dots"><span></span><span></span><span></span></div>
+            <span class="win-title">Tyverix · Dashboard</span>
+            <span class="win-badge" data-i18n="demo"></span>
+          </div>
+          <div class="dash-body">
+            <div class="dash-stats">
+              <div class="dash-stat">
+                <div class="dash-stat-label">CPU</div>
+                <div class="dash-stat-val" data-gauge="0">32%</div>
+                <div class="dash-meter"><i data-meter="0" style="width:32%"></i></div>
               </div>
-              <div class="mockup-chart">
-                <div class="row"><span>CPU history</span><span>last 60s</span></div>
-                <svg viewBox="0 0 240 56" preserveAspectRatio="none">
-                  <polygon points="0,56 0,40 20,34 40,38 60,24 80,30 100,18 120,26 140,16 160,22 180,12 200,20 220,14 240,18 240,56" />
-                  <polyline points="0,40 20,34 40,38 60,24 80,30 100,18 120,26 140,16 160,22 180,12 200,20 220,14 240,18" />
-                </svg>
+              <div class="dash-stat">
+                <div class="dash-stat-label">RAM</div>
+                <div class="dash-stat-val" data-gauge="1">54%</div>
+                <div class="dash-meter"><i data-meter="1" style="width:54%;background:var(--amber)"></i></div>
+              </div>
+              <div class="dash-stat">
+                <div class="dash-stat-label">GPU</div>
+                <div class="dash-stat-val" style="color:var(--text3)">N/A</div>
+                <div class="dash-stat-change" data-i18n="hero.gpuNa"></div>
+              </div>
+            </div>
+            <div class="chart-wrap">
+              <div class="chart-head">
+                <span class="chart-head-title" data-i18n="hero.cpuHistory"></span>
+                <span class="chip neutral" data-i18n="hero.last60"></span>
+              </div>
+              <div class="bars" id="heroBars"></div>
+            </div>
+            <div class="tx-list">
+              <div class="tx-item">
+                <div class="tx-icon" style="background:rgba(91,140,255,.12);color:var(--sky)">
+                  <svg viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" /></svg>
+                </div>
+                <div class="tx-info">
+                  <div class="tx-name" data-i18n="hero.tx1"></div>
+                  <div class="tx-date" data-i18n="hero.tx1sub"></div>
+                </div>
+                <span class="chip" data-i18n="hero.undo"></span>
+              </div>
+              <div class="tx-item">
+                <div class="tx-icon" style="background:rgba(155,123,255,.12);color:var(--violet)">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M6 12h4M8 10v4" /><circle cx="16" cy="11" r="1" /><circle cx="18" cy="13" r="1" /></svg>
+                </div>
+                <div class="tx-info">
+                  <div class="tx-name" data-i18n="hero.tx2"></div>
+                  <div class="tx-date" data-i18n="hero.tx2sub"></div>
+                </div>
+                <span class="chip neutral" data-i18n="hero.restored"></span>
               </div>
             </div>
           </div>
@@ -422,163 +195,286 @@
       </div>
     </header>
 
-    <section id="features">
-      <div class="wrap">
-        <p class="eyebrow" data-i18n="features.eyebrow"></p>
-        <h2 data-i18n="features.title"></h2>
+    <!-- BUILT ON -->
+    <div class="tools-strip">
+      <div class="tools-label" data-i18n="tools.label"></div>
+      <div class="marquee">
+        <div class="marquee-track" id="toolsTrack"></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <section class="stats" id="stats">
+      <div class="stat-block">
+        <div class="icon-box"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7" /><polyline points="3 3 3 9 9 9" /></svg></div>
+        <div class="stat-num" data-target="15">0</div>
+        <div class="stat-label" data-i18n="stats.tweaks"></div>
+        <div class="stat-bar-wrap"><div class="stat-bar" data-width="100%"></div></div>
+        <div class="stat-trend"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg><span data-i18n="stats.tweaksTrend"></span></div>
+      </div>
+      <div class="stat-block">
+        <div class="icon-box violet"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg></div>
+        <div class="stat-num" data-target="9">0</div>
+        <div class="stat-label" data-i18n="stats.cleaner"></div>
+        <div class="stat-bar-wrap"><div class="stat-bar" style="background:var(--violet)" data-width="100%"></div></div>
+        <div class="stat-trend" style="color:var(--violet)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg><span data-i18n="stats.cleanerTrend"></span></div>
+      </div>
+      <div class="stat-block">
+        <div class="icon-box green"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><polyline points="9 12 11 14 15 10" /></svg></div>
+        <div class="stat-num" data-target="0">0</div>
+        <div class="stat-label" data-i18n="stats.fake"></div>
+        <div class="stat-bar-wrap"><div class="stat-bar" style="background:var(--green)" data-width="0%"></div></div>
+        <div class="stat-trend"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg><span data-i18n="stats.fakeTrend"></span></div>
+      </div>
+      <div class="stat-block">
+        <div class="icon-box amber"><svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12" /><rect x="2" y="7" width="20" height="5" /><line x1="12" y1="22" x2="12" y2="7" /><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" /><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" /></svg></div>
+        <div class="stat-num" data-target="1">0</div>
+        <div class="stat-label" data-i18n="stats.trial"></div>
+        <div class="stat-bar-wrap"><div class="stat-bar" style="background:var(--amber)" data-width="100%"></div></div>
+        <div class="stat-trend" style="color:var(--amber)"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg><span data-i18n="stats.trialTrend"></span></div>
+      </div>
+    </section>
+
+    <!-- FEATURES — STICKY STACK with the real screenshots -->
+    <section class="section" id="features">
+      <div class="section-head silk-reveal">
+        <div class="section-tag" data-i18n="features.eyebrow"></div>
+        <h2 class="section-title" data-i18n="features.title"></h2>
         <p class="section-sub" data-i18n="features.sub"></p>
-        <div class="grid reveal" id="feature-grid"></div>
+      </div>
+      <div class="sticky-layout">
+        <div class="sticky-cards" id="stickyCards"></div>
+        <div class="sticky-panel-wrap">
+          <div class="sticky-panel">
+            <div class="win-bar">
+              <div class="win-dots"><span></span><span></span><span></span></div>
+              <span class="win-title" id="panelLabel">Tyverix</span>
+              <span class="win-badge real" data-i18n="realShot"></span>
+            </div>
+            <div class="panel-shot" id="panelShots"></div>
+            <div class="panel-caption">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.6" y2="16.6" /><line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" /></svg>
+              <span data-i18n="features.zoom"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="more-grid" id="moreGrid"></div>
+    </section>
+
+    <!-- A/B BENCHMARK -->
+    <section class="section alt" id="benchmark">
+      <div class="bench-inner">
+        <div class="section-head silk-reveal">
+          <div class="section-tag" data-i18n="bench.eyebrow"></div>
+          <h2 class="section-title" data-i18n="bench.title"></h2>
+          <p class="section-sub" data-i18n="bench.sub"></p>
+        </div>
+        <div class="bench-preview silk-reveal">
+          <div class="bp-topbar">
+            <div class="bp-title">
+              <span data-i18n="bench.window"></span>
+              <span class="win-badge" style="margin-left:0" data-i18n="bench.example"></span>
+            </div>
+            <div class="seg" id="benchSeg">
+              <button data-scenario="helped" class="active" data-i18n="bench.sHelped"></button>
+              <button data-scenario="none" data-i18n="bench.sNone"></button>
+              <button data-scenario="hurt" data-i18n="bench.sHurt"></button>
+            </div>
+          </div>
+          <div class="bp-body">
+            <div class="bp-chart">
+              <div class="bp-legend">
+                <span><i style="background:var(--text2)"></i><span data-i18n="bench.runA"></span></span>
+                <span><i style="background:var(--sky)"></i><span data-i18n="bench.runB"></span></span>
+              </div>
+              <div class="bp-bars" id="benchBars"></div>
+              <div class="bp-axis"><span>0 s</span><span data-i18n="bench.axis"></span><span>45 s</span></div>
+            </div>
+            <div class="bp-side">
+              <div class="bp-card">
+                <div class="bp-label" data-i18n="bench.avg"></div>
+                <div class="bp-val"><span id="benchA"></span> → <span id="benchB"></span></div>
+                <div class="bp-small" data-i18n="bench.fps"></div>
+              </div>
+              <div class="bp-card">
+                <div class="bp-label" data-i18n="bench.diff"></div>
+                <div class="bp-val" id="benchDiff"></div>
+                <div class="bp-small" id="benchCi"></div>
+                <div class="bp-ci" aria-hidden="true"><span class="zero"></span><span class="range" id="benchRange"></span><span class="pt" id="benchPt"></span></div>
+              </div>
+              <div class="bp-card">
+                <div class="bp-label" data-i18n="bench.verdict"></div>
+                <div id="benchVerdict"></div>
+                <div class="bp-small" id="benchExplain"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bp-foot" data-i18n="bench.foot"></div>
+        </div>
       </div>
     </section>
 
-    <section id="screenshots">
-      <div class="wrap">
-        <p class="eyebrow" data-i18n="shots.eyebrow"></p>
-        <h2 data-i18n="shots.title"></h2>
+    <!-- HONESTY -->
+    <section class="section grid-texture" id="honesty" style="--gx:100%;--gy:0%">
+      <div class="split">
+        <div class="silk-reveal-left">
+          <div class="section-tag" data-i18n="honesty.eyebrow"></div>
+          <h2 class="section-title" data-i18n="honesty.title"></h2>
+          <p class="section-sub" style="margin-bottom:28px" data-i18n="honesty.sub"></p>
+          <a href="changes.html" class="btn-outline">
+            <span data-i18n="honesty.cta"></span>
+            <svg viewBox="0 0 16 16"><line x1="3" y1="8" x2="13" y2="8" /><polyline points="9,4 13,8 9,12" /></svg>
+          </a>
+        </div>
+        <div class="rule-grid silk-reveal-right" id="ruleGrid"></div>
+      </div>
+    </section>
+
+    <!-- SCREENSHOTS CAROUSEL -->
+    <section class="section alt" id="screenshots" style="padding-left:0;padding-right:0">
+      <div class="section-head silk-reveal" style="padding:0 24px">
+        <div class="section-tag" data-i18n="shots.eyebrow"></div>
+        <h2 class="section-title" data-i18n="shots.title"></h2>
         <p class="section-sub" data-i18n="shots.sub"></p>
-        <div class="shots reveal">
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Dashboard</span>
-            </div>
-            <img src="screenshots/dashboard.png" alt="Tyverix dashboard with live CPU, RAM and network" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Diagnostics</span>
-            </div>
-            <img src="screenshots/diagnostics.png" alt="Tyverix hardware diagnostics: memory speed, refresh rate, PCIe link" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Boost</span>
-            </div>
-            <img src="screenshots/boost.png" alt="Tyverix performance tweaks, each marked reversible with its honest expected impact" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">A/B benchmark</span>
-            </div>
-            <img src="screenshots/benchmark.png" alt="Tyverix A/B benchmark comparing two measured Counter-Strike 2 runs" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Game Mode</span>
-            </div>
-            <img src="screenshots/gamemode.png" alt="Tyverix Game Mode" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Cleaner</span>
-            </div>
-            <img src="screenshots/cleaner.png" alt="Tyverix safe disk cleaner" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Memory</span>
-            </div>
-            <img src="screenshots/memory.png" alt="Tyverix memory optimizer" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Network</span>
-            </div>
-            <img src="screenshots/network.png" alt="Tyverix network latency monitor" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Startup</span>
-            </div>
-            <img src="screenshots/startup.png" alt="Tyverix startup manager listing everything that starts with Windows" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Processes</span>
-            </div>
-            <img src="screenshots/processes.png" alt="Tyverix process monitor" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Safety</span>
-            </div>
-            <img src="screenshots/safety.png" alt="Tyverix safety net: restore points, undo history and what can be undone" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-          <div class="shot-card" data-shot>
-            <div class="mockup-bar">
-              <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-              <span class="mockup-title">Settings</span>
-            </div>
-            <img src="screenshots/settings.png" alt="Tyverix settings and Free vs Pro" loading="lazy" onerror="this.closest('[data-shot]').classList.add('is-missing')" />
-          </div>
-        </div>
+      </div>
+      <div class="shots-wrap">
+        <div class="shots-track" id="shotsTrack"></div>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:30px">
+        <button class="pause-btn" id="shotsToggle">
+          <svg id="shotsIcon" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+          <span id="shotsLabel"></span>
+        </button>
       </div>
     </section>
 
-    <section id="honesty" class="band">
-      <div class="wrap">
-        <p class="eyebrow" data-i18n="honesty.eyebrow"></p>
-        <h2 data-i18n="honesty.title"></h2>
-        <p class="section-sub" data-i18n="honesty.sub"></p>
-        <div class="list reveal" id="honesty-list"></div>
-      </div>
-    </section>
-
-    <section id="pricing">
-      <div class="wrap">
-        <p class="eyebrow" data-i18n="pricing.eyebrow"></p>
-        <h2 data-i18n="pricing.title"></h2>
+    <!-- PRICING -->
+    <section class="section" id="pricing">
+      <div class="section-head silk-reveal">
+        <div class="section-tag" data-i18n="pricing.eyebrow"></div>
+        <h2 class="section-title" data-i18n="pricing.title"></h2>
         <p class="section-sub" data-i18n="pricing.sub"></p>
-        <div class="prices reveal">
-          <div class="price">
-            <h3 data-i18n="pricing.freeName"></h3>
-            <div class="amount">$0</div>
-            <ul id="free-list"></ul>
-            <a class="btn btn-outline" href="#download"><span data-i18n="pricing.freeCta"></span></a>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card silk-reveal">
+          <div class="featured-badge" data-i18n="pricing.trialBadge"></div>
+          <div class="price-plan" data-i18n="pricing.freeName"></div>
+          <div class="price-amount"><sup>$</sup>0</div>
+          <div class="price-period" data-i18n="pricing.forever"></div>
+          <ul class="price-features" id="free-list"></ul>
+          <a class="price-btn ghost" href="#download" data-i18n="pricing.freeCta"></a>
+        </div>
+        <div class="price-card featured silk-reveal">
+          <div class="price-plan" data-i18n="pricing.proName"></div>
+          <div class="price-amount"><sup>$</sup>5</div>
+          <div class="price-period" data-i18n="pricing.perMonth"></div>
+          <ul class="price-features" id="pro-list"></ul>
+          <a class="price-btn primary" href="#" id="buy" data-i18n="pricing.proCta"></a>
+        </div>
+      </div>
+      <p class="pricing-note" data-i18n="pricing.note"></p>
+    </section>
+
+    <!-- DOWNLOAD -->
+    <section class="section alt grid-texture" id="download" style="--gx:100%;--gy:100%">
+      <div class="download-inner">
+        <div class="silk-reveal-left">
+          <div class="section-tag" data-i18n="download.eyebrow"></div>
+          <h2 class="section-title" data-i18n="download.title"></h2>
+          <p class="section-sub" data-i18n="download.sub"></p>
+          <div class="dl-btns">
+            <a class="store-btn primary" id="download-link" href="#">
+              <svg viewBox="0 0 24 24"><path d="M3 5.5 10 4.5v7H3zM12 4.2 21 3v8.5h-9zM3 13h7v7l-7-1zM12 13h9v8l-9-1.2z" /></svg>
+              <span class="store-btn-info">
+                <span class="store-btn-sub" data-i18n="download.ctaSub"></span>
+                <span class="store-btn-name" data-i18n="download.cta"></span>
+              </span>
+            </a>
+            <a class="store-btn" href="changelog.html">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" /><polyline points="12 7 12 12 15 14" /></svg>
+              <span class="store-btn-info">
+                <span class="store-btn-sub" data-version></span>
+                <span class="store-btn-name" data-i18n="nav.changelog"></span>
+              </span>
+            </a>
+            <a class="store-btn" href="https://discord.me/tyverix" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.6 3a19.7 19.7 0 0 0-4.9 1.5C.6 9.1-.3 13.7.1 18.2a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4a12.9 12.9 0 0 1-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.5-5.2-.9-9.8-3.6-13.8zM8.5 15.4c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>
+              <span class="store-btn-info">
+                <span class="store-btn-sub" data-i18n="download.discordSub"></span>
+                <span class="store-btn-name">Discord</span>
+              </span>
+            </a>
           </div>
-          <div class="price pro">
-            <h3 data-i18n="pricing.proName"></h3>
-            <div class="amount">$5<span data-i18n="pricing.perMonth"></span></div>
-            <ul id="pro-list"></ul>
-            <a class="btn btn-primary" href="#" id="buy"><span data-i18n="pricing.proCta"></span></a>
+          <div class="dl-meta">
+            <span data-i18n="download.req"></span>
+            <span><a href="changes.html" data-i18n="download.changes"></a></span>
+            <span data-i18n="download.smartscreen"></span>
           </div>
         </div>
-        <p class="hint" style="text-align:center" data-i18n="pricing.note"></p>
+        <div class="tilt-wrap silk-reveal-right">
+          <div class="tilt-frame" id="tiltFrame">
+            <img src="screenshots/dashboard.png" alt="Tyverix dashboard with live CPU, RAM and network" loading="lazy" />
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="download" class="download">
-      <div class="wrap">
-        <div class="box reveal">
-          <p class="eyebrow" data-i18n="download.eyebrow"></p>
-          <h2 data-i18n="download.title"></h2>
-          <p class="section-sub" style="margin-bottom:28px" data-i18n="download.sub"></p>
-          <a class="btn btn-primary" id="download-link" href="#" target="_blank" rel="noreferrer"><span data-i18n="download.cta"></span></a>
-          <p class="hint" data-i18n="download.req"></p>
-          <p class="hint">
-            <a href="changelog.html" id="download-version" style="text-decoration: underline; text-underline-offset: 3px"></a>
-            <span style="opacity: 0.4"> · </span>
-            <a href="changes.html" data-i18n="download.changes" style="text-decoration: underline; text-underline-offset: 3px"></a>
-          </p>
+    <!-- FAQ -->
+    <section class="section grid-texture" id="faq" style="--gx:0%;--gy:100%">
+      <div class="faq-inner">
+        <div class="faq-head">
+          <div>
+            <div class="section-tag" data-i18n="faq.eyebrow"></div>
+            <h2 class="section-title" data-i18n="faq.title"></h2>
+          </div>
+          <button class="faq-toggle" id="faqToggleAll">
+            <svg id="faqToggleIcon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            <span id="faqToggleLabel"></span>
+          </button>
         </div>
+        <div class="faq-list" id="faqList"></div>
       </div>
     </section>
 
-    <footer>
-      <div class="wrap">
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-logo"><img src="logo.png" alt="" /> Tyverix</div>
+          <p class="footer-desc" data-i18n="footer.desc"></p>
+          <div class="footer-tagline" data-i18n="footer.tagline"></div>
+        </div>
+        <div>
+          <div class="footer-col-title" data-i18n="footer.product"></div>
+          <ul class="footer-links">
+            <li><a href="#features" data-i18n="nav.features"></a></li>
+            <li><a href="#benchmark" data-i18n="nav.benchmark"></a></li>
+            <li><a href="#pricing" data-i18n="nav.pricing"></a></li>
+            <li><a href="#download" data-i18n="nav.download"></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title" data-i18n="footer.transparency"></div>
+          <ul class="footer-links">
+            <li><a href="changes.html" data-i18n="nav.changes"></a></li>
+            <li><a href="changelog.html" data-i18n="nav.changelog"></a></li>
+            <li><a href="#honesty" data-i18n="nav.honesty"></a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title" data-i18n="footer.support"></div>
+          <ul class="footer-links">
+            <li><a href="account.html" data-i18n="nav.account"></a></li>
+            <li><a href="#faq" data-i18n="nav.faq"></a></li>
+            <li><a href="mailto:support@tyverix.com">support@tyverix.com</a></li>
+            <li><a href="https://discord.me/tyverix" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;vertical-align:-2px;margin-right:6px"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.6 3a19.7 19.7 0 0 0-4.9 1.5C.6 9.1-.3 13.7.1 18.2a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4a12.9 12.9 0 0 1-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.5-5.2-.9-9.8-3.6-13.8zM8.5 15.4c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>Discord</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
         <span>© 2026 Tyverix</span>
-        <a href="mailto:info@tyverix.com" style="color: inherit">info@tyverix.com</a>
-        <span data-i18n="footer.tagline"></span>
+        <span><a href="mailto:support@tyverix.com">support@tyverix.com</a> · <a href="https://discord.me/tyverix" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;vertical-align:-2px;margin-right:6px"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.6 3a19.7 19.7 0 0 0-4.9 1.5C.6 9.1-.3 13.7.1 18.2a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4a12.9 12.9 0 0 1-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.5-5.2-.9-9.8-3.6-13.8zM8.5 15.4c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>Discord</a></span>
       </div>
     </footer>
 
@@ -589,5 +485,6 @@
 
     <script src="config.js"></script>
     <script src="i18n.js"></script>
+    <script src="site.js"></script>
   </body>
 </html>

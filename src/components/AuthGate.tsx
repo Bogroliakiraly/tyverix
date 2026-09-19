@@ -106,8 +106,8 @@ export function AuthGate() {
           </button>
           <p className="pt-1 text-center text-xs text-text-muted">
             {t("auth.helpContact")}{" "}
-            <a href="mailto:info@tyverix.com" className="selectable text-accent hover:underline">
-              info@tyverix.com
+            <a href="mailto:support@tyverix.com" className="selectable text-accent hover:underline">
+              support@tyverix.com
             </a>
           </p>
         </div>

@@ -11,26 +11,11 @@
     <link rel="icon" href="favicon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="site.css" />
     <style>
-      :root {
-        --bg: #0a0b0f; --surface: #121419; --elevated: #181b22; --border: #242833;
-        --accent: #5b8cff; --accent-hover: #6f9bff; --good: #3ddc84; --warn: #f5b14c;
-        --text: #eef1f7; --text-2: #9aa3b2; --text-3: #5f6776;
-      }
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: "Inter", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
-      a { color: inherit; text-decoration: none; }
       .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
-      nav { border-bottom: 1px solid var(--border); background: rgba(10,11,15,0.72); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 10; }
-      nav .bar { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
-      .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
-      .logo .mark { width: 32px; height: 32px; object-fit: contain; display: block; }
-      .langs { display: flex; gap: 4px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 3px; }
-      .langs button { background: none; border: none; color: var(--text-2); cursor: pointer; font-size: 13px; padding: 4px 9px; border-radius: 7px; font-family: inherit; }
-      .langs button.active { background: var(--elevated); color: var(--text); }
-      .back { display: inline-block; margin-top: 28px; color: var(--text-2); font-size: 14px; }
-      .back:hover { color: var(--text); }
       main { padding: 0 0 80px; }
       h1 { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; margin-top: 10px; }
       h2 { font-size: 20px; font-weight: 700; margin: 44px 0 6px; }
@@ -64,19 +49,30 @@
       footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; }
     </style>
   </head>
-  <body>
-    <nav>
-      <div class="bar">
-        <a class="logo" href="index.html"><img class="mark" src="logo.png" alt="Tyverix logo" /> Tyverix</a>
+  <body class="subpage">
+    <nav class="site-nav solid nav-sub">
+      <a class="nav-logo" href="index.html"><img src="logo.png" alt="" /> Tyverix</a>
+      <div class="nav-links">
+        <a href="index.html#features" data-nav="features"></a>
+        <a href="index.html#benchmark" data-nav="benchmark"></a>
+        <a href="index.html#honesty" data-nav="honesty"></a>
+        <a href="index.html#pricing" data-nav="pricing"></a>
+        <a href="index.html#faq" data-nav="faq"></a>
+        <a href="changes.html" data-nav="changes"></a>
+        <a href="changelog.html" data-nav="changelog"></a>
+      </div>
+      <div class="nav-cta">
         <div class="langs" id="langs">
           <button data-lang="en">EN</button>
           <button data-lang="hu">HU</button>
           <button data-lang="de">DE</button>
         </div>
+        <a href="account.html" class="btn-ghost" data-nav="account"></a>
+        <a href="index.html#download" class="btn-primary" data-nav="download"></a>
       </div>
     </nav>
 
-    <main>
+    <main class="grid-texture">
       <div class="wrap">
         <a class="back" href="index.html" id="backLink"></a>
         <h1 id="pageTitle"></h1>
@@ -89,7 +85,8 @@
     <footer>
       <div class="wrap">
         <span>&copy; 2026 Tyverix</span>
-        <a href="mailto:info@tyverix.com">info@tyverix.com</a>
+        <a href="mailto:support@tyverix.com">support@tyverix.com</a>
+      <a href="https://discord.me/tyverix" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;vertical-align:-2px;margin-right:6px"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18.3 18.3 0 0 0-5.5 0L8.6 3a19.7 19.7 0 0 0-4.9 1.5C.6 9.1-.3 13.7.1 18.2a19.9 19.9 0 0 0 6 3l1.3-2.1a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4a12.9 12.9 0 0 1-2 1l1.3 2.1a19.8 19.8 0 0 0 6-3c.5-5.2-.9-9.8-3.6-13.8zM8.5 15.4c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4zm7 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4z"/></svg>Discord</a>
         <a href="index.html" id="footerHome"></a>
       </div>
     </footer>
@@ -544,5 +541,6 @@
       const sys = (navigator.language || "en").slice(0, 2);
       render(saved || (["hu", "de"].includes(sys) ? sys : "en"));
     </script>
+    <script src="subnav.js"></script>
   </body>
 </html>

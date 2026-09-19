@@ -209,8 +209,8 @@ export function Settings({ elevated }: { elevated: boolean | null }) {
         <div className="mt-2 flex items-center gap-2 text-sm">
           <Mail className="h-4 w-4 text-accent" />
           <span className="text-text-secondary">{t("settings.contactBody")}</span>
-          <a href="mailto:info@tyverix.com" className="selectable text-accent hover:underline">
-            info@tyverix.com
+          <a href="mailto:support@tyverix.com" className="selectable text-accent hover:underline">
+            support@tyverix.com
           </a>
         </div>
       </Card>

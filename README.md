@@ -8,7 +8,7 @@ instead of inventing a number.
 
 > Windows 10 & Windows 11 only.
 
-Website: <https://tyverix.com> · Contact: <info@tyverix.com>
+Website: <https://tyverix.com> · Contact: <support@tyverix.com>
 
 ## Tech stack
 
