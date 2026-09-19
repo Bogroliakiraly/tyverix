@@ -17,6 +17,7 @@ import {
 import type { ActionRecord } from "../lib/types";
 import { Badge, Card, EmptyState, SectionTitle, Spinner } from "../components/ui";
 import { formatDate } from "../lib/format";
+import { describeAction } from "../lib/history";
 import { useConfirm } from "../store/useConfirm";
 import { toast } from "../store/useToast";
 import { useT } from "../i18n";
@@ -53,7 +54,7 @@ export function Safety() {
       await createRestorePoint("Tyverix — manual checkpoint");
       toast.success(t("safety.toastRestoreCreated"));
     } catch (e) {
-      toast.error(t("safety.toastRestoreFailed"), String(e) + " (requires admin + System Restore enabled)");
+      toast.error(t("safety.toastRestoreFailed"), `${String(e)} (${t("safety.restoreNeedsAdmin")})`);
     } finally {
       setBusy(null);
     }
@@ -75,7 +76,7 @@ export function Safety() {
     setBusy(rec.id);
     try {
       await undoAction(rec.id);
-      toast.success(t("safety.toastReverted"), rec.description);
+      toast.success(t("safety.toastReverted"), describeAction(rec, t));
       await loadLog();
     } catch (e) {
       toast.error(t("safety.toastUndoFailed"), String(e));
@@ -183,7 +184,7 @@ export function Safety() {
               <div key={rec.id} className="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-bg-hover">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="truncate text-sm font-medium">{rec.description}</span>
+                    <span className="truncate text-sm font-medium">{describeAction(rec, t)}</span>
                     {rec.undone && <Badge>{t("safety.reverted")}</Badge>}
                   </div>
                   <p className="text-xs text-text-muted">{formatDate(rec.timestamp)}</p>

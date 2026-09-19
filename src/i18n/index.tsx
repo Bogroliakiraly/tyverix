@@ -37,6 +37,15 @@ const en: Dict = {
   "nav.diagnostics": "Diagnostics",
   "nav.boost": "Boost",
   "nav.bench": "A/B benchmark",
+  "history.startupEnabled": "Enabled startup item “{name}”",
+  "history.startupDisabled": "Disabled startup item “{name}”",
+  "history.tweakApplied": "Applied tweak “{name}”",
+  "history.tweakReverted": "Reverted tweak “{name}”",
+  "history.tweakRevertAll": "Reverted every applied tweak ({n})",
+  "history.tweakRevertAllNoCount": "Reverted every applied tweak",
+  "history.powerPlan": "Switched power plan to {name}",
+  "history.gameMode": "Engaged Game Mode (performance power plan)",
+  "safety.restoreNeedsAdmin": "requires administrator rights and System Restore turned on",
 
   "reverse.title": "What Tyverix can and cannot undo",
   "reverse.subtitle":
@@ -658,6 +667,15 @@ const hu: Dict = {
   "nav.diagnostics": "Diagnosztika",
   "nav.boost": "Gyorsítás",
   "nav.bench": "A/B mérés",
+  "history.startupEnabled": "Indítási elem bekapcsolva: „{name}”",
+  "history.startupDisabled": "Indítási elem letiltva: „{name}”",
+  "history.tweakApplied": "Tweak bekapcsolva: „{name}”",
+  "history.tweakReverted": "Tweak visszavonva: „{name}”",
+  "history.tweakRevertAll": "Minden bekapcsolt tweak visszavonva ({n} db)",
+  "history.tweakRevertAllNoCount": "Minden bekapcsolt tweak visszavonva",
+  "history.powerPlan": "Energiaséma váltva: {name}",
+  "history.gameMode": "Játék mód bekapcsolva (teljesítmény-energiaséma)",
+  "safety.restoreNeedsAdmin": "rendszergazdai jog és bekapcsolt Rendszer-visszaállítás szükséges",
 
   "reverse.title": "Mit tud és mit nem tud visszavonni a Tyverix",
   "reverse.subtitle":
@@ -1437,6 +1455,15 @@ const de: Dict = {
   "nav.diagnostics": "Diagnose",
   "nav.boost": "Boost",
   "nav.bench": "A/B-Messung",
+  "history.startupEnabled": "Autostart-Eintrag aktiviert: „{name}“",
+  "history.startupDisabled": "Autostart-Eintrag deaktiviert: „{name}“",
+  "history.tweakApplied": "Tweak aktiviert: „{name}“",
+  "history.tweakReverted": "Tweak zurückgesetzt: „{name}“",
+  "history.tweakRevertAll": "Alle aktiven Tweaks zurückgesetzt ({n})",
+  "history.tweakRevertAllNoCount": "Alle aktiven Tweaks zurückgesetzt",
+  "history.powerPlan": "Energieplan gewechselt: {name}",
+  "history.gameMode": "Spielmodus aktiviert (Leistungs-Energieplan)",
+  "safety.restoreNeedsAdmin": "erfordert Administratorrechte und aktivierte Systemwiederherstellung",
 
   "reverse.title": "Was Tyverix rückgängig machen kann — und was nicht",
   "reverse.subtitle":

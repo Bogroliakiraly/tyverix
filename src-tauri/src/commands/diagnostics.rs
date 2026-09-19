@@ -123,13 +123,66 @@ struct RamModule {
     configured: Option<u32>,
     #[serde(rename = "Locator")]
     locator: Option<String>,
+    #[serde(rename = "Part")]
+    part: Option<String>,
+}
+
+/// The XMP/EXPO speed a module's manufacturer part number advertises.
+///
+/// WMI's `Speed` is the module's *JEDEC* SPD speed — the safe fallback a board
+/// boots at with no profile loaded. A DDR4-3200 kit reports 2400 there, so
+/// comparing `Speed` with `ConfiguredClockSpeed` can never catch a disabled
+/// XMP profile: both read 2400. The rated speed lives in the part number
+/// instead, and every major vendor encodes it plainly:
+///
+/// * a four-digit data rate — Kingston `KHX3200C16D4/8GX`, Corsair
+///   `CMK16GX4M2B3200C16`, G.Skill `F4-3600C16-8GVKC`, TeamGroup `TF3D48G3200HC16F01`
+/// * Kingston FURY's short form, generation digit + hundreds — `KF432C16BB/8`
+///   (DDR4-3200), `KF560C36BBE-16` (DDR5-6000)
+///
+/// Returns `None` when neither pattern is present rather than guessing.
+fn part_number_speed(part: &str) -> Option<u32> {
+    let part = part.trim().to_uppercase();
+    let bytes = part.as_bytes();
+
+    // Kingston FURY: KF4xx / KF5xx.
+    if part.starts_with("KF") && bytes.len() >= 5 && (bytes[2] == b'4' || bytes[2] == b'5') {
+        if let Ok(hundreds) = part[3..5].parse::<u32>() {
+            let speed = hundreds * 100;
+            if (1600..=9000).contains(&speed) {
+                return Some(speed);
+            }
+        }
+    }
+
+    // Any standalone four-digit run in the plausible DDR3–DDR5 range.
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i].is_ascii_digit() {
+            let start = i;
+            while i < bytes.len() && bytes[i].is_ascii_digit() {
+                i += 1;
+            }
+            if i - start == 4 {
+                if let Ok(n) = part[start..i].parse::<u32>() {
+                    if (1600..=9000).contains(&n) && n % 100 < 70 {
+                        return Some(n);
+                    }
+                }
+            }
+        } else {
+            i += 1;
+        }
+    }
+    None
 }
 
 /// XMP/EXPO left disabled is the single most common, most expensive and least
 /// noticed misconfiguration on a gaming PC: DDR5 running at its 4800 MT/s JEDEC
 /// fallback instead of the 6000 MT/s printed on the sticks costs 10-20% of the
-/// 1% lows in CPU-bound games. WMI reports both numbers, so this is measurable,
-/// not guesswork.
+/// 1% lows in CPU-bound games. The running speed comes from WMI and the rated
+/// speed from the module part number (see `part_number_speed`), so this is
+/// measured, not guessed.
 fn check_memory() -> Vec<Finding> {
     let script = r#"
 Get-CimInstance Win32_PhysicalMemory | ForEach-Object {
@@ -138,6 +191,7 @@ Get-CimInstance Win32_PhysicalMemory | ForEach-Object {
     Speed      = [uint32]$_.Speed
     Configured = [uint32]$_.ConfiguredClockSpeed
     Locator    = [string]$_.DeviceLocator
+    Part       = [string]$_.PartNumber
   }
 } | ConvertTo-Json -Depth 2
 "#;
@@ -158,11 +212,28 @@ Get-CimInstance Win32_PhysicalMemory | ForEach-Object {
 
     let mut out = Vec::new();
 
-    // Rated vs configured speed.
-    let rated = modules.iter().filter_map(|m| m.speed).max().unwrap_or(0);
+    // Rated vs configured speed. The part number is the better source of the
+    // rated speed (see `part_number_speed`); WMI's JEDEC figure is only a
+    // fallback for modules whose part number does not encode it.
+    let jedec = modules.iter().filter_map(|m| m.speed).max().unwrap_or(0);
+    let from_part = modules
+        .iter()
+        .filter_map(|m| m.part.as_deref().and_then(part_number_speed))
+        .max();
+    let rated = from_part.unwrap_or(0).max(jedec);
     let configured = modules.iter().filter_map(|m| m.configured).max().unwrap_or(0);
+    let part_text = modules
+        .iter()
+        .filter_map(|m| m.part.as_deref().map(str::trim))
+        .find(|p| !p.is_empty())
+        .unwrap_or("")
+        .to_string();
     if rated > 0 && configured > 0 {
-        let measured = format!("running {configured} MT/s, modules rated {rated} MT/s");
+        let measured = if from_part.is_some() {
+            format!("running {configured} MT/s; part number {part_text} is rated {rated} MT/s (JEDEC fallback {jedec} MT/s)")
+        } else {
+            format!("running {configured} MT/s, modules rated {rated} MT/s")
+        };
         if configured + 100 < rated {
             let pct = ((rated as f64 - configured as f64) / rated as f64 * 100.0).round();
             out.push(
@@ -855,4 +926,41 @@ Get-CimInstance Win32_VideoController | ForEach-Object {
             })
         })
         .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::part_number_speed;
+
+    #[test]
+    fn reads_the_xmp_speed_from_common_part_numbers() {
+        // The exact modules on the machine this was found on: a DDR4-3200 kit
+        // that WMI reports as 2400 because XMP was never enabled.
+        assert_eq!(part_number_speed("KHX3200C16D4/8GX"), Some(3200));
+        assert_eq!(part_number_speed("KF432C16BB/8"), Some(3200));
+        assert_eq!(part_number_speed("KF560C36BBE-16"), Some(6000));
+        assert_eq!(part_number_speed("CMK16GX4M2B3200C16"), Some(3200));
+        assert_eq!(part_number_speed("F4-3600C16-8GVKC"), Some(3600));
+        assert_eq!(part_number_speed("  cmk32gx5m2b6000c36  "), Some(6000));
+    }
+
+    /// Prints the real memory findings for this machine; run with
+    /// `cargo test -- --ignored --nocapture this_machines_memory`.
+    #[test]
+    #[ignore]
+    fn this_machines_memory() {
+        for f in super::check_memory() {
+            println!("[{}] {}\n    {}", f.severity, f.title, f.measured.unwrap_or_default());
+        }
+    }
+
+    #[test]
+    fn does_not_invent_a_speed() {
+        // OEM parts without a data rate in the name, and numbers that are
+        // clearly not one (a 4-digit capacity code, a year).
+        assert_eq!(part_number_speed("M378A1K43CB2-CTD"), None);
+        assert_eq!(part_number_speed("HMA81GU6CJR8N-XN"), None);
+        assert_eq!(part_number_speed(""), None);
+        assert_eq!(part_number_speed("ABC1234XYZ"), None);
+    }
 }

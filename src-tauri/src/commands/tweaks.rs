@@ -867,7 +867,7 @@ pub async fn revert_all_tweaks(app: tauri::AppHandle) -> AppResult<usize> {
             state.record(
                 "tweak",
                 format!("Reverted every applied tweak ({reverted})"),
-                serde_json::json!({ "bulk": true }),
+                serde_json::json!({ "bulk": true, "count": reverted }),
             );
         }
         Ok(reverted)

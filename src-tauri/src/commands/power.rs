@@ -48,7 +48,7 @@ pub async fn set_power_plan(app: tauri::AppHandle, guid: String) -> AppResult<()
                 state.record(
                     "power_plan",
                     format!("Switched power plan to {}", plan_name(&guid)),
-                    serde_json::json!({ "previous_guid": prev }),
+                    serde_json::json!({ "previous_guid": prev, "plan_name": plan_name(&guid) }),
                 );
             }
         }

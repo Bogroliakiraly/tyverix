@@ -155,6 +155,9 @@ export interface ActionRecord {
   timestamp: string; // ISO 8601
   reversible: boolean;
   undone: boolean;
+  /** Structured details of the change. The UI builds its localized text from
+   *  these; `description` is the backend's English fallback. */
+  payload?: Record<string, unknown>;
 }
 
 export interface MemoryFreeResult {
